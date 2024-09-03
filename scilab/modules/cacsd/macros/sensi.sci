@@ -19,8 +19,12 @@ function [Se,R,T]=sensi(G,Sk,flag)
     // [Si,Ri,Ti]= [inv(eye+K*G);G*inv(eye+K*G);K*G*inv(eye+K*G)];
     //!
 
-    [LHS,RHS]=argn(0);
-    if RHS==2 then flag="o";end
+    arguments
+        G {mustBeA(G, "lss")}
+        Sk {mustBeA(Sk, "lss")}
+        flag (1,1) {mustBeA(flag, "string"), mustBeMember(flag, ["o", "i"])} = "o"
+    end
+
     select flag
     case "o"
         G1=G(1);Sk1=Sk(1);

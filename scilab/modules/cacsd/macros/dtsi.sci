@@ -23,24 +23,14 @@ function [ga,gs,gi]=dtsi(g,tol)
     // Default value: 100*%eps
     //!
 
-    [lhs,rhs]=argn(0),
-    if rhs <1 then
-        error(msprintf(gettext("%s: Wrong number of input arguments: At least %d expected.\n"),"dtsi",1))
+    arguments
+        g {mustBeA(g, ["r", "lss"])}
+        tol (1,1) {mustBeA(tol, "double"), mustBeReal, mustBeNonnegative}= 100 * %eps
     end
 
-    if and(typeof(g)<>["rational","state-space"]) then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space or a transfer function expected.\n"),"dtsi",1))
-    end
     if g.dt<>"c" then
         error(msprintf(gettext("%s: Wrong type for argument #%d: In continuous time expected.\n"),"dtsi",1))
     end
-    if rhs==1 then
-        tol=100*%eps,
-    else
-        if type(tol)<>1|size(tol,"*")<>1|~isreal(tol)|tol<=0 then
-            error(msprintf(gettext("%s: Wrong value for input argument #%d: Must be a positive scalar.\n"),"dtsi",2))
-        end
-    end,
 
     select typeof(g)
     case "rational" then

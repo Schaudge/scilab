@@ -20,11 +20,11 @@ function [k,x,err]=leqr(p12,vx)
     //   |0   b'  0|   | s'   0   d'd|       |0   0   0|   | s'   -b'   d'd|
     //
 
-    [lhs,rhs]=argn(0);
-
-    if typeof(p12)<>"state-space" then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space expected.\n"),"leqr",1))
+    arguments
+        p12 {mustBeA(p12, "lss")}
+        vx {mustBeA(vx, "double")}
     end
+
     [a,b2,c1,d12]=p12(2:5);
     [n,nu]=size(b2);
     [ny,n]=size(c1);

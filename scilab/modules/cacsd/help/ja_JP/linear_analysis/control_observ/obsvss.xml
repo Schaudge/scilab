@@ -60,7 +60,7 @@
         </para>
         <para>
             <literal>tol</literal> は可制御性を調べる際の閾値です
-            (<literal>contr</literal>参照);
+            (<link linkend="contr">contr</link>参照);
             デフォルト値 = <literal>100*%eps</literal>
         </para>
     </refsection>

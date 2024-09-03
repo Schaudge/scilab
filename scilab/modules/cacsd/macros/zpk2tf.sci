@@ -8,9 +8,10 @@
 function s=zpk2tf(sys)
     //zero pole gain to state space (simo system)
 
-    if typeof(sys)<>"zpk" then
-        error(msprintf(_("%s: Wrong type for input argument #%d: zero-pole-gain representation expected.\n"),"zpk2tf",1))
+    arguments
+        sys {mustBeA(sys, "zpk")}
     end
+    
     [ny,nu]=size(sys)
     siso=ny*nu==1
 

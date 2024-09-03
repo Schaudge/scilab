@@ -11,10 +11,10 @@
 // along with this program.
 
 function show_margins(h,typ)
-    if argn(2)<2 then typ="bode",end
-    if and(typ<>["nyquist","bode"]) then
-        error(msprintf(_("%s: Wrong value for input argument #%d: Must be in the set {%s}.\n"),..
-        "show_margins",2,"""nyquist"", ""bode"""))
+
+    arguments
+        h {mustBeA(h, ["r", "lss"])}
+        typ {mustBeA(typ, "string"), mustBeMember(typ, ["bode", "nyquist"])} = "bode"
     end
 
     fig=gcf();

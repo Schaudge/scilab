@@ -21,8 +21,16 @@ function [io,s] = syssize(sys)
     //                nin :  nb. inputs
     //   s    : nb states.
 
+    arguments
+        sys {mustBeA(sys, ["double", "lss", "r"])}
+    end
+
     select type(sys)
     case 1 then
+        msg = "%s: %s(Sl) is obsolete when Sl is a matrix of doubles.\n"
+        msg = msprintf(msg, "syssize", "syssize");
+        msg = [msg, msprintf(_("This feature will be permanently removed in Scilab %s"), "2026.0.0")]
+        warning(msg) 
         io=size(sys)
         s=[]
     case 16 then
@@ -35,12 +43,6 @@ function [io,s] = syssize(sys)
             io=size(sys("den"))
             [lhs,rhs]=argn(0);
             if lhs==2 then  sys=tf2ss(sys);[s,s]=size(sys("A")),end
-        else
-            msg = _("%s: Argument #%d: A system in state space or transfer matrix form expected.\n")
-            error(msprintf(msg, "syssize", 1))
         end
-    else
-        msg = _("%s: Argument #%d: A system in state space or transfer matrix form expected.\n")
-        error(msprintf(msg, "syssize", 1))
     end
 endfunction

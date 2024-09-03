@@ -15,23 +15,23 @@ function [best_h,best_w]=frep2tf(frq,repf,dg,dom,tols,weight)
     // iterative use of frep2tf_b jpc fd 1997
 
     // Copyright INRIA
-    [lhs,rhs]=argn(0);
-    if rhs <= 3 then dom="c" ; end
-    if rhs <= 4 then
-        rtol=1.e-2; atol=1.e-4, N=10;
-    else
-        rtol=tols(1);atol=tols(2);N=tols(3);
+    arguments
+        frq {mustBeA(frq, "double")}
+        repf {mustBeA(repf, "double")}
+        dg (1,1) {mustBeA(dg, "double")}
+        dom {mustBeA(dom, ["double", "string"]), mustBeScalarOrEmpty} = "c"
+        tols {mustBeA(tols, "double")} = [1e-2; 1.e-4; 10]
+        weight {mustBeA(weight, "double")} = []
     end
+
+    rtol=tols(1);atol=tols(2);N=tols(3);
+
     if dom==[] then dom="c";end
     if dom=="d" then dom=1;end
-    if rhs <=5  then
-        [h,err]=frep2tf_b(frq,repf,dg,dom);
-        best_w = [];
-    else
-        [h,err]=frep2tf_b(frq,repf,dg,dom,weight);
-        best_w = weight;
-    end
+    [h,err]=frep2tf_b(frq,repf,dg,dom,weight);
+    best_w = weight;
     best_h = h ;
+
     for k=1:N
         if dom=="c" then
             //    weight=(1)./abs(freq(h('den'),1,%i*frq*2*%pi));
@@ -50,10 +50,14 @@ endfunction
 function [h,err]=frep2tf_b(frq,repf,dg,dom,weight)
     // steer, jpc, fd 1997 (Nov)
     //============================
-    [lhs,rhs]=argn(0);
+    arguments
+        frq {mustBeA(frq, "double")}
+        repf {mustBeA(repf, "double")}
+        dg (1,1) {mustBeA(dg, "double")}
+        dom {mustBeA(dom, ["double", "string"]), mustBeScalarOrEmpty} = "c"
+        weight {mustBeA(weight, "double")} = []
+    end
     // test the system type 'c' 'd' or dt
-    if rhs <= 3 then dom="c" ; end
-    if rhs <= 4 then weight=[];end
     if dom==[] then dom="c";end
     if dom=="d" then dom=1;end
     n=size(frq,"*");
@@ -117,7 +121,7 @@ function [h,err]=frep2tf_b(frq,repf,dg,dom,weight)
     x=x(1:$-1);
 
     h=syslin(dom,poly(x(1:dg+1),"s","c"),poly([x((dg+2):$)],"s","c"))
-    if lhs==2 then
+    if nargout==2 then
         repf1=repfreq(h,frq);
         err = sum(abs(repf1(:)-repf(:)))/n;
     end

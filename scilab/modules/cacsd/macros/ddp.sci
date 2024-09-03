@@ -50,12 +50,16 @@ function [Closed,F,G]=ddp(Sys,zeroed,B1,D1,flag,Alfa,Beta)
     // Stability (resp. pole placement) requires stabilizability
     // (resp. controllability) of (A,B2).
     //
-    [LHS,RHS]=argn(0);
-    if RHS==5 then Beta=-1;end
-    if RHS==4 then Beta=-1;Alfa=-1;end
-    if RHS==3 then Beta=-1;Alfa=-1;flag="st";end
-    if RHS==2 then Beta=-1;Alfa=-1;flag="st";D1=zeros(size(Sys("C"),1),size(B1,2));
+    arguments
+        Sys {mustBeA(Sys, "lss")}
+        zeroed {mustBeA(zeroed, "double"), mustBeInteger}
+        B1 {mustBeA(B1, "double")}
+        D1 {mustBeA(D1, "double")} = zeros(size(Sys("C"),1),size(B1,2))
+        flag {mustBeA(flag, "string"), mustBeMember(flag, ["ge", "st", "pp"])}= "st"
+        Alfa {mustBeA(Alfa, "double")} = -1
+        Beta {mustBeA(Beta, "double")} = -1
     end
+
     if size(B1,1) ~= size(Sys("A"),1) then
         error(msprintf(gettext("%s: Incompatible input arguments #%d and #%d: Same row dimensions expected.\n"),"ddp",1,3))
     end

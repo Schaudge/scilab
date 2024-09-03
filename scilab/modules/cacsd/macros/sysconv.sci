@@ -45,6 +45,11 @@ function [s1,s2]=sysconv(s1,s2)
     //e(s,n)   -> conversion to samples system with period n
     //!
 
+    arguments
+        s1 {mustBeA(s1, ["des", "r", "lss"])}
+        s2 {mustBeA(s2, ["des", "r", "lss"])}
+    end
+
     s11=s1(1);s21=s2(1);
     if s11(1)<>s21(1) then // conversion ss<-->tf
         if s11(1)=="r" then s1=tf2ss(s1),else s2=tf2ss(s2),end

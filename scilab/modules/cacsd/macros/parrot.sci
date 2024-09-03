@@ -20,6 +20,11 @@ function [Kopt,gamaopt]=parrot(D,r)
     //is minimal (Parrot's theorem)
     //!
 
+    arguments
+        D {mustBeA(D, "double")}
+        r {mustBeA(r, "double")}
+    end
+
     [l,k]=size(D);
     l1=1:(l-r(1));
     l2=(l-r(1)+1):l;

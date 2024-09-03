@@ -54,18 +54,13 @@ function [X,dims,J,Y,k,Z]=cainv(Sl,Alfa,Beta,flag)
     // [Xp(1:dimSg,:);C]*W = [0 | *] one has
     // H*W = [0 | *]  (with at least as many columns as above).
 
-    [LHS,RHS]=argn(0);
-    if RHS==1 then Alfa=-1;Beta=-1;flag="ge";end
-    if RHS==2 then Beta=Alfa;flag="ge";end
-    if RHS==3 then flag="ge";end
-    if RHS==4 then
-        if type(flag)~=10 then
-            error(msprintf(gettext("%s: Wrong type for input argument #%d: String array expected.\n"),"cainv",4));
-        end
-        if size(flag,"*")<>1 then
-            error(msprintf(gettext("%s: Wrong size for input argument #%d: string expected.\n"),"cainv",4));
-        end
+    arguments
+        Sl {mustBeA(Sl, "lss")}
+        Alfa {mustBeA(Alfa, "double")} = -1
+        Beta {mustBeA(Beta, "double")} =  Alfa
+        flag (1,1) {mustBeA(flag, "string"), mustBeMember(flag, ["ge", "st", "pp"])}= "ge"
     end
+
     [X,ddims,F,U,k,Z]=abinv(Sl',Beta,Alfa,flag);
     [nx,nx]=size(X);
     select flag

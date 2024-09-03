@@ -27,27 +27,13 @@ function [hinfnorm,frequency]=h_norm(Sl,rerr)
     //  Adapted from
     //  N.A. Bruinsma   T.U.Delft/Philips Research Eindhoven, see also
     //  Systems & Control Letters, vol. 14 pp. 287-293.
-    if argn(2)<1 then
-        error(msprintf(gettext("%s: Wrong number of input argument(s): At least %d expected.\n"),..
-        "h_norm",1))
+
+    arguments
+        Sl {mustBeA(Sl, ["r", "lss"])}
+        rerr (1,1) {mustBeA(rerr, "double"), mustBeReal, mustBePositive}= 1e-8
     end
 
-    sltyp=typeof(Sl)
-    if and(sltyp<>["rational","state-space"]) then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear dynamical system expected.\n"),..
-        "h_norm",1))
-    end
-    if sltyp=="rational" then Sl=tf2ss(Sl);end
-    if argn(2)==1 then
-        rerr=1e-8;
-    else
-        if type(rerr)<>1|size(rerr,"*")<>1 then
-            error(msprintf(gettext("%s: Wrong type for input argument: Scalar expected.\n"),"h_norm",2))
-        end
-        if ~isreal(rerr)|rerr<=0 then
-            error(msprintf(gettext( "%s: Input argument #%d must be strictly positive.\n"),"h_norm",2))
-        end
-    end;
+    if typeof(Sl) == "rational" then Sl=tf2ss(Sl);end
 
     eps=1.d-8;
     if Sl.dt=="d"|type(Sl.dt)==1 then

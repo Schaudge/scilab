@@ -21,6 +21,10 @@ function [Kopt,gamaopt]=h_inf_st(D,r)
     //                     D21 D22]
     //where size(D22)=r=[r1 r2]
 
+    arguments
+        D {mustBeA(D, "double")}
+        r (1,2) {mustBeA(r, "double")}
+    end
 
     [l,k]=size(D);
     l1=1:(l-r(1));

@@ -20,6 +20,13 @@ function [Sl]=markp2ss(markpar,n,nout,nin)
     // See also: pol2des
     //!
 
+    arguments
+        markpar {mustBeA(markpar, "double")}
+        n (1,1) {mustBeA(n, "double")}
+        nout (1,1) {mustBeA(nout, "double")}
+        nin (1,1) {mustBeA(nin, "double")}
+    end
+
     nmax=max(size(markpar));
     H=[];H(n*nout,n*nin)=0;
     p=markpar;

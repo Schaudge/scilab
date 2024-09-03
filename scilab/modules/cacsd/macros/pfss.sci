@@ -21,22 +21,17 @@ function elts = pfss(S, rmax, cord)
     // If S is given in transfer form, it is first converted into state-space
     // and each subsystem is then converted in transfer form.
 
-    select argn(2)
-    case 1 then
-        rmax = [];
-        cord = [];
-    case 2 then
-        if type(rmax) == 10 then
-            cord = rmax;
-            rmax=[];
-        elseif type(rmax) == 1 then
-            cord = [];
-        end
+    arguments
+        S {mustBeA(S, ["r", "lss"])}
+        rmax {mustBeA(rmax, ["double", "string"])} = []
+        cord {mustBeA(cord, ["double", "string"])} = []
     end
 
-    if and(typeof(S) <> ["rational", "state-space"]) then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space or a transfer function expected.\n"), "pfss", 1))
+    if nargin == 2 && type(rmax) == 10 then
+        cord = rmax;
+        rmax = [];
     end
+
     if typeof(S) == "rational" then
         flag = varn(S("num"))
         S = tf2ss(S)

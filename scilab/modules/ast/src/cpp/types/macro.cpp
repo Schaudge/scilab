@@ -107,7 +107,7 @@ std::map<std::wstring, std::function<bool(types::InternalType*)>> typeValidator 
     {L"checkbox", mustBeUIControlStyle<__GO_UI_CHECKBOX__>}, {L"edit", mustBeUIControlStyle<__GO_UI_EDIT__>}, {L"spinner", mustBeUIControlStyle<__GO_UI_SPINNER__>}, 
     {L"frame", mustBeUIControlStyle<__GO_UI_FRAME__>}, {L"image", mustBeUIControlStyle<__GO_UI_IMAGE__>}, {L"listbox", mustBeUIControlStyle<__GO_UI_LISTBOX__>}, 
     {L"popupmenu", mustBeUIControlStyle<__GO_UI_POPUPMENU__>}, {L"pushbutton", mustBeUIControlStyle<__GO_UI_PUSHBUTTON__>}, {L"radiobutton", mustBeUIControlStyle<__GO_UI_RADIOBUTTON__>}, 
-    {L"slider", mustBeUIControlStyle<__GO_UI_SLIDER__>}, {L"table", mustBeUIControlStyle<__GO_UI_TABLE__>}, {L"text", mustBeUIControlStyle<__GO_UI_TEXT__>}, {L"layer", mustBeUIControlStyle<__GO_UI_LAYER__>}, 
+    {L"slider", mustBeUIControlStyle<__GO_UI_SLIDER__>}, {L"text", mustBeUIControlStyle<__GO_UI_TEXT__>}, {L"layer", mustBeUIControlStyle<__GO_UI_LAYER__>}, 
     {L"tab", mustBeUIControlStyle<__GO_UI_TAB__>}
 };
 

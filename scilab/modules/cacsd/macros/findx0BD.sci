@@ -1,6 +1,5 @@
 function [x0,B,D,V,rcnd]=findx0BD(A,C,y,u,withx0,withd,tol,printw)
-    x0=[];B=[];D=[];V=[];rcnd=[];
-    [nargout,nargin] = argn(0)
+    
     //FINDX0BD  Estimates the initial state and/or the matrices B and D of a
     //          discrete-time linear system, given the (estimated) system
     //          matrices A, C, and a set of input/output data.
@@ -55,28 +54,22 @@ function [x0,B,D,V,rcnd]=findx0BD(A,C,y,u,withx0,withd,tol,printw)
     //        Revisions:
     //        V. Sima, July 2000.
     //
-    ni = nargin;
+
+    arguments
+        A {mustBeA(A, "double")}
+        C {mustBeA(C, "double")}
+        y {mustBeA(y, "double")}
+        u {mustBeA(u, "double")}
+        withx0 {mustBeA(withx0, "double"), mustBeMember(withd, [0 1])} = 1
+        withd {mustBeA(withd, "double"), mustBeMember(withd, [0 1])} = 1
+        tol {mustBeA(tol, "double")} = 0
+        printw (1,1) {mustBeA(printw, "double"), mustBeMember(printw, [0, 1])} = 0
+    end
+
     nout = nargout;
-    if ni<4 then
-        error(msprintf(gettext("%s: Wrong number of input arguments: %d to %d expected.\n"),"findx0BD",4,8));
-    end
-    if nout<1 then
-        error(msprintf(gettext("%s: Wrong number of output arguments: At least %d expected.\n"),"findx0BD",1));
-    end
-    //
-    if ni<8 then
-        printw = 0;
-    end
-    if ni<7 then tol = 0;end
+    x0=[];B=[];D=[];V=[];rcnd=[];
+
     if tol==[] then tol = 0;end
-    if ni<6 then
-        withd = 1;
-    elseif withd ==[] then
-        withd = 1;
-    elseif (withd~=0)&(withd~=1) then
-        warning(msprintf(gettext("%s: Wrong value for input argument #%d: %d or %d expected.\n"),"findx0BD",6,0,1))
-    end
-    if ni<5 then  withx0 = 1;end
     if withx0 ==[] then  withx0 = 1;end
     job = withd+1;
     //

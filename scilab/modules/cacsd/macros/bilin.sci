@@ -12,6 +12,10 @@
 
 
 function Sl2=bilin(Sl1,v)
+    arguments
+        Sl1 {mustBeA(Sl1, ["lss", "r"])}
+        v (:, 4) {mustBeA(v, "double")}
+    end
 
     [A,B,C,D]=abcd(Sl1);
     dom=Sl1("dt");
@@ -22,8 +26,10 @@ function Sl2=bilin(Sl1,v)
     BB=(a*b-c*d)*i*B;
     CB=C*i;
     DB=D+c*C*i*B;
-    if dom=="c" then Sl2=syslin("d",AB,BB,CB,DB);
-    else Sl2=syslin("c",AB,BB,CB,DB);end
-
+    if dom=="c" then 
+        Sl2=syslin("d",AB,BB,CB,DB);
+    else 
+        Sl2=syslin("c",AB,BB,CB,DB);
+    end
 
 endfunction

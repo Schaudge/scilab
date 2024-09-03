@@ -42,7 +42,7 @@
                 <term>tol</term>
                 <listitem>
                     <para>
-                        is a threshold for controllability (see <literal>contr</literal>).  default value is <literal>sqrt(%eps)</literal>.
+                        is a threshold for controllability (see <link linkend="contr">contr</link>).  default value is <literal>sqrt(%eps)</literal>.
                     </para>
                 </listitem>
             </varlistentry>

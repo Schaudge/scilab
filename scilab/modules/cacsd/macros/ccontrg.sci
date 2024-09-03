@@ -22,26 +22,17 @@ function [K]=ccontrg(PP,r,Gamma);
     //  b = ( b1 , b2 ) ,     c = ( c1 ) ,    d = ( d11  d12)
     //                ( c2 )          ( d21  d22)
     //  r(1) and r(2) are the dimensions of d22 (rows x columns)
-    if argn(2)<>3 then
-        error(msprintf(gettext("%s: Wrong number of input arguments: %d expected.\n"),"ccontrg",3))
+    arguments
+        PP {mustBeA(PP, "lss")}
+        r {mustBeA(r, "double"), mustBeReal, mustBeVector, mustBeNonnegative}
+        Gamma {mustBeA(Gamma, "double")}
     end
 
-    if typeof(PP)<>"state-space" then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space expected.\n"),"ccontrg",1))
-    end
     if PP.dt<>"c" then
         error(msprintf(gettext("%s: Wrong value for input argument #%d: Continuous time system expected.\n"),"ccontrg",1))
     end
-    if typeof(r)<>"constant"|~isreal(r) then
-        error(msprintf(gettext("%s: Wrong type for argument #%d: Real vector expected.\n"),"ccontrg",2))
-    end
-    if size(r,"*")<>2 then
-        error(msprintf(gettext("%s: Wrong size for input argument #%d: %d expected.\n"),"ccontrg",2,2))
-    end
+
     r=int(r);
-    if or(r<=0) then
-        error(msprintf(gettext("%s: Wrong values for input argument #%d: Elements must be positive.\n"),"ccontrg",2))
-    end
 
     //parameter recovery
     [a,b1,b2,c1,c2,d11,d12,d21,d22]=smga(PP,r);

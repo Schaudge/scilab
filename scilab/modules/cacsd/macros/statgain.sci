@@ -12,6 +12,10 @@
 
 function st = statgain(sl)
 
+    arguments
+        sl {mustBeA(sl, ["r", "lss"])}
+    end
+
     select typeof(sl)
     case "rational" then
         dom=sl("dt")
@@ -36,9 +40,6 @@ function st = statgain(sl)
             end
             st = sl(5) + sl(4)*inv(eye(m,m) - sl(2))*sl(3);
         end
-    else
-        msg = gettext("%s: Argument #%d: A system in state space or transfer matrix form expected.\n")
-        error(msprintf(msg, "statgain", 1));
     end
 
 endfunction

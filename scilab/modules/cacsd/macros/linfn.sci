@@ -62,6 +62,13 @@ function [x,frequ]=linfn(G,PREC,RELTOL,options);
     //      last modification: Oct 3nd, 1991
     //****************************************************************************
 
+    arguments
+        G {mustBeA(G, "lss")}
+        PREC (1,1) {mustBeA(PREC, ["string", "double"])} = 1.0e-3
+        RELTOL (1,1) {mustBeA(RELTOL, ["string", "double"])} = 1.0e-10
+        options (1,1) {mustBeA(options, "string"), mustBeMember(options, ["t", "nul"])} = "nul"
+    end
+
 
     //constants
     //*********
@@ -72,43 +79,51 @@ function [x,frequ]=linfn(G,PREC,RELTOL,options);
     //user interface. The default values are:
     //     PREC=1.0e-3; RELTOL=1.0e-10; options='nul';
     //************************************************
-    [lhs,rhs]=argn(0);
-    select rhs,
-    case 0 then
-        error(msprintf(gettext("%s: Wrong number of input arguments: At least %d expected.\n"),"linfn",1))
-    case 1 then
-        PREC=1.0e-3; RELTOL=1.0e-10; options="nul";
-    case 2 then
-        RELTOL=1.0e-10;
-        if type(PREC)==10 then
-            iopt=2
-            options=PREC; PREC=1.0e-3;
-        else
-            options="nul";
-        end,
-    case 3 then
-        if type(RELTOL)==10 then
-            iopt=3
-            options=RELTOL; RELTOL=1.0e-10;
-        else
-            options="nul";
-        end,
-    end
+    // [lhs,rhs]=argn(0);
+    // select rhs,
+    // case 0 then
+    //     error(msprintf(gettext("%s: Wrong number of input arguments: At least %d expected.\n"),"linfn",1))
+    // case 1 then
+    //     PREC=1.0e-3; RELTOL=1.0e-10; options="nul";
 
-    if typeof(G)<>"state-space" then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space  expected.\n"),"linfn",1))
-    end
+
+    // case 2 then
+    //     RELTOL=1.0e-10;
+        if nargin == 2 && type(PREC)==10 then
+            iopt=2;
+            options=PREC; 
+            PREC=1.0e-3;
+        elseif nargin == 3 && type(RELTOL)==10 then
+            iopt=3;
+            options=RELTOL; 
+            RELTOL=1.0e-10;
+        end
+        // else
+        //     options="nul";
+        // end,
+    // case 3 then
+    //     if type(RELTOL)==10 then
+    //         iopt=3
+    //         options=RELTOL; RELTOL=1.0e-10;
+    //     else
+    //         options="nul";
+    //     end,
+    // end
+
+    // if typeof(G)<>"state-space" then
+    //     error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space  expected.\n"),"linfn",1))
+    // end
     if G.dt<>"c" then
         error(msprintf(gettext("%s: Wrong type for argument #%d: In continuous time expected.\n"),"linfn",1))
     end
 
-    if type(options)<>10|and(options<>["t","nul"]) then
+    if and(options<>["t","nul"]) then
         error(msprintf(gettext("%s: Wrong value for input argument #%d: Must be in the set {%s}.\n"),"linfn",iopt,"""t"",""nul"""))
     end
-    if type(PREC)<>1|size(PREC,"*")<>1|~isreal(PREC)|PREC<=0 then
+    if ~isreal(PREC)|PREC<=0 then
         error(msprintf(gettext("%s: Wrong value for input argument #%d: Must be a positive scalar.\n"),"linfn",2))
     end
-    if type(RELTOL)<>1|size(RELTOL,"*")<>1|~isreal(RELTOL)|RELTOL<=0 then
+    if ~isreal(RELTOL)|RELTOL<=0 then
         error(msprintf(gettext("%s: Wrong value for input argument #%d: Must be a positive scalar.\n"),"linfn",3))
     end
 

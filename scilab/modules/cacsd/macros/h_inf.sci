@@ -34,55 +34,21 @@ function [Sk,rk,mu]=h_inf(P,r,mumin,mumax,nmax)
     // mu_inf upper bound on mu = gama^-2
     //P2 = normalized P.
     //
-    if argn(2)<>5 then
-        error(msprintf(gettext("%s: Wrong number of input arguments: %d expected.\n"),"h_inf",5))
+    arguments
+        P {mustBeA(P, ["r", "lss"])}
+        r {mustBeA(r, "double"), mustBeReal, mustBeVector, mustBeNonnegative}
+        mumin (1,1) {mustBeA(mumin, "double"), mustBeReal, mustBeNonnegative}
+        mumax (1,1) {mustBeA(mumax, "double"), mustBeReal, mustBeNonnegative}
+        nmax {mustBeA(nmax, "double"), mustBeReal, mustBeInteger, mustBePositive}
     end
+    
 
-    if and(typeof(P)<>["rational","state-space"]) then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space or a transfer function expected.\n"),"h_inf",1))
-    end
     if P.dt<>"c" then
         error(msprintf(gettext("%s: Wrong value for input argument #%d: Continuous time system expected.\n"),"h_inf",1))
     end
-    if typeof(r)<>"constant"|~isreal(r) then
-        error(msprintf(gettext("%s: Wrong type for argument #%d: Real vector expected.\n"),"h_inf",2))
-    end
-    if size(r,"*")<>2 then
-        error(msprintf(gettext("%s: Wrong size for input argument #%d: %d expected.\n"),"h_inf",2,2))
-    end
+
     r=int(r);
-    if or(r<=0) then
-        error(msprintf(gettext("%s: Wrong values for input argument #%d: Elements must be positive.\n"),"h_inf",2))
-    end
 
-
-    if typeof(mumin)<>"constant"|~isreal(mumin) then
-        error(msprintf(gettext("%s: Wrong type for argument #%d: Real vector expected.\n"),"h_inf",3))
-    end
-    if size(mumin,"*")<>1 then
-        error(msprintf(gettext("%s: Wrong size for input argument #%d: Scalar expected.\n"),"h_inf",3))
-    end
-    if or(mumin<0) then
-        error(msprintf(gettext("%s: Wrong values for input argument #%d: Elements must be positive.\n"),"h_inf",3))
-    end
-
-
-    if typeof(mumax)<>"constant"|~isreal(mumax) then
-        error(msprintf(gettext("%s: Wrong type for argument #%d: Real vector expected.\n"),"h_inf",4))
-    end
-    if size(mumax,"*")<>1 then
-        error(msprintf(gettext("%s: Wrong size for input argument #%d: Scalar expected.\n"),"h_inf",4))
-    end
-    if mumax<0 then
-        error(msprintf(gettext("%s: Wrong values for input argument #%d: Elements must be positive.\n"),"h_inf",4))
-    end
-    if typeof(nmax)<>"constant"|~isreal(nmax) then
-        error(msprintf(gettext("%s: Wrong type for argument #%d: Real vector expected.\n"),"h_inf",5))
-    end
-
-    if nmax<>int(nmax)|nmax<=0 then
-        error(msprintf(gettext("%s: Wrong size for input argument #%d: A positive integer expected.\n"),"h_inf",5))
-    end
     [P2,mu_inf,Uci,Yci,D22]=h_init(P,r,%t)
     //if mu_inf < mumax then write(%io(2),mu_inf,'(3x,''romax too big: max romax= '',f10.5)');end
     mumax=min(mu_inf,mumax)

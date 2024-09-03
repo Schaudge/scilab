@@ -15,10 +15,13 @@ function [u,m]=nearly_multiples(v,tol)
     //      mean
     //m   : the multiplicity of the "unique" values/ (u(i) is nearly equal to
     //      m(i) values in v
-    v=v(:);
-    if argn(2)<2 then
-        tol=1e-10
+    arguments
+        v {mustBeA(v, "double")}
+        tol (1,1) {mustBeA(tol, "double")} = 1e-10
     end
+    
+    v=v(:);
+
     kz=find(abs(v)<=tol);
     mz=size(kz,"*")
     v(kz)=[]

@@ -70,6 +70,11 @@ function [p1,r1]=lft(p,r,p#,r#)
         end
 
         if rhs==4 then //Obsolete
+            msg = "%s: %s(P, p, R, r) is obsolete. Please use %s(P, p, R) instead.\n"
+            msg = msprintf(msg, "lft", "lft", "lft");
+            msg = [msg, msprintf(_("This feature will be permanently removed in Scilab %s"), "2026.0.0")]
+            warning(msg);
+
             if type(r#)<>1 then
                 error(msprintf(_("%s: Wrong type for argument %d: Real vector expected.\n"),"lft",4))
             end

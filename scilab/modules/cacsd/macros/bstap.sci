@@ -21,6 +21,9 @@ function [Q]=bstap(sl)
     //!
     //balancing
     //-----------------------------------
+    arguments
+        sl {mustBeA(sl, "lss")}
+    end
 
     slt=gtild(sl);slt=balreal(slt);sl=gtild(slt),
     // D such that DB1'+sC1 = 0 , DD' = s**2I

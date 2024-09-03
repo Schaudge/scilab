@@ -20,9 +20,10 @@ function [N,M]=lcf(Sl)
     //  N,M : is realization of Sl: Sl = M^-1 N
     //!
 
-    if and(typeof(Sl)<>["rational","state-space"]) then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space or a transfer function expected.\n"),"lcf",1))
+    arguments
+        Sl {mustBeA(Sl, ["r", "lss"])}
     end
+
     if Sl.dt<>"c" then
         error(msprintf(gettext("%s: Wrong type for argument #%d: In continuous time expected.\n"),"lcf",1))
     end

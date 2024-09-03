@@ -12,7 +12,11 @@
 
 function [sl]=imrep2ss(v,deg)
 
-    [lhs,rhs]=argn(0)
+    arguments
+        v {mustBeA(v, "double")}
+        deg {mustBeA(deg, "double")} = []
+    end
+    
     // hankel
     [no,nv]=size(v);
     n=nv/2;
@@ -21,7 +25,7 @@ function [sl]=imrep2ss(v,deg)
     h= zeros(n,n);
     for k=1:n,h(l:l+ns1,:)=v(:,k:k+n2),l=l+no,end;
     //factorization
-    if rhs==1 then [u,h1,v1,deg]=svd(h);else [u,h1,v1]=svd(h);end
+    if deg == [] then [u,h1,v1,deg]=svd(h);else [u,h1,v1]=svd(h);end
     //extraction
     obs=u(:,1:deg);con=h1*v1';con=con(1:deg,:);
     //shift

@@ -11,7 +11,7 @@
 // along with this program.
 
 function handles = nicholschart(modules, args, colors)
-
+    
     fname = "nicholschart"
     [lhs,rhs]=argn(0);
 
@@ -47,30 +47,55 @@ function handles = nicholschart(modules, args, colors)
     defaultArgs = [1 2 5 10 20 30 50 70 90 120 140 160 180];
     defaultModules=[-30:-10:mod_min -25 -20 -15 -12 -9 -6 -3 -2 -1 -0.5 -0.2 -0.1 0 0.1 0.2 0.5  1  2 3 6 12];
 
-
-    if exists("modules","local") == 0 | modules == [] then
-        modules=defaultModules
-    else
+    if exists("modules", "local") & modules <> [] then
         if type(modules)<>1|~isreal(modules) then
             msg = _("%s: Wrong type for input argument ""%s"": real floating point array expected\n")
             error(msprintf(msg, fname, "modules"));
         end
         modules=matrix(modules,1,-1)
-    end
-    if exists("args","local")==0 | args == [] then
-        args=defaultArgs
     else
+        try
+            if type(modules) == 0 then
+                msg = "%s: %s(, [args, colors]) is obsolete. Please use %s(modules, [args, colors]) with modules = [].\n"
+                msg = msprintf(msg, fname, fname, fname);
+                msg = [msg, msprintf(_("This feature will be permanently removed in Scilab %s"), "2026.0.0")]
+                warning(msg);
+            end
+        end
+        modules=defaultModules
+    end
+
+    if exists("args", "local") & args <> [] then
         if type(args)<>1|~isreal(args) then
             msg = _("%s: Wrong type for input argument ""%s"": real floating point array expected\n")
             error(msprintf(msg, fname, "args"));
         end
         args=matrix(args,1,-1)
+    else
+        try
+            if type(args) == 0 then
+                msg = "%s: %s(modules, , colors) is obsolete. Please use %s(modules, args, colors) with args = [].\n"
+                msg = msprintf(msg, fname, fname, fname);
+                msg = [msg, msprintf(_("This feature will be permanently removed in Scilab %s"), "2026.0.0")]
+                warning(msg);
+            end
+        end
+        args=defaultArgs
     end
 
     // colors
     if exists("colors","local")==0 | colors == [] then
+        try
+            if type(colors) == 0 then
+                msg = "%s: %s(modules, args, ) is obsolete. Please use %s(modules, args, colors) with colors = [].\n"
+                msg = msprintf(msg, fname, fname, fname);
+                msg = [msg, msprintf(_("This feature will be permanently removed in Scilab %s"), "2026.0.0")]
+                warning(msg);
+            end
+        end
         colors = "grey85";
     end
+
     c = iscolor(colors);
     if or(isnan(c))
         msg = _("%s: Argument #%d: Wrong color specification.\n")
@@ -223,7 +248,7 @@ function handles = nicholschart(modules, args, colors)
     fig.immediate_drawing=immediate_drawing;
 
     // reset data_bounds
-    if rhs == 0 | blankAxes then
+    if blankAxes then
         ax.data_bounds = [-360,-40;0,40];
     else
         ax.data_bounds = old_data_bounds;

@@ -49,37 +49,14 @@ function [X,dims,F,U,k,Z]=abinv(Sl,Alfa,Beta,flag)
     //     Then C*[(sI-A-B*F)^(-1)+D]*(Q+B*R) =0   (<=>G*(Q+B*R)=0)
     //F.D.
     //function [X,dims,F,U,k,Z]=abinv(Sl,Alfa,Beta,flag)
-    [LHS,RHS]=argn(0);
-    if and(typeof(Sl)<>["state-space" "rational"]) then
-        error(msprintf(_("%s: Wrong type for input argument #%d: Linear dynamical system expected.\n"),"abinv",1))
+
+    arguments
+        Sl {mustBeA(Sl, ["lss", "r"])}
+        Alfa {mustBeA(Alfa, "double")} = -1
+        Beta {mustBeA(Beta, "double")}= Alfa
+        flag {mustBeA(flag, "string"), mustBeMember(flag, ["ge", "st", "pp"])} = "ge"
     end
-    select argn(2)
-    case 1 then
-        Alfa=-1;Beta=-1;
-        flag="ge";
-    case 2 then
-        Beta=Alfa;
-        if type(Beta)<>1 then
-            error(msprintf(_("%s: Wrong type for input argument #%d: Array of floating point numbers expected.\n"),..
-            "abinv",2))
-        end
-        flag="ge";
-    case 3 then
-        if type(Alfa)<>1 then
-            error(msprintf(_("%s: Wrong type for input argument #%d: Array of floating point numbers expected.\n"),..
-            "abinv",2))
-        end
-        if type(Beta)<>1 then
-            error(msprintf(_("%s: Wrong type for input argument #%d: Array of floating point numbers expected.\n"),..
-            "abinv",3))
-        end
-        flag="ge";
-    case 4 then
-        if and(flag<>["ge","st","pp"]) then
-            error(msprintf(gettext("%s: Wrong value for input argument #%d: Must be in the set {%s}.\n"),..
-            "abinv",4,"''ge'',''st'',''pp''"));
-        end
-    end
+
     timedomain=Sl.dt;
     if timedomain==[] then
         warning(msprintf(gettext("%s: Input argument %d is assumed continuous time.\n"),"abinv",1));
@@ -155,7 +132,7 @@ function [X,dims,F,U,k,Z]=abinv(Sl,Alfa,Beta,flag)
     A11=A11+B1bar*F1bar;  //add B1bar*F1bar is not necessary.
     if B1t ~= [] then
         voidB1t=%f;
-        if RHS==1 then
+        if nargin == 1 then
             warning(msprintf(gettext("%s: Needs %s => Use default value %s=%d.\n"),"abinv","Alfa","Alfa",-1))
             Alfa=-1;
         end
@@ -172,7 +149,7 @@ function [X,dims,F,U,k,Z]=abinv(Sl,Alfa,Beta,flag)
 
     sl2=syslin(timedomain,A22,B2*Urange,0*(B2*Urange)');
     [ns2,nc2,U2,sl3]=st_ility(sl2);
-    if (nc2~=0)&(RHS==1|RHS==2) then
+    if (nc2~=0)&(nargin == 1| nargin == 2) then
         warning(msprintf(gettext("%s: Needs %s => Use default value %s=%d.\n"),"abinv","Beta","Beta",-1));
     end
     F2=Urange*stabil(sl2("A"),sl2("B"),Beta);

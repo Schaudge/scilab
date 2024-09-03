@@ -8,12 +8,12 @@
 function s=zpk2ss(sys)
     //zero pole gain to state space (simo system)
 
-    if typeof(sys)<>"zpk" then
-        error(msprintf(_("%s: Wrong type for input argument #%d: zero-pole-gain representation expected.\n"),"zpk2ss",1))
+    arguments
+        sys {mustBeA(sys, "zpk")}
     end
+
     [ny,nu]=size(sys)
     siso=ny*nu==1
-
 
     if siso then
         s=zp2ss_siso(sys.Z{1},sys.P{1},sys.K,sys.dt);

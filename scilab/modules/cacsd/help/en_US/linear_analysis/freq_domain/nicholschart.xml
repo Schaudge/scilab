@@ -110,16 +110,12 @@
             <literal>nicholschart</literal> may be used in conjunction with
             <link linkend="black">black</link>.
         </para>
-        <note>
-            To use the default value of an input argument, just skip it, as in
-            <literal>nicholschart(modules,,colors)</literal>.
-        </note>
     </refsection>
     <refsection>
         <title>Examples</title>
         <programlisting role="example"><![CDATA[
     //Nichols chart
-    clf
+    clf()
     subplot(1,2,1)
     nicholschart();
     subplot(1,2,2)
@@ -128,7 +124,7 @@
     ]]></programlisting>
         <para>
             <scilab:image localized="true">
-                clf
+                clf()
                 subplot(1,2,1)
                 nicholschart()
                 subplot(1,2,2)
@@ -146,14 +142,16 @@
     tau = 0.2;
     xsi = 1.2;
     PID = syslin('c',(1/(2*xsi*tau*s))*(1+2*xsi*tau*s+tau^2*s^2));
-    clf
+    clf()
     black([Plant;Plant*PID ],0.01,100,["Plant";"Plant and PID corrector"]);
 
     //move the caption in the lower right corner
     gca().children(1).legend_location="in_lower_right";
 
     // Add the Nichols frame and tune its labels color
-    h = nicholschart(,,'wheat');
+    h = nicholschart();
+    h.phaseFrame.foreground = color("wheat");
+    h.gainFrame.foreground = color("wheat");
     h.gainLabels.font_foreground = color("orange");
     ]]></programlisting>
         <para>
@@ -169,7 +167,9 @@
                 black([Plant;Plant*PID ],0.01,100,["Plant";"Plant and PID corrector"]);
                 //move the caption in the lower right corner
                 gca().children(1).legend_location="in_lower_right";
-                h = nicholschart(,,'wheat');
+                h = nicholschart();
+                h.phaseFrame.foreground = color("wheat");
+                h.gainFrame.foreground = color("wheat");
                 h.gainLabels.font_foreground = color("orange");
             </scilab:image>
         </para>
@@ -223,6 +223,17 @@
                         </listitem>
                         <listitem>
                             Output argument <literal>sh</literal> added.
+                        </listitem>
+                    </itemizedlist>
+                </revremark>
+            </revision>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revremark>
+                    <itemizedlist>
+                        <listitem>
+                            The syntax, where the input arguments are skipped like nicholschart(modules,, colors), 
+                            is now obsolete and will be removed in 2026.0.0.
                         </listitem>
                     </itemizedlist>
                 </revremark>

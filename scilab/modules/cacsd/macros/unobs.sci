@@ -21,22 +21,10 @@ function [dim,x]=unobs(A,C,tol)
     //    C*X = [0,*]
     // Copyright INRIA
 
-    [lhs,rhs]=argn(0);
-
-    if rhs < 2
-        error(msprintf(gettext("%s: Wrong number of input argument: %d to %d expected."),"unobs", 2, 3));
-    end
-
-    if typeof(A) <> "constant" | ~isreal(A)
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: A real matrix expected."),"unobs",1));
-    end
-
-    if typeof(C) <> "constant" | ~isreal(C)
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: A real matrix expected."),"unobs",2));
-    end
-
-    if rhs == 2
-        tol=1.d-10*norm([A;C],1);
+    arguments
+        A {mustBeA(A, "double"), mustBeReal}
+        C {mustBeA(C, "double"), mustBeReal}
+        tol (1,1) {mustBeA(tol, "double")} = 1.d-10*norm([A;C],1)
     end
 
     [p,p]=size(A);

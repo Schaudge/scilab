@@ -15,9 +15,10 @@ function des=sm2ss(sysmat)
     // sysmat=[-s I + A , B; C , D]
     // [n,n]=size(A)
 
-    if typeof(sysmat)<>"polynomial" then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Polynomial array expected.\n"),"sm2ss",1))
+    arguments
+        sysmat {mustBeA(sysmat, "polynomial")}
     end
+
     [nl,nc]=size(sysmat);
     E=-coeff(sysmat,1);
     k=nc;

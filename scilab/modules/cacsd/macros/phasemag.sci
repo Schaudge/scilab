@@ -11,17 +11,16 @@
 // along with this program.
 
 function [phi,db]=phasemag(z,mod)
-    //
 
-    mod_def="c"     //continuous representation
-    //mod_def='m'   //representation modulo 360 degrees
-    [lhs,rhs]=argn(0)
-    if lhs==2 then
+    arguments
+        z {mustBeA(z, "double")}
+        mod (1,1) {mustBeA(mod, "string"), mustBeMember(mod, ["c", "m"])} = "c"
+    end
+
+    if nargout == 2 then
         db=20*log(abs(z))/log(10),
     end
-    if rhs<>2 then
-        mod=mod_def
-    end
+
     //compute first phase value in  (-pi, pi]
     phi1=atan(imag(z(:,1)),real(z(:,1)))
     //compute phase increments in (-pi, pi]

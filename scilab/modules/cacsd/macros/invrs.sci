@@ -14,8 +14,9 @@ function Sli=invrs(Sl,alfa);
     // Sli=invrs(Sl,alfa) computes Sli, the PSSD
     // inverse of PSSD Sl.
     //!
-    if typeof(Sl)<>"state-space" then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space expected.\n"),"invrs",1))
+    arguments
+        Sl {mustBeA(Sl, "lss")}
+        alfa {mustBeA(alfa, "double")}
     end
 
     D=Sl.D;

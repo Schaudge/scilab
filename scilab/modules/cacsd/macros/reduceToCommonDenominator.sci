@@ -6,6 +6,12 @@
 // For more information, see the COPYING file which you should have received
 // along with this program.
 function [Zc,Pc]=reduceToCommonDenominator(Z,P,K)
+    
+    arguments
+        Z {mustBeA(Z, "cell")}
+        P {mustBeA(P, "cell"), mustBeEqualDims(P, Z)}
+        K {mustBeA(K, "double"), mustBeReal, mustBeEqualDims(K, Z)}
+    end
     if typeof(Z)<>"ce" then
         error(msprintf(_("%s: Wrong type for input argument #%d: Cell expected.\n"),...
         "reduceToCommonDenominator",1))
@@ -21,14 +27,6 @@ function [Zc,Pc]=reduceToCommonDenominator(Z,P,K)
 
     Pc=P{1};
     mn=size(Z)
-    if or(size(P)<>mn) then
-        error(msprintf(_("%s: Arguments %d and %d must have equal dimensions.\n"),...
-        "reduceToCommonDenominator",1,2))
-    end
-    if or(size(K)<>mn) then
-        error(msprintf(_("%s: Arguments %d and %d must have equal dimensions.\n"),...
-        "reduceToCommonDenominator",1,3))
-    end
     n=prod(mn)
     Zc=Z;
     for k=2:n

@@ -6,9 +6,11 @@
 // For more information, see the COPYING file which you should have received
 // along with this program.
 function [z,p,k]=tf2zp(S)
-    if typeof(S)<>"rational" then
-        error(msprintf(_("%s: Wrong type for input argument #%d: transfer function expected.\n"),"tf2zp",1))
+
+    arguments
+        S {mustBeA(S, "r")}
     end
+
     [ny,nu]=size(S)
     if nu<>1 then
         error(msprintf(_("%s: Wrong type for input argument #%d: a single input system expected.\n"),"tf2zp",1))

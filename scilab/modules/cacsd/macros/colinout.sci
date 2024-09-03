@@ -11,6 +11,9 @@
 // along with this program.
 
 function [Inn,X,Gbar]=colinout(G)
+    arguments
+        G {mustBeA(G, ["r", "lss"])}
+    end
 
     [Innt,Xt,Gbart]=rowinout(G');
     Inn=Innt';X=Xt';Gbar=Gbart';

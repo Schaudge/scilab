@@ -111,10 +111,6 @@
             <literal>nicholschart</literal> は,<link linkend="black">black</link>
             と組み合わせて使用することができます.
         </para>
-        <note>
-            To use the default value of an input argument, just skip it, as in
-            <literal>nicholschart(modules,,colors)</literal>.
-        </note>
     </refsection>
     <refsection>
         <title>例</title>
@@ -223,6 +219,17 @@
                         </listitem>
                         <listitem>
                             Output argument <literal>sh</literal> added.
+                        </listitem>
+                    </itemizedlist>
+                </revremark>
+            </revision>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revremark>
+                    <itemizedlist>
+                        <listitem>
+                            The syntax, where the input arguments are skipped like nicholschart(modules,, colors), 
+                            is now obsolete and will be removed in 2026.0.0.
                         </listitem>
                     </itemizedlist>
                 </revremark>

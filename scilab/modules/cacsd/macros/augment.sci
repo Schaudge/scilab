@@ -31,12 +31,15 @@ function [P,r]=augment(G,SRT,flag)
     //       [ G | -G]
     //!
 
-    [LHS,RHS]=argn(0);
-    if RHS <= 2 then flag="output";end
+    arguments
+        G {mustBeA(G, ["r", "lss"])}
+        SRT {mustBeA(SRT, "string"), mustBeMember(SRT, ["S", "R", "T", "SR", "ST", "RT", "SRT"])}= "SRT"
+        flag {mustBeA(flag, "string"), mustBeMember(flag, ["output", "input", "o", "i"])}= "output"
+    end
+
     select part(flag,1)
     case "o"
         G1=G(1);
-        if RHS==1 then SRT="SRT";end
         r=size(G);
         [ny,nu]=size(G);Iu=eye(nu,nu);Iy=eye(ny,ny);
         Ouy=zeros(nu,ny);Oyu=zeros(ny,nu);Ouu=zeros(nu,nu);
@@ -47,9 +50,6 @@ function [P,r]=augment(G,SRT,flag)
         select long
         case 3 then
             // 'SRT'
-            if SRT<>"SRT" then
-                error(msprintf(gettext("%s: Wrong value for input argument #%d: ''%s'' expected.\n"), "augment",2,"SRT"),9999);
-            end
             if ssSRT==0 then
                 W1=[Iy,Oyu,Oyy;
                 Ouy,Iu,Ouy;
@@ -119,8 +119,6 @@ function [P,r]=augment(G,SRT,flag)
                 end
                 return
             end
-            error(msprintf(gettext("%s: Wrong value for input argument #%d: Must be in the set {%s}.\n"),..
-            "augment",2, "''SR'',''ST'',''RT''"),9999);
         case 1 then
             if SRT=="S" then
                 if ssSRT==0 then
@@ -170,7 +168,6 @@ function [P,r]=augment(G,SRT,flag)
         end
     case "i"
         G1=G(1);
-        if RHS==1 then SRT="SRT";end
         r=size(G);
         [ny,nu]=size(G);Iu=eye(nu,nu);Iy=eye(ny,ny);
         Ouy=zeros(nu,ny);Oyu=zeros(ny,nu);Ouu=zeros(nu,nu);
@@ -181,9 +178,6 @@ function [P,r]=augment(G,SRT,flag)
         select long
         case 3 then
             // 'SRT'
-            if SRT<>"SRT" then
-                error(msprintf(gettext("%s: Wrong value for input argument #%d: ''%s'' expected.\n"), "augment",2,"SRT"),9999);
-            end;
             if ssSRT==0 then
                 W1=[Iu,-Iu;
                 Oyu,Oyu;
@@ -249,9 +243,6 @@ function [P,r]=augment(G,SRT,flag)
                 end
                 return
             end
-
-            error(msprintf(gettext("%s: Wrong value for input argument #%d: Must be in the set {%s}.\n"),..
-            "augment",2, "''SR'',''ST'',''RT''"),9999);
 
         case 1 then
             if SRT=="S" then

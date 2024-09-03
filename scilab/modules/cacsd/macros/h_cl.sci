@@ -22,31 +22,17 @@ function Aclosed=h_cl(P,r,K)
         error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space or a transfer function expected.\n"),"h_cl",1))
     end
 
-    if typeof(P)=="rational" then P=tf2ss(P);end
+    
     [LHS,RHS]=argn(0);
     if RHS==2 then //h_cl(P,K)
-        K=r;[A,B2,C2,D22]=abcd(P);
-        iK=2
+        K=r;
+        [P, K] = %h_cl1(P, K)
+        [A,B2,C2,D22]=abcd(P);
     elseif RHS==3 then //h_cl(P,r,K)
-        if typeof(r)<>"constant"|~isreal(r) then
-            error(msprintf(gettext("%s: Wrong type for argument #%d: Real vector expected.\n"),"h_cl",2))
-        end
-        if size(r,"*")<>2 then
-            error(msprintf(gettext("%s: Wrong size for input argument #%d: %d expected.\n"),"h_cl",2,2))
-        end
+        [P, K] = %h_cl2(P, r, K)
         r=int(r);
-        if or(r<=0) then
-            error(msprintf(gettext("%s: Wrong values for input argument #%d: Elements must be positive.\n"),"h_cl",2,2))
-        end
-
         [A,B1,B2,C1,C2,D11,D12,D21,D22]=smga(P,r);
-        iK=3
-    end
-    if and(typeof(K)<>["rational","state-space"]) then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space or a transfer function expected.\n"),"h_cl",iK))
-    end
-
-    if typeof(K)=="rational" then K=tf2ss(K);end
+    end    
 
     [Ac,Bc,Cc,Dc]=abcd(K);
     [n,pp]=size(B2);[ndc1,ndc2]=size(Dc);[nd1,nd2]=size(D22);
@@ -57,4 +43,37 @@ function Aclosed=h_cl(P,r,K)
     Cw=[zeros(ndc1,m1), Cc;  C2, zeros(n2,m2)];
     Aclosed=[A, zeros(n,m); zeros(m,n), Ac] +...
       Bw*inv([eye(ndc1,ndc1),-Dc;-D22,eye(nd1,nd1)])*Cw;
+endfunction
+
+function [P, K] = %h_cl1(P, K)
+    arguments
+        P {mustBeA(P, ["r", "lss"])}
+        K {mustBeA(K, ["r", "lss"])}
+    end
+
+    if typeof(P) == "rational" then
+        P = tf2ss(P);
+    end
+
+    if typeof(K) == "rational" then
+        K = tf2ss(K);
+    end
+
+endfunction
+
+function [P, K] = %h_cl2(P, r, K)
+    arguments
+        P {mustBeA(P, ["r", "lss"])}
+        r {mustBeA(r, "double"), mustBeReal, mustBeVector, mustBePositive}
+        K {mustBeA(K, ["r", "lss"])}
+    end
+
+    if typeof(P) == "rational" then
+        P = tf2ss(P);
+    end
+
+    if typeof(K) == "rational" then
+        K = tf2ss(K);
+    end
+
 endfunction

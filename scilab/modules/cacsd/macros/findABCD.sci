@@ -1,6 +1,4 @@
 function [sys,K,Q,Ry,S,rcnd]=findABCD(s,n,l,R,meth,nsmpl,tol,printw)
-    sys=[];K=[];Q=[];Ry=[];S=[];rcnd=[];
-    [nargout,nargin] = argn(0)
     //FINDABCD  Finds the system matrices and the Kalman gain of a discrete-time
     //          system, given the system order and the relevant part of the
     //          R factor of the concatenated block-Hankel matrices, using subspace
@@ -65,26 +63,26 @@ function [sys,K,Q,Ry,S,rcnd]=findABCD(s,n,l,R,meth,nsmpl,tol,printw)
     //        Revisions:
     //
 
-    nin = nargin;
-    nout = nargout;
-    //
-    if nin<8 then
-        printw = 0;
+    arguments
+        s (1,1) {mustBeA(s, "double"), mustBeInteger}
+        n (1,1) {mustBeA(n, "double"), mustBeInteger}
+        l (1,1) {mustBeA(l, "double"), mustBeInteger}
+        R {mustBeA(R, "double")}
+        meth {mustBeA(meth, "double"), mustBeMember(meth, [1, 2, 3])} = 3
+        nsmpl {mustBeA(nsmpl, "double"), mustBeInteger} = 0
+        tol {mustBeA(tol, "double")} = 0
+        printw (1,1) {mustBeA(printw, "double"), mustBeMember(printw, [0 1])}= 0
     end
-    if nin<7 then tol = 0;end
+
+    sys=[];K=[];Q=[];Ry=[];S=[];rcnd=[];
+
     if tol==[] then tol = 0;end
-
-    if nin<6 then nsmpl = 0;end
     if nsmpl==[] then nsmpl = 0;end
-
-    if nin<5 then meth = 3;end
     if meth==[] then meth = 3;end
 
-    if nin<4 then
-        error(msprintf(gettext("%s: Wrong number of input arguments: %d to %d expected.\n"),"findABCD",4,8));
-    end
     //
     // Compute all system matrices.
+    nout = nargout;
     job = 1;
     if nout==1 then
         [A,C,B,D] = sident(meth,job,s,n,l,R,tol,nsmpl,[],[],printw);

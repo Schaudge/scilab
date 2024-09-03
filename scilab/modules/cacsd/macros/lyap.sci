@@ -12,16 +12,16 @@
 
 function X = lyap(A,C,flag)
     //  solve  A'*X+X*A=C if flag=='c' or  A'*X*A-X=C if flag=='d'
-    if argn(2)<>3 then
-        error(msprintf(gettext("%s: Wrong number of input argument(s): %d expected.\n"),"lyap",3))
+    arguments
+        A {mustBeA(A, "double"), mustBeReal, mustBeSquare}
+        C {mustBeA(C, "double"), mustBeReal, mustBeSquare}
+        flag {mustBeA(flag, "string"), mustBeMember(flag, ["c", "d"])}
     end
-    flag=part(flag,1)
+
     if flag=="c" then
         flag=[0 0],
     elseif flag=="d" then
         flag=[1 0],
-    else
-        error(msprintf(gettext("%s: Wrong value for input argument #%d: ""c"" or ""d"" expected.\n"), "lyap", 3));
     end
     X=linmeq(2,A,C,flag)
 endfunction

@@ -15,9 +15,10 @@ function [X,F]=gcare(Sl)
     //Generalized Control Algebraic Riccati Equation
     //X = solution , F = gain
     //!
-    if typeof(Sl)<>"state-space" then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space expected.\n"),"gcare",1))
+    arguments
+        Sl {mustBeA(Sl, "lss")}
     end
+
     if Sl.dt<>"c" then
         error(msprintf(gettext("%s: Wrong type for argument #%d: In continuous time expected.\n"),"gcare",1))
     end

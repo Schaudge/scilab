@@ -22,7 +22,7 @@
     </refnamediv>
     <refsynopsisdiv>
         <title>Syntax</title>
-        <synopsis>[db, phi] = dbphi(repf)</synopsis>
+        <synopsis>[db, phi] = dbphi(repf [, mod])</synopsis>
     </refsynopsisdiv>
     <refsection>
         <title>Arguments</title>
@@ -37,6 +37,28 @@
                 <term>repf</term>
                 <listitem>
                     <para>vector of complex frequency response</para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>mod</term>
+                <listitem>
+                    <para>character string</para>
+                    <variablelist>
+                        <varlistentry>
+                            <term>mod='c'</term>
+                            <listitem>
+                                <para>"continuous" representation between -infinity and +360
+                                    degrees (default)
+                                </para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term>mod='m'</term>
+                            <listitem>
+                                <para>representation between -360 and 0 degrees</para>
+                            </listitem>
+                        </varlistentry>
+                    </variablelist>
                 </listitem>
             </varlistentry>
         </variablelist>
@@ -57,6 +79,9 @@
             </member>
             <member>
                 <link linkend="bode">bode</link>
+            </member>
+            <member>
+                <link linkend="phasemag">phasemag</link>
             </member>
         </simplelist>
     </refsection>

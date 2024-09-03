@@ -17,6 +17,11 @@ function [Stmp,Ws]=rowregul(Sl,Alfa,Beta);
     //Zeros at infinity of Sl are moved to -Beta;
     //Sl is asummed right invertible i.e. ss2tf(Sl) full row rank
     //!
+    arguments
+        Sl {mustBeA(Sl, ["r", "lss"])}
+        Alfa {mustBeA(Alfa, "double")}
+        Beta {mustBeA(Beta, "double")}
+    end
 
     [Stmp,Ws]=colregul(Sl',Alfa,Beta);
     Stmp=Stmp';Ws=Ws';
