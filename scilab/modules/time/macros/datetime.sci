@@ -316,7 +316,6 @@ function out = datetime(varargin)
         end
     end
 
-    noDate = %f;
     if type(input1) == 1 then
         if input1 == [] then
             out = mlist(["datetime", "date", "time", "format"], [], [], outputFormat);
@@ -535,22 +534,22 @@ function out = datetime(varargin)
                 end
             else //with infmt
                 reg_list = list(...
-                    ["yyyy", "yy"], ...
+                    ["[y]{1,}"], ...
                     ["MMMM", "MMM", "MM", "M"], ...
-                    ["dd", "d"], ...
-                    ["HH", "H"], ..
+                    ["[d]{1,}"], ...
+                    ["[H]{1,}"], ..
                     ["mm"], ...
                     ["ss.SSS", "ss"], ...
                     ["[e]{3,4}"], ...
                     ["hh:mm:ss a", "h:mm:ss a", "hh:mm a", "h:mm a"]);
 
                 reg_replace = list(...
-                    ["[0-9]{4}", "[0-9]{2}"], ...
+                    ["[0-9]{1,}"], ...
                     ["[a-zA-Z]{3,}", "[a-zA-Z]{3}", "[0-9]{2}", "[0-9]{1,2}"], ...
-                    ["[0-9]{2}", "[0-9]{1,2}"], ...
-                    ["[0-9]{2}", "[0-9]{1,2}"], ...
-                    ["[0-9]{2}"], ...
-                    ["[0-9]{2}\.[0-9]{3}", "[0-9]{2}"], ...
+                    ["[0-9]{1,2}"], ...
+                    ["[0-9]{1,2}"], ...
+                    ["[0-9]{1,2}"], ...
+                    ["[0-9]{2}\.[0-9]{3}", "[0-9]{1,2}"], ...
                     ["[a-zA-Z]{3,}"], ...
                     ["[0-9]{2}:[0-9]{2}:[0-9]{2} [aApP][mM]", "[0-9]{1,2}:[0-9]{2} [aApP][mM]", "[0-9]{2}:[0-9]{2} [aApP][mM]", "[0-9]{1,2}:[0-9]{2} [aApP][mM]"]);
 
@@ -573,7 +572,6 @@ function out = datetime(varargin)
                 index(idx_remove, :) = [];
                 order(idx_remove) = [];
 
-                
                 Y = ["yy"; "yyyy"];
                 M = ["M"; "MM"; "MMM"];
                 D = ["d"; "dd"];
@@ -671,7 +669,7 @@ function out = datetime(varargin)
 
                     count = length(find(order <= 6));
 
-                    inputFormat = "/" + inputFormat + "/"
+                    inputFormat = "/" + inputFormat + "/";
                     kk = find(input1 <> "");
                     [_a, _b, _c, size_d] = regexp(input1(kk(1)), inputFormat);
                     d = emptystr(size(input1, "*"), size(size_d, 2));
@@ -688,7 +686,7 @@ function out = datetime(varargin)
                     mount_val = d(:, order == 2);
                     h = d(:, posAMPM);
                     d = strtod(d);
-                
+
                     if hasAMPM then
                         d2 = emptystr(size(input1, "*"), 4);
                         for i = 1:size(input1, "*")
@@ -741,23 +739,26 @@ function out = datetime(varargin)
                         error(msprintf(_("%s: Wrong or missing ""InputFormat"" to be applied.\n"), fname));
                     end
 
-                    select count
-                    case 2
-                        dt = datenum(0, 1, 1, d(:, order == 4), d(:, order == 5), 0);
-                        noDate = %t;
-                    case 3
-                        if or(order == 1) then
-                            dt = datenum(d(:, order == 1), d(:, order == 2), d(:, order == 3));
-                        else
-                            dt = datenum(0, 1, 1, d(:, order == 4), d(:, order == 5), d(:, order == 6));
-                            noDate = %t;
-                        end
-                    case 5
-                        dt = datenum(d(:, order == 1), d(:, order == 2), d(:, order == 3), d(:, order == 4), d(:, order == 5), 0);
-                    case 6
-                        dt = datenum(d(:, order == 1), d(:, order == 2), d(:, order == 3), d(:, order == 4), d(:, order == 5), d(:, order == 6));
+                    g = getdate();
+                    g = g([1 2 6]);
+                    v = zeros(size(input1, "*"), 6);
+
+                    if and(order <> 2) && or(order < 2) then
+                        g(2) = 1;
+                    end
+                    if and(order <> 3) && or(order < 3) then
+                        g(3) = 1;
                     end
 
+                    v(:, 1:3) = g .*. ones(size(input1, "*"), 1);
+
+                    for k = 1:6
+                        if or(order == k) then
+                            v(:, k) = d(:, order == k);
+                        end
+                    end
+
+                    dt = datenum(v);
                     dt = matrix(dt, size(input1, 1), size(input1, 2));
                 end
             end
@@ -778,14 +779,8 @@ function out = datetime(varargin)
     end
 
     [d,t] = %datetime_splitter(dt);
-
-    if noDate then
-        d = zeros(d);
-    end
-
     d(input1 == "") = -1;
 
     out = mlist(["datetime", "date", "time", "format"], d, t, outputFormat);
 
-    
 endfunction
