@@ -95,13 +95,13 @@ types::Function::ReturnValue sci_http_upload(types::typed_list &in, types::optio
             types::InternalType* pITRemote = pSST->get(L"remote");
             if (pITRemote->isString() == false || pITRemote->getAs<types::String>()->isScalar() == false)
             {
-                Scierror(999, _("%s: Wrong size for input argument #%d, element %d, field %s: Scalar string expected.\n"), fname, 2, i + 1, "remote");
+                Scierror(999, _("%s: Wrong size for input argument #%d, element %d, field %s: Scalar string expected.\n"), fname, 2, i+1, "remote");
                 return types::Function::Error;
             }
 
-            wchar_t* pwcFile = getFullFilenameW(pITLocal->getAs<types::String>()->get(i));
+            wchar_t* pwcFile = getFullFilenameW(pITLocal->getAs<types::String>()->get(0));
             char* pcLocal = wide_string_to_UTF8(pwcFile);
-            char* pcRemote = wide_string_to_UTF8(pITRemote->getAs<types::String>()->get(i));
+            char* pcRemote = wide_string_to_UTF8(pITRemote->getAs<types::String>()->get(0));
             files.push_back({pcLocal, pcRemote});
             FREE(pwcFile);
             FREE(pcLocal);
@@ -122,9 +122,9 @@ types::Function::ReturnValue sci_http_upload(types::typed_list &in, types::optio
     }
 
     if (in[2]->getAs<types::String>()->isScalar() == false && 
-        in[1]->getAs<types::GenericType>()->getSize() == in[2]->getAs<types::GenericType>()->getSize())
+        in[1]->getAs<types::GenericType>()->getSize() != in[2]->getAs<types::GenericType>()->getSize())
     {
-        Scierror(999, _("%s: Wrong size for input argument #%d: A Scalar or same size as #2 expected.\n"), fname, 3);
+        Scierror(999, _("%s: Wrong size for input argument #%d: A Scalar or same size as #%d expected.\n"), fname, 3, 2);
         return types::Function::Error;
     }
 
