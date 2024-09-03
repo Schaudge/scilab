@@ -17,5 +17,5 @@
 // kroneck() returned wrong error message
 
 assert_checkfalse(execstr("kroneck()"   ,"errcatch") == 0);
-refMsg = msprintf(_("%s: Wrong number of input arguments: %d or %d expected.\n"), "kroneck", 1, 2);
+refMsg = msprintf(_("%s: Wrong number of input arguments: %d to %d expected.\n"), "kroneck", 1, 2);
 assert_checkerror("kroneck()", refMsg);

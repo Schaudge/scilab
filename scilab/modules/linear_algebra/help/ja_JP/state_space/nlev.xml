@@ -71,7 +71,7 @@
 
                     <para>
 
-                        オプションのパラメータ (<literal>bdiag</literal>参照)
+                        オプションのパラメータ (<link linkend="bdiag">bdiag</link>参照)
 
                     </para>
 
@@ -121,7 +121,7 @@
 A=rand(3,3);x=poly(0,'x');
 [NUM,den]=nlev(A,'x')
 clean(den-poly(A,'x'))
-clean(NUM/den-inv(x*eye()-A))
+clean(NUM/den-inv(x*eye(A)-A))
  ]]></programlisting>
 
     </refsection>
@@ -161,4 +161,3 @@ clean(NUM/den-inv(x*eye()-A))
     </refsection>
 
 </refentry>
-

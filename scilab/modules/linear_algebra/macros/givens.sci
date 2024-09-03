@@ -21,11 +21,16 @@ function [u,c]=givens(x,y)
     // givens(x,y)=givens([x;y])
     //
     //!
-    [lhs,rhs]=argn(0);
-    if rhs==2 then x=[x;y];end
+    arguments
+        x ([1 2],1) {mustBeA(x, "double")}
+        y {mustBeA(y, "double"), mustBeScalarOrEmpty} = []
+    end
+
+    if nargin==2 then x=[x;y];end
     if or(size(x)<>[2 1]) then
         error(msprintf(gettext("%s: Wrong size for input argument #%d: A column vector expected.\n"),"givens",1));
     end
+
     if x(2)<>0 then
         r = norm(x);
         u = [x'; -x(2) x(1)]/r;

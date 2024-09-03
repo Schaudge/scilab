@@ -104,6 +104,7 @@ a = rand(5,5);
 ]]></screen>
         <programlisting role="example"><![CDATA[
 // No caso de complexos: blocos 1x1 complexos
+a = rand(5,5);
 [ab, x, bs] = bdiag(a+%i*0); ab
      ]]></programlisting>
     </refsection>

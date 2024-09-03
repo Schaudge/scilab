@@ -19,10 +19,11 @@ function [n,d] = coff(m,var)
     // See also : coffg
     //!
     //
-    if type(m)<>1 then
-        msg = _("%s: Argument #%d: Decimal or complex number(s) expected.\n");
-        error(msprintf(msg, "coff", 1));
+    arguments
+        m {mustBeA(m, "double")}
+        var (1,1) {mustBeA(var, "string")} = "s"
     end
+    
     if m==[] then
         n = [];
         d = 1;

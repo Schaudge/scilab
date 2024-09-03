@@ -11,33 +11,23 @@
 // along with this program.
 
 function x=diff(x,N,DIM)
-    rhs=argn(2)
-    if rhs<1 then
-        error(msprintf(gettext("%s: Wrong number of input arguments: %d to %d expected.\n"),"diff",1,3));
+    arguments
+        x {mustBeA(x, ["double", "polynomial", "int", "sparse"])}
+        N (1,1) {mustBeA(N, "double"), mustBePositive} = 1
+        DIM (1,1) {mustBeA(DIM, ["double", "string"])} = "*"
     end
+    
     dims=size(x),nd=prod(size(dims))
-    if rhs<3 then DIM="*",end
-    if rhs<2 then N=1,end
     if DIM=="r" then DIM=1,end
     if DIM=="c" then DIM=2,end
     if DIM=="*" then DIM=-1,end
-    if size(DIM,"*")<>1 then
-        error(msprintf(gettext("%s: Wrong size for input argument #%d: A scalar expected.\n"),"diff",1));
-    end
     DIM=round(DIM)
     if DIM<>-1&DIM<1 then
         error(msprintf(gettext("%s: Wrong values for input argument #%d: Non-negative integers expected.\n"),"diff",3));
     end
     if DIM>nd then x=[],return,end
 
-    if type(N)<>1|size(N,"*")<>1 then
-        error(msprintf(gettext("%s: Wrong size for input argument #%d: A scalar expected.\n"),"diff",2));
-    end
     N=round(N)
-    if N<0 then
-        error(msprintf(gettext("%s: Wrong values for input argument #%d: Non-negative integers expected.\n"),"diff",3));
-    end
-
 
     if N==1 then
         if (DIM==-1) then

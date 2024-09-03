@@ -100,6 +100,7 @@ a = rand(5,5);
 ]]></screen>
         <programlisting role="example"><![CDATA[
 // случай комплексных чисел: комплексные блоки 1x1
+a = rand(5,5);
 [ab, x, bs] = bdiag(a+%i*0); ab
  ]]></programlisting>
     </refsection>

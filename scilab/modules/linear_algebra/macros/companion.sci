@@ -19,9 +19,10 @@ function A = companion(p)
     // diagonal and block number i has characteristic polynomial
     // equal to p(i).
 
-    if type(p) ~= 2
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Polynomial expected."),"companion",1));
+    arguments
+        p {mustBeA(p, "polynomial")}
     end
+
     // Tranform the row or column vector of poly into a column vector of polynomials
     p=p(:);
     // Transpose the vector from column in to row vector,

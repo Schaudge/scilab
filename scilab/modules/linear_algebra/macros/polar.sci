@@ -18,6 +18,10 @@ function [ro,teta]=polar(a);
     // Teta hermitian >=0
     //F.D.
     //!
+    arguments
+        a {mustBeA(a, "double")}
+    end
+
     [U,s,V]=svd(a);
     ro1=U*sqrt(s);
     ro=ro1*ro1';

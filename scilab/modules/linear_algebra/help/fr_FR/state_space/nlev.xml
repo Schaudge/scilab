@@ -43,7 +43,7 @@
                 <term>rmax  </term>
                 <listitem>
                     <para>
-                        paramètre optionnel (voir <literal>bdiag</literal>)
+                        paramètre optionnel (voir <link linkend="bdiag">bdiag</link>)
                     </para>
                 </listitem>
             </varlistentry>
@@ -68,7 +68,7 @@
 A=rand(3,3);x=poly(0,'x');
 [NUM,den]=nlev(A,'x')
 clean(den-poly(A,'x'))
-clean(NUM/den-inv(x*eye()-A))
+clean(NUM/den-inv(x*eye(A)-A))
  ]]></programlisting>
     </refsection>
     <refsection role="see also">

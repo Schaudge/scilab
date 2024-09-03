@@ -13,32 +13,32 @@
 
 function [u, hm] = householder(v,w)
 
-    fname = "householder"
-    [lhs,rhs] = argn(0)
-
     // Example = demo
     // --------------
-    if rhs==0 then
+    select nargin
+    case 0
         disp("householder() example: Reflect an object using the Householder matrix")
         [funs, path] = libraryinfo(whereis("householder"));
         editor(path+"householder.sce")
         exec(path+"householder.sce", -1)
         return
+    case 1
+        [u, hm] = %householder(v);
+    case 2
+        [u, hm] = %householder(v, w)
+    else
+        error(msprintf(gettext("%s: Wrong number of input argument.\n"),"householder"));
+    end
+endfunction
+
+function [u, hm] = %householder(v, w)
+
+    arguments
+        v {mustBeA(v, "double")}
+        w {mustBeA(w, "double"), mustBeEqualDims(v, w)} = eye(v)
     end
 
-    // CHECKING INPUT PARAMETERS
-    // -------------------------
-    if rhs<2 then
-        w = eye(v)
-    end
-    if typeof(v(:))~="constant"
-        msg = _("%s: Wrong type for argument %d: Decimal or complex numbers expected.\n")
-        error(msprintf(msg, fname, 1))
-    end
-    if typeof(w(:))~="constant"
-        msg = _("%s: Wrong type for argument %d: Decimal or complex numbers expected.\n")
-        error(msprintf(msg, fname, 2))
-    end
+    fname = "householder";
     if length(find(size(v)>1))>1 then
         msg = _("%s: Wrong size for input argument #%d: Column vector expected.\n")
         error(msprintf(msg, fname, 1))
@@ -47,10 +47,7 @@ function [u, hm] = householder(v,w)
         msg = _("%s: Wrong size for input argument #%d: Column vector expected.\n")
         error(msprintf(msg, fname, 2))
     end
-    if length(v)~=length(w) then
-        msg = _("%s: Incompatible input arguments #%d and #%d: Same sizes expected.\n")
-        error(msprintf(msg, fname, 1, 2))
-    end
+
     v = v(:)
     w = w(:)
 
@@ -103,7 +100,7 @@ function [u, hm] = householder(v,w)
     try
         u = u / norm(u)
     end
-    if lhs>1 then
+    if nargout > 1 then
         hm = eye() - 2*u*u'
     end
 endfunction

@@ -18,13 +18,19 @@ function [x,dim,dima]=spanplus(a,b,tol)
     // relative to a. tol is an optional argument.
     // The dim first columns of x make a basis for A+B.
     //!
+
+    arguments
+        a {mustBeA(a, "double")}
+        b {mustBeA(b, "double")}
+        tol (1,1) {mustBeA(tol, "double")} = %eps*size(a, "*")*size(b, "*")
+    end
+
     [na,ma]=size(a);[nb,mb]=size(b);
     if na*ma==0 then
         dima=0;[x,dim]=rowcomp(b);x=x';return;
     end
     if nb*mb==0 then [x,dima]=rowcomp(a);dim=dima;x=x';return;end
-    [lhs,rhs]=argn(0);
-    if rhs==2 then tol=%eps*na*nb*ma*mb;end
+
     if na<>nb then
         error(msprintf(gettext("%s: Incompatible input arguments #%d and #%d: Same sizes expected.\n"),"spanplus",1,2));
     end

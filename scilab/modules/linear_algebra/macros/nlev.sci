@@ -20,16 +20,15 @@ function[m,den]=nlev(a,z,rmax)
     //rmax  parametre optionnel utilise pour bloc diagonaliser a (voir la
     //      fonction bdiag)
     //
-
-    rhs=argn(2);
-    if rhs < 2 then
-        msg = gettext("%s: Wrong number of input arguments: %d or %d expected.\n")
-        error(msprintf(msg, "nlev", 2, 3));
+    arguments
+        a {mustBeA(a, "double")}
+        z (1,1) {mustBeA(z, "string")}
+        rmax (1,1) {mustBeA(rmax, "double")}= 0
     end
 
     z=poly(0,z);
 
-    if rhs==3 then
+    if nargin==3 then
         [a,x,bs]=bdiag(a,rmax),
     else
         [a,x,bs]=bdiag(a),

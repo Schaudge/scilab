@@ -21,6 +21,12 @@ function [Q,M]=psmall(A,thres,flag)
     // M1*A*Q1 =evals of A with real part >= thres (case flag='d',...).
     // See also pbig
     //!
+    arguments
+        A {mustBeA(A, "double")}
+        thres (1,1) {mustBeA(thres, "double")}
+        flag (1,1) {mustBeA(flag, "string"), mustBeMember(flag, ["d", "c"])}
+    end
+    
     [n,n]=size(A);
     thres=real(thres);
     if flag=="c" then
@@ -30,8 +36,6 @@ function [Q,M]=psmall(A,thres,flag)
     elseif flag=="d" then
         deff("[flag]=%smallei(x)","flag=abs(x) < thres")
         deff("[flag]=%bigeig(x)","flag=abs(x) >= thres")
-    else
-        error(msprintf(gettext("%s: Wrong value for input argument #%d: Must be in the set {%s}.\n"),"psmall",3,"''c'',''d''"));
     end
     //
     [X,dsmall] = schur(A,%smallei);
