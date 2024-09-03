@@ -38,7 +38,7 @@ function [y,x]=csim(u,dt,sl,x0,tol)
     //      dt(1)   dt(2)   dt(n)
     //
     //See also:
-    // dsimul flts ltitr rtitr ode impl
+    // dsimul flts ltitr rtitr ode dae
     //!
 
     [lhs,rhs]=argn(0)

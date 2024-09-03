@@ -28,7 +28,8 @@
         <title>Description</title>
         <para>
             Sets a variable <literal>%DAEOPTIONS</literal> that is used in function <literal>dae</literal>
-            to set solver options.
+            to set solver options, only for <emphasis role="bold">dassl</emphasis>, <emphasis role="bold">dasrt ("root")</emphasis> and 
+            <emphasis role="bold">daskr ("root2")</emphasis> solvers.
         </para>
         <para>This daeoptions function interactively displays a window which
             sets various options of the <link linkend="dae">dae</link> solver.

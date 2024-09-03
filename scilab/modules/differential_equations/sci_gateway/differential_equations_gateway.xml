@@ -23,7 +23,7 @@
 -->
 <module name="differential_equations">
     <gateway name="sci_ode"     function="ode"      type="1" />
-    <gateway name="sci_impl"    function="impl"     type="1" />
+    <gateway name="sci_impl"    function="%_impl"     type="1" />
     <gateway name="sci_dassl"   function="%_dassl"    type="1" />
     <gateway name="sci_dasrt"   function="%_dasrt"    type="1" />
     <gateway name="sci_daskr"   function="%_daskr"    type="1" />

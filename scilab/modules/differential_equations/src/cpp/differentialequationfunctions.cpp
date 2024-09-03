@@ -165,7 +165,7 @@ DifferentialEquationFunctions::DifferentialEquationFunctions(const std::wstring&
         m_staticFunctionMap[L"cndf"]    = (void*) C2F(cndf);
         m_staticFunctionMap[L"cngu"]    = (void*) C2F(cngu);
     }
-    else if (callerName == L"impl")
+    else if (callerName == L"%_impl")
     {
         m_staticFunctionMap[L"resid"]   = (void*) C2F(resid);  // res
         m_staticFunctionMap[L"aplusp"]  = (void*) C2F(aplusp); // adda

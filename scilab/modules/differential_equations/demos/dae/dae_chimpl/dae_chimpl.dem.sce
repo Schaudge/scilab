@@ -5,7 +5,7 @@
 
 // Equation definition
 
-function demo_ode_chimpl()
+function demo_dae_chimpl()
 
     function r=chemres(t,y,yd)
         r(1)=-0.04*y(1)+1d4*y(2)*y(3)-yd(1);
@@ -28,16 +28,16 @@ function demo_ode_chimpl()
     t    = [1.d-5:0.02:.4 0.41:.1:4 40 400 4000 40000 4d5 4d6 4d7 4d8 4d9 4d10];
     atol = [1.d-6;1.d-10;1.d-6];
     rtol = 1d-4;
-    y    = impl(y0,yd0,0,t,atol,rtol,chemres,chemad,chemjac);
+    y    = dae("stiff", [y0,yd0],0,t,rtol,atol,chemres,chemjac,chemad);
 
     // visualization
 
     my_handle = scf(100001);
     clf(my_handle,"reset");
-    demo_viewCode("ode_chimpl.dem.sce");
+    demo_viewCode("dae_chimpl.dem.sce");
 
     drawlater()
-    plot2d(t',(diag([1 10000 1])*y)',style=(1:3))
+    plot2d(t',(diag([1 10000 1])*y(1:3, :))',style=(1:3))
     ax=gca();
     ax.log_flags = "lnn";
     ax.box="on";
@@ -48,5 +48,5 @@ function demo_ode_chimpl()
 
 endfunction
 
-demo_ode_chimpl();
-clear demo_ode_chimpl;
+demo_dae_chimpl();
+clear demo_dae_chimpl;

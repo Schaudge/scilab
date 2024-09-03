@@ -23,7 +23,7 @@
 int DifferentialEquationsModule::Load()
 {
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"ode", &sci_ode, NULL, MODULE_NAME));
-    symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"impl", &sci_impl, NULL, MODULE_NAME));
+    symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"%_impl", &sci_impl, NULL, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"%_dassl", &sci_dassl, NULL, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"%_dasrt", &sci_dasrt, NULL, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"%_daskr", &sci_daskr, NULL, MODULE_NAME));

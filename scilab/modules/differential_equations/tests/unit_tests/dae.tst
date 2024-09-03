@@ -479,3 +479,50 @@ assert_checkalmostequal(nn(1),162.57763,0.004);
 
 // cleanup memory
 ludel();
+
+// IMPLICIT DIFFERENTIAL ALGEBRAIC EQUATION
+// With adams and stiff solvers
+y0 = [1; 0; 0];
+y0d = [-0.04; 0.04; 0];
+t0 = 0;
+t = 0.4;
+yy = dae("stiff", [y0, y0d], t0, t, "resid", "aplusp");
+assert_checkequal(size(yy), [6, 1]);
+assert_checkfalse(norm(yy(1:3) - [0.9851721;0.0000339;0.0147941]) < %eps);
+
+Leps=1.e-6;
+// scilab macros
+function r=resid(t,y,s)
+    r(1)=-.04d0*y(1)+1.d4*y(2)*y(3)-s(1);
+    r(2)=.04d0*y(1)-1.d4*y(2)*y(3)-3.d7*y(2)*y(2)-s(2);
+    r(3)=y(1)+y(2)+y(3)-1.d0;
+endfunction
+
+function p=aplusp(t,y,p)
+    p(1,1)=p(1,1)+1.d0;
+    p(2,2)=p(2,2)+1.d0;
+endfunction
+
+function p=dgbydy(t,y,s)
+    p(1,1)=-.04d0;
+    p(1,2)=1.d4*y(3);
+    p(1,3)=1.d4*y(2);
+    p(2,1)=.04d0;
+    p(2,2)=-1.d4*y(3)-6.d7*y(2);
+    p(2,3)=-1.d4*y(2);
+    p(3,1)=1.d0;
+    p(3,2)=1.d0;
+    p(3,3)=1.d0;
+endfunction
+
+yt = dae("stiff", [y0, y0d], t0, t, resid, dgbydy, aplusp);
+r1 = yt - dae("stiff", [y0, y0d], t0, t, resid, aplusp);
+assert_checktrue(abs(r1(1:3)) < 1.e-10);
+
+r2 = yt - dae("stiff", [y0, y0d], t0, t, "resid", "aplusp");
+assert_checktrue(abs(r2(1:3)) < 1.e-10);
+
+//           Hot Restart
+[y1, hotw] = dae("stiff", [y0, y0d], 0, 0.2, 'resid', 'aplusp');
+y1 = dae("stiff", [y0, y0d], 0.2, 0.4, 'resid', 'aplusp', hotw);
+assert_checktrue(abs(yy-y1) < 1.e-7);

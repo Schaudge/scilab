@@ -451,9 +451,6 @@ ode("stiff",[0;1],0,1,f,Jacobian)
                 <link linkend="dae">dae</link>
             </member>
             <member>
-                <link linkend="impl">impl</link>
-            </member>
-            <member>
                 <link linkend="odedc">odedc</link>
             </member>
             <member>

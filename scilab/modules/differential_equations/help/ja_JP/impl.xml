@@ -18,6 +18,7 @@
     <refnamediv>
         <refname>impl</refname>
         <refpurpose>微分代数方程式</refpurpose>
+        <refpurpose><emphasis role="bold">This function is obsolete. Please use <link linkend="dae">dae</link> instead.</emphasis></refpurpose>
     </refnamediv>
     <refsynopsisdiv>
         <title>呼出し手順</title>
@@ -185,5 +186,16 @@ y = impl([1;0;0], [-0.04;0.04;0], 0, 0.4, 'resid', 'aplusp');
                 <link linkend="external">external</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection>
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revremark>
+                    Tagged obsolete and will be removed in Scilab 2026.0.0.
+                </revremark>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

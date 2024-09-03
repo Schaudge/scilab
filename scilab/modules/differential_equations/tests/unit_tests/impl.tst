@@ -7,7 +7,7 @@
 
 // <-- CLI SHELL MODE -->
 
-y=impl([1;0;0],[-0.04;0.04;0],0,0.4,'resid','aplusp');
+y=%_impl([1;0;0],[-0.04;0.04;0],0,0.4,'resid','aplusp');
 if size(y) <> [3 1] then pause,end
 if norm( y - [0.9851721;0.0000339;0.0147941]) < %eps then pause,end
 
@@ -39,11 +39,11 @@ endfunction
 
 //         calling scilab
 //  
-yt=impl([1;0;0],[-.04;.04;0],0,0.4,resid,aplusp,dgbydy);
+yt=%_impl([1;0;0],[-.04;.04;0],0,0.4,resid,aplusp,dgbydy);
 //  
-r1=yt-impl([1;0;0],[-0.04;0.04;0],0,0.4,resid,aplusp);
+r1=yt-%_impl([1;0;0],[-0.04;0.04;0],0,0.4,resid,aplusp);
 if abs(r1) > 1.e-10 then pause,end
 //   calling fortran
-r2=yt-impl([1;0;0],[-0.04;0.04;0],0,0.4,'resid','aplusp');
+r2=yt-%_impl([1;0;0],[-0.04;0.04;0],0,0.4,'resid','aplusp');
 if abs(r2) > 1.e-10 then pause,end
 
