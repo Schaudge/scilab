@@ -53,10 +53,15 @@ function [delim, decim] = detectDelimiter(str, delimiters)
         end
     else
         nb = sum(bool2s(tab>0), "r");
+        [m, k] = max(count);
         if modulo(max(nb), r) == 0 then
-            delim = delimiters(nb == max(nb))(1);
+            i = find(nb == max(nb));
+            d = diff(tab(:, i), 1, "r");
+            delim = delimiters(i(sum(d, "r") == 0))(1);
+            if delim == [] then
+                delim = delimiters(k);
+            end
         else
-            [m, k] = max(count);
             delim = delimiters(k)
         end
     end
@@ -64,10 +69,10 @@ function [delim, decim] = detectDelimiter(str, delimiters)
     // find decimal separator "," or "."
     if delim <> "," then
         index = find(delimiters == ",");
-        decimal = [",", "."];
+        decimal = [".", ","];
         if index <> [] then
             // search only "." separator
-            count = [count(index) 0];
+            count = [0, count(index)];
             k = 2;          
         else
             count = zeros(1, 2);

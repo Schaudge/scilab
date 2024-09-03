@@ -19,7 +19,7 @@
             uiimport(filename)
         </synopsis>
     </refsynopsisdiv>
-    <refsection>
+    <refsection role="arguments">
         <title>Arguments</title>
         <variablelist>
             <varlistentry>
@@ -32,7 +32,7 @@
             </varlistentry>
         </variablelist>
     </refsection>
-    <refsection>
+    <refsection role="description">
         <title>Description</title>
         <para>
             <literal>uiimport</literal> opens a Scilab application which asks you to select the CSV or TXT file to load data. 
@@ -112,6 +112,18 @@
                         </inlinemediaobject>
                     </para>
                     <para/>
+                    <para>
+                        The delimiter popupmenu contains the value "Custom". It allows the user to specify another delimiter.
+                    </para>
+                    <para/>
+                    <para>
+                        <inlinemediaobject>
+                            <imageobject>
+                                <imagedata fileref="../images/uiimport_info2.png"/>
+                            </imageobject>
+                        </inlinemediaobject>
+                    </para>
+                    <para/>
                 </listitem>
                 <listitem>
                     <para>
@@ -177,7 +189,7 @@
             </itemizedlist>
         </para>
     </refsection>
-    <refsection>
+    <refsection role="example">
         <title>Examples</title>
         <programlisting role="example"><![CDATA[
 uiimport(fullfile(SCI, "modules", "spreadsheet", "tests", "unit_tests","meteo_data_bordeaux.csv"));

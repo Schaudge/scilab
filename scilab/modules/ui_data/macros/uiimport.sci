@@ -66,6 +66,9 @@ function uiimport(action)
         case "resetoutput"
             uiimport_resetoutputformat();
             return
+        case "customdelimiter"
+            uiimport_custom_delimiter();
+            return
         else
             if ~isfile(action) then
                 error(msprintf(_("%s: Wrong value for input argument #%d: A filename expected.\n"), fname, 1));
@@ -108,7 +111,7 @@ endfunction
 function uiimport_gui(data)
 
     w = 1024; //800;
-    h = 640; //600;
+    h = 675; //640; //600;
 
     fig = figure(...
         "figure_name", _("Import data"), ...
@@ -158,7 +161,7 @@ function uiimport_gui(data)
         "layout", "gridbag", ...
         "constraints", createConstraints("border", "center"));
 
-    y = 605;
+    y = h - 35; //605;
     x = 5;
     ad = 35;
     uicontrol(l, ...
@@ -273,28 +276,55 @@ function uiimport_gui(data)
 
     uicontrol(l, ...
         "style", "popupmenu", ...
-        "string", [_("Comma"), _("Space"), _("Tab"), _("Semicolon"), _("Pipe"), _("Colon")], ...
-        "userdata", [",", " ", ascii(9), ";", "|", ":"], ...
+        "string", [_("Comma"), _("Space"), _("Tab"), _("Semicolon"), _("Pipe"), _("Colon"), _("Custom")], ...
+        "userdata", [",", " ", ascii(9), ";", "|", ":", ""], ...
         "value", 1, ...
         "tag", "uiimport_delim", ...
         "callback", "uiimport(""preview"")", ...
         "position", [110 y 105 22]);
 
     y = y - 25;
-    uicontrol(l, ...
+    fr_custom_delim = uicontrol(l, ...
+        "style", "frame", ...
+        "backgroundcolor", [1 1 1], ...
+        "tag", "uiimport_fr_custom_delim", ...
+        "visible", "off", ...
+        "position", [0 y 215 25]);
+
+    uicontrol(fr_custom_delim, ...
+        "style", "text", ...
+        "string", _("Symbol"), ...
+        "backgroundcolor", [1 1 1], ...
+        "position", [5 0 95 25]);
+
+    uicontrol(fr_custom_delim, ...
+        "style", "edit", ...
+        "string", "", ...
+        "tag", "uiimport_custom_delim", ...
+        "callback", "uiimport(""customdelimiter"")", ...
+        "position", [110 0 105 22]);
+
+    //y = y - 25;
+    fr_decim = uicontrol(l, ...
+        "style", "frame", ...
+        "backgroundcolor", [1 1 1], ...
+        "tag", "uiimport_fr_decim", ...
+        "position", [0 y 215 25]);
+
+    uicontrol(fr_decim, ...
         "style", "text", ...
         "string", _("Decimal"), ...
         "backgroundcolor", [1 1 1], ...
-        "position", [5 y 95 25]);
+        "position", [5 0 95 25]);
 
-    uicontrol(l, ...
+    uicontrol(fr_decim, ...
         "style", "popupmenu", ...
         "string", [_("Point"), _("Comma")], ...
         "userdata", [".", ","], ...
         "value", 1, ...
         "tag", "uiimport_decim", ...
         "callback", "uiimport(""preview"")", ...
-        "position", [110 y 105 22]);
+        "position", [110 0 105 22]);
 
     y = y - 10;
     ll = uicontrol(l, ...
@@ -467,6 +497,7 @@ function uiimport_function()
     path = data.path;
 
     x = "import_" + basename(path);
+    x = strsubst(x, "/-|\.|\s/", "_", "r");
     filename = fullfile(fileparts(path), x + ".sce");
 
     if isfile(filename) then
@@ -978,6 +1009,80 @@ endfunction
 
 // -----------------------------------------------------------------------------
 
+function uiimport_delimiter(delim)
+    if delim == 7 && get("uiimport_fr_custom_delim", "visible") == "off" then
+        // custom choice
+        set("uiimport_fr_custom_delim", "visible", "on");
+        pos = get("uiimport_fr_decim", "position");
+        pos(2) = pos(2) - 25;
+        set("uiimport_fr_decim", "position", pos);
+        pos = get("uiimport_frimport", "position");
+        pos(4) = pos(4) - 25;
+        set("uiimport_frimport", "position", pos)
+    elseif delim <> 7 && get("uiimport_fr_custom_delim", "visible") == "on" then
+        set("uiimport_fr_custom_delim", "visible", "off");
+        pos = get("uiimport_fr_decim", "position");
+        pos(2) = pos(2) + 25;
+        set("uiimport_fr_decim", "position", pos);
+        pos = get("uiimport_frimport", "position");
+        pos(4) = pos(4) + 25;
+        set("uiimport_frimport", "position", pos)
+
+        set("uiimport_custom_delim", "string", "");
+        set("uiimport_delim", "userdata", [get("uiimport_delim", "userdata")(1:$-1), ""])
+    end
+
+    if get("uiimport_custom_delim", "string") <> "" then
+        d = get("uiimport_custom_delim", "string");
+        symbol = get("uiimport_delim", "userdata");
+        // check if the new delimiter already exists in symbol list
+        idx = find(symbol == d);
+        if idx <> [] then
+            if idx <> 7 then
+                set("uiimport_delim", "value", idx);
+                set("uiimport_fr_custom_delim", "visible", "off")
+
+                pos = get("uiimport_fr_decim", "position");
+                pos(2) = pos(2) + 25;
+                set("uiimport_fr_decim", "position", pos);
+                pos = get("uiimport_frimport", "position");
+                pos(4) = pos(4) + 25;
+                set("uiimport_frimport", "position", pos)
+
+                set("uiimport_custom_delim", "string", "");
+                set("uiimport_delim", "userdata", [get("uiimport_delim", "userdata")(1:$-1), ""])
+            else
+                return
+            end
+        else
+            if size(symbol, "*") == 6 then
+                // add new delimiter
+                set("uiimport_delim", "userdata", [symbol, d]);
+            else
+                // modify delimiter if last delimiter is not new delimiter
+                if symbol($) <> d then
+                    set("uiimport_delim", "userdata", [symbol(1:$-1), d]);
+                end
+            end
+        end
+    end
+endfunction
+
+// -----------------------------------------------------------------------------
+
+function uiimport_custom_delimiter()
+    data = get("uiimport", "userdata");
+    val = get("uiimport_delim", "value");
+    delim = get("uiimport_delim", "userdata")(val);
+    if delim <> data.opts.delimiter then
+        uiimport_delimiter(val);
+        uiimport_preview();
+    end
+endfunction
+
+
+// -----------------------------------------------------------------------------
+
 function uiimport_preview()
     //global %uiimport_cancel;
 
@@ -995,11 +1100,19 @@ function uiimport_preview()
         try
             opts = detectImportOptions(path);
             if opts.variableNames <> [] & size(opts.variableNames, "*") <> size(opts.variableTypes, "*") then
+                messagebox("Problem during the import. Choose another delimiter or decimal separator.", "Warning", "warning", "Ok", "modal");
+                data.opts = opts;
+                set("uiimport", "userdata", data),
+                fc = get("uiimport_import");
+                set("uiimport_frimport", "visible", "off");
+                delete(fc.children)
+                fp = get("uiimport_preview");
+                delete(fp.children)
                 return
             end
         catch
-            errclear();
             fc = get("uiimport_import");
+            set("uiimport_frimport", "visible", "off");
             delete(fc.children);
             fp = get("uiimport_preview");
             delete(fp.children)
@@ -1016,17 +1129,23 @@ function uiimport_preview()
         delim = opts.delimiter;
         decim = opts.decimal;
         val = find(get("uiimport_delim", "userdata") == delim)
+        if delim <> "" && val == [] then
+            val = 7;
+            set("uiimport_custom_delim", "string", delim);
+        end
+        set("uiimport_delim", "value", val);
+
         if val == 1 then
             set("uiimport_decim", "value", 1);
         else
             value = find(get("uiimport_decim", "userdata") == decim)
             set("uiimport_decim", "value", value)
         end
-        set("uiimport_delim", "value", val);
+        
         set("uiimport_nbrows", "string", string(nbrows));
     else
-        delim = get("uiimport_delim", "value")
-        delim = get("uiimport_delim", "userdata")(delim);
+        val = get("uiimport_delim", "value");
+        delim = get("uiimport_delim", "userdata")(val);
         decim = get("uiimport_decim", "value")
         decim = get("uiimport_decim", "userdata")(decim);
         try
@@ -1035,13 +1154,21 @@ function uiimport_preview()
                 return
             end
         catch
+            uiimport_delimiter(val);
+            set("uiimport_nbcols", "string", "Not defined");
+            set("uiimport_nbheader", "string", "Not defined");
+            set("uiimport_frimport", "visible", "off");
             fc = get("uiimport_import");
             delete(fc.children);
             fp = get("uiimport_preview");
+            fp.visible = "off";
             delete(fp.children)
+            fp.visible = "on";
             return;
         end
     end
+
+    uiimport_delimiter(val);
 
     if opts.variableNames == [] then
         opts.variableNames = "Var" + string(1:size(opts.variableTypes, "*"));
@@ -1079,9 +1206,9 @@ function uiimport_preview()
     l = opts.datalines;
 
     dots = %f;
-    if l($)-l(1)+1 > 29 then
+    if l($)-l(1)+1 > 31 then
         txt = mgetl(path);
-        txt = txt([l(1):l(1)+13 l($)-13:l($)])
+        txt = txt([l(1):l(1)+14 l($)-14:l($)])
         dots = %t;
     else
         txt = mgetl(path);
@@ -1091,14 +1218,23 @@ function uiimport_preview()
     try
         x = csvTextScan(txt, delim, decim, "string");
     catch
-        errclear();
-        //delete(fr);
         c.visible = "on";
         return;
     end
 
     if opts.emptyCol <> [] then
         x(:, opts.emptyCol) = [];
+    end
+
+    if size(x, "c") <> size(varnames, "c") then
+        messagebox("Problem during the import. Choose another delimiter or decimal separator.", "Warning", "warning", "Ok", "modal");
+        data.opts = opts;
+        set("uiimport", "userdata", data),
+        fc = get("uiimport_import");
+        set("uiimport_frimport", "visible", "off");
+        delete(fc.children),
+        c.visible = "on";
+        return
     end
 
     hasHeader = %f;

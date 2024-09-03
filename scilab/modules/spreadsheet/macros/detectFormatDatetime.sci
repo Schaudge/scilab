@@ -57,7 +57,9 @@ function [fmt, typ] = detectFormatDatetime(txt)
                 // d.M.yy, d.M.yyyy, dd.MM.yy
                 fmt = strcat([emptystr(1, length(d(1))) + "d", ".", emptystr(1, length(d(2))) + "M", ".", emptystr(1, length(d(3))) + "y"]);
             case 4
-                fmt = "yyyyMMdd";
+                if max(len) == len then
+                    fmt = "yyyyMMdd";
+                end
             case 5
                 // d-MMM-yy, d-MMM-yyyy, dd-MMM-yy, d MMM yy, ...
                 if d(2) == "-" then
