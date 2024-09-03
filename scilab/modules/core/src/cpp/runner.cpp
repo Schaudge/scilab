@@ -85,9 +85,10 @@ int StaticRunner::launch()
     try
     {
         int level = ConfigVariable::getRecursionLevel();
+        std::unique_ptr<ast::ConstVisitor> exec(ConfigVariable::getDefaultVisitor());
         try
         {
-            runMe->getProgram()->accept(*ConfigVariable::getDefaultVisitor());
+            runMe->getProgram()->accept(*exec);
         }
         catch (const ast::RecursionException& re)
         {
@@ -147,7 +148,8 @@ int StaticRunner::launch()
             ConfigVariable::DecreasePauseLevel();
             // Release the console to display the prompt after aborting a callback execution
             sendExecDoneSignal();
-            // set back the runner wich have been overwritten in StaticRunner::getRunner
+            delete m_CurrentRunner;
+            // set back the runner
             m_CurrentRunner = pRunSave;
 
             // dumping stack after execution
@@ -175,7 +177,9 @@ int StaticRunner::launch()
         // send information about execution done to debuggers
         manager->sendExecutionReleased();
 
-        // set back the runner wich have been overwritten in StaticRunner::getRunner
+        delete m_CurrentRunner;
+
+        // set back the runner
         m_CurrentRunner = pRunSave;
 
         // dumping stack after execution
@@ -225,7 +229,9 @@ int StaticRunner::launch()
     //clean debugger step flag if debugger is not interrupted ( end of debug )
     manager->resetStep();
 
-    // set back the runner wich have been overwritten in StaticRunner::getRunner
+    delete m_CurrentRunner;
+
+    // set back the runner
     m_CurrentRunner = pRunSave;
 
     // dumping stack after execution

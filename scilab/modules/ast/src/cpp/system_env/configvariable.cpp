@@ -1551,10 +1551,6 @@ void ConfigVariable::setDefaultVisitor(ast::ConstVisitor* _default)
 
 ast::ConstVisitor* ConfigVariable::getDefaultVisitor()
 {
-    if (m_defaultvisitor.get() == nullptr)
-    {
-        m_defaultvisitor.reset(new ast::ExecVisitor());
-    }
     return m_defaultvisitor->clone();
 }
 

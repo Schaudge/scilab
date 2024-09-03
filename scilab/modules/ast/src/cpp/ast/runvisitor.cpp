@@ -1323,7 +1323,6 @@ void RunVisitorT<T>::visitprivate(const FunctionDec & e)
         else
         {
             pMacro = new types::Macro(e.getSymbol().getName(), *pVarList, *pRetList, const_cast<SeqExp&>(static_cast<const SeqExp&>(e.getBody())), L"script");
-            pMacro->IncreaseRef();
             const_cast<ast::FunctionDec&>(e).setMacro(pMacro);
         }
 
