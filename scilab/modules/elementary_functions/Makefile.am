@@ -57,7 +57,8 @@ ELEMENTARIES_FUNCTIONS_CXX_SOURCES = \
     src/cpp/sum.cpp \
     src/cpp/max.cpp \
     src/cpp/min.cpp \
-    src/cpp/clean.cpp
+    src/cpp/clean.cpp \
+    src/cpp/vander.cpp
 
 SLATEC_SOURCES = \
     src/fortran/slatec/zwrsk.f \
@@ -338,7 +339,8 @@ GATEWAY_CXX_SOURCES =  \
     sci_gateway/cpp/sci_permute.cpp \
     sci_gateway/cpp/sci_bitstring.cpp \
     sci_gateway/cpp/sci_base2dec.cpp \
-    sci_gateway/cpp/sci_dec2base.cpp    
+    sci_gateway/cpp/sci_dec2base.cpp \
+    sci_gateway/cpp/sci_vander.cpp
 
 EISPACK_SOURCES = src/fortran/eispack/balbak.f
 

@@ -338,7 +338,8 @@ am__objects_6 = src/cpp/libscielementary_functions_algo_la-getmode.lo \
 	src/cpp/libscielementary_functions_algo_la-sum.lo \
 	src/cpp/libscielementary_functions_algo_la-max.lo \
 	src/cpp/libscielementary_functions_algo_la-min.lo \
-	src/cpp/libscielementary_functions_algo_la-clean.lo
+	src/cpp/libscielementary_functions_algo_la-clean.lo \
+	src/cpp/libscielementary_functions_algo_la-vander.lo
 am_libscielementary_functions_algo_la_OBJECTS = $(am__objects_1) \
 	$(am__objects_2) $(am__objects_3) $(am__objects_4) \
 	$(am__objects_5) $(am__objects_6)
@@ -411,7 +412,8 @@ am__objects_8 =  \
 	sci_gateway/cpp/libscielementary_functions_la-sci_permute.lo \
 	sci_gateway/cpp/libscielementary_functions_la-sci_bitstring.lo \
 	sci_gateway/cpp/libscielementary_functions_la-sci_base2dec.lo \
-	sci_gateway/cpp/libscielementary_functions_la-sci_dec2base.lo
+	sci_gateway/cpp/libscielementary_functions_la-sci_dec2base.lo \
+	sci_gateway/cpp/libscielementary_functions_la-sci_vander.lo
 am_libscielementary_functions_la_OBJECTS = $(am__objects_7) \
 	$(am__objects_8)
 libscielementary_functions_la_OBJECTS =  \
@@ -494,6 +496,7 @@ am__depfiles_remade = sci_gateway/c/$(DEPDIR)/libscielementary_functions_la-sci_
 	sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_tanh.Plo \
 	sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_tril.Plo \
 	sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_triu.Plo \
+	sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_vander.Plo \
 	sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_zeros.Plo \
 	src/c/$(DEPDIR)/libdummy_elementary_functions_la-unsfdcopy.Plo \
 	src/c/$(DEPDIR)/libscielementary_functions_algo_la-abs.Plo \
@@ -546,7 +549,8 @@ am__depfiles_remade = sci_gateway/c/$(DEPDIR)/libscielementary_functions_la-sci_
 	src/cpp/$(DEPDIR)/libscielementary_functions_algo_la-max.Plo \
 	src/cpp/$(DEPDIR)/libscielementary_functions_algo_la-min.Plo \
 	src/cpp/$(DEPDIR)/libscielementary_functions_algo_la-prod.Plo \
-	src/cpp/$(DEPDIR)/libscielementary_functions_algo_la-sum.Plo
+	src/cpp/$(DEPDIR)/libscielementary_functions_algo_la-sum.Plo \
+	src/cpp/$(DEPDIR)/libscielementary_functions_algo_la-vander.Plo
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -1012,7 +1016,8 @@ ELEMENTARIES_FUNCTIONS_CXX_SOURCES = \
     src/cpp/sum.cpp \
     src/cpp/max.cpp \
     src/cpp/min.cpp \
-    src/cpp/clean.cpp
+    src/cpp/clean.cpp \
+    src/cpp/vander.cpp
 
 SLATEC_SOURCES = \
     src/fortran/slatec/zwrsk.f \
@@ -1293,7 +1298,8 @@ GATEWAY_CXX_SOURCES = \
     sci_gateway/cpp/sci_permute.cpp \
     sci_gateway/cpp/sci_bitstring.cpp \
     sci_gateway/cpp/sci_base2dec.cpp \
-    sci_gateway/cpp/sci_dec2base.cpp    
+    sci_gateway/cpp/sci_dec2base.cpp \
+    sci_gateway/cpp/sci_vander.cpp
 
 EISPACK_SOURCES = src/fortran/eispack/balbak.f
 
@@ -2084,6 +2090,8 @@ src/cpp/libscielementary_functions_algo_la-min.lo:  \
 	src/cpp/$(am__dirstamp) src/cpp/$(DEPDIR)/$(am__dirstamp)
 src/cpp/libscielementary_functions_algo_la-clean.lo:  \
 	src/cpp/$(am__dirstamp) src/cpp/$(DEPDIR)/$(am__dirstamp)
+src/cpp/libscielementary_functions_algo_la-vander.lo:  \
+	src/cpp/$(am__dirstamp) src/cpp/$(DEPDIR)/$(am__dirstamp)
 
 libscielementary_functions-algo.la: $(libscielementary_functions_algo_la_OBJECTS) $(libscielementary_functions_algo_la_DEPENDENCIES) $(EXTRA_libscielementary_functions_algo_la_DEPENDENCIES) 
 	$(AM_V_CXXLD)$(CXXLINK) $(am_libscielementary_functions_algo_la_rpath) $(libscielementary_functions_algo_la_OBJECTS) $(libscielementary_functions_algo_la_LIBADD) $(LIBS)
@@ -2282,6 +2290,9 @@ sci_gateway/cpp/libscielementary_functions_la-sci_base2dec.lo:  \
 sci_gateway/cpp/libscielementary_functions_la-sci_dec2base.lo:  \
 	sci_gateway/cpp/$(am__dirstamp) \
 	sci_gateway/cpp/$(DEPDIR)/$(am__dirstamp)
+sci_gateway/cpp/libscielementary_functions_la-sci_vander.lo:  \
+	sci_gateway/cpp/$(am__dirstamp) \
+	sci_gateway/cpp/$(DEPDIR)/$(am__dirstamp)
 
 libscielementary_functions.la: $(libscielementary_functions_la_OBJECTS) $(libscielementary_functions_la_DEPENDENCIES) $(EXTRA_libscielementary_functions_la_DEPENDENCIES) 
 	$(AM_V_CXXLD)$(CXXLINK) $(am_libscielementary_functions_la_rpath) $(libscielementary_functions_la_OBJECTS) $(libscielementary_functions_la_LIBADD) $(LIBS)
@@ -2368,6 +2379,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_tanh.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_tril.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_triu.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_vander.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_zeros.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/$(DEPDIR)/libdummy_elementary_functions_la-unsfdcopy.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/$(DEPDIR)/libscielementary_functions_algo_la-abs.Plo@am__quote@ # am--include-marker
@@ -2421,6 +2433,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libscielementary_functions_algo_la-min.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libscielementary_functions_algo_la-prod.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libscielementary_functions_algo_la-sum.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libscielementary_functions_algo_la-vander.Plo@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -2861,6 +2874,13 @@ src/cpp/libscielementary_functions_algo_la-clean.lo: src/cpp/clean.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscielementary_functions_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/cpp/libscielementary_functions_algo_la-clean.lo `test -f 'src/cpp/clean.cpp' || echo '$(srcdir)/'`src/cpp/clean.cpp
 
+src/cpp/libscielementary_functions_algo_la-vander.lo: src/cpp/vander.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscielementary_functions_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/cpp/libscielementary_functions_algo_la-vander.lo -MD -MP -MF src/cpp/$(DEPDIR)/libscielementary_functions_algo_la-vander.Tpo -c -o src/cpp/libscielementary_functions_algo_la-vander.lo `test -f 'src/cpp/vander.cpp' || echo '$(srcdir)/'`src/cpp/vander.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/cpp/$(DEPDIR)/libscielementary_functions_algo_la-vander.Tpo src/cpp/$(DEPDIR)/libscielementary_functions_algo_la-vander.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/cpp/vander.cpp' object='src/cpp/libscielementary_functions_algo_la-vander.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscielementary_functions_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/cpp/libscielementary_functions_algo_la-vander.lo `test -f 'src/cpp/vander.cpp' || echo '$(srcdir)/'`src/cpp/vander.cpp
+
 sci_gateway/cpp/libscielementary_functions_la-sci_isequal.lo: sci_gateway/cpp/sci_isequal.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscielementary_functions_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sci_gateway/cpp/libscielementary_functions_la-sci_isequal.lo -MD -MP -MF sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_isequal.Tpo -c -o sci_gateway/cpp/libscielementary_functions_la-sci_isequal.lo `test -f 'sci_gateway/cpp/sci_isequal.cpp' || echo '$(srcdir)/'`sci_gateway/cpp/sci_isequal.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_isequal.Tpo sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_isequal.Plo
@@ -3267,6 +3287,13 @@ sci_gateway/cpp/libscielementary_functions_la-sci_dec2base.lo: sci_gateway/cpp/s
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscielementary_functions_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sci_gateway/cpp/libscielementary_functions_la-sci_dec2base.lo `test -f 'sci_gateway/cpp/sci_dec2base.cpp' || echo '$(srcdir)/'`sci_gateway/cpp/sci_dec2base.cpp
 
+sci_gateway/cpp/libscielementary_functions_la-sci_vander.lo: sci_gateway/cpp/sci_vander.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscielementary_functions_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sci_gateway/cpp/libscielementary_functions_la-sci_vander.lo -MD -MP -MF sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_vander.Tpo -c -o sci_gateway/cpp/libscielementary_functions_la-sci_vander.lo `test -f 'sci_gateway/cpp/sci_vander.cpp' || echo '$(srcdir)/'`sci_gateway/cpp/sci_vander.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_vander.Tpo sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_vander.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='sci_gateway/cpp/sci_vander.cpp' object='sci_gateway/cpp/libscielementary_functions_la-sci_vander.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscielementary_functions_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sci_gateway/cpp/libscielementary_functions_la-sci_vander.lo `test -f 'sci_gateway/cpp/sci_vander.cpp' || echo '$(srcdir)/'`sci_gateway/cpp/sci_vander.cpp
+
 .f.o:
 	$(AM_V_F77)$(F77COMPILE) -c -o $@ $<
 
@@ -3536,6 +3563,7 @@ distclean: distclean-am
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_tanh.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_tril.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_triu.Plo
+	-rm -f sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_vander.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_zeros.Plo
 	-rm -f src/c/$(DEPDIR)/libdummy_elementary_functions_la-unsfdcopy.Plo
 	-rm -f src/c/$(DEPDIR)/libscielementary_functions_algo_la-abs.Plo
@@ -3589,6 +3617,7 @@ distclean: distclean-am
 	-rm -f src/cpp/$(DEPDIR)/libscielementary_functions_algo_la-min.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscielementary_functions_algo_la-prod.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscielementary_functions_algo_la-sum.Plo
+	-rm -f src/cpp/$(DEPDIR)/libscielementary_functions_algo_la-vander.Plo
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-local distclean-tags
@@ -3696,6 +3725,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_tanh.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_tril.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_triu.Plo
+	-rm -f sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_vander.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_zeros.Plo
 	-rm -f src/c/$(DEPDIR)/libdummy_elementary_functions_la-unsfdcopy.Plo
 	-rm -f src/c/$(DEPDIR)/libscielementary_functions_algo_la-abs.Plo
@@ -3749,6 +3779,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/cpp/$(DEPDIR)/libscielementary_functions_algo_la-min.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscielementary_functions_algo_la-prod.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscielementary_functions_algo_la-sum.Plo
+	-rm -f src/cpp/$(DEPDIR)/libscielementary_functions_algo_la-vander.Plo
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
