@@ -394,6 +394,7 @@ _LaTeX_ode.xml_1.png=84ae2f6a526a30f59b67ce587fcd28c9
 _LaTeX_pack.xml_1.png=44e43279e4a6173003d2e27d996c92e5
 _LaTeX_percente.xml_1.png=3be181064c31bd09ccf0caddf10b3e85
 _LaTeX_percentk.xml_1.png=3f3bd79cf1cdbfb65e3b968410acb779
+_LaTeX_polyfit.xml_1.png=c6f4ad284e8bb7a74df52a0d70efd4d0
 _LaTeX_prod.xml_1.png=05a314d76d3342cb017a069e00be89bc
 _LaTeX_prod.xml_2.png=36e17bceced31cceba9ae0745b814988
 _LaTeX_prod.xml_3.png=cd9dd14f63c05c574d2b9d7af5f12b38
