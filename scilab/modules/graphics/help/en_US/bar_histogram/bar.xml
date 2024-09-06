@@ -104,6 +104,9 @@
             polyline which has the <literal>polyline_style</literal> type 6, versus x=1:length(y).
             If y is a matrix N*M, bar() draws M polylines (type 6), versus x=1:size(y,1).
             Each polyline represents a category, with a specific color.
+            <warning>
+                <literal>bar(a, b, ...)</literal> where a and b are scalars is interpreted as <literal>bar(x, y, ...)</literal> (case below) and not as <literal>bar(y, width, ...)</literal> (this case).
+            </warning>
         </para>
         <para>
             <literal>bar(x,y,...) :</literal> if y is a vector, then bar() draws a
@@ -111,6 +114,9 @@
             = y length. If y is a matrix NxM then bar function draws M polylines which
             have the type 6. Each polyline corresponds to a column of y versus vector
             x.
+            <warning>
+                <literal>bar(a, b, ...)</literal> where a and b are scalars is interpreted as <literal>bar(x, y, ...)</literal> (this case) and not as <literal>bar(y, width, ...)</literal> (case above).
+            </warning>
         </para>
         <para>
             <literal>bar(h,...) :</literal> specifies the targeted axes where the drawing is
@@ -230,6 +236,16 @@ bar(x,y,0.2,'green');
                       </listitem>
                       <listitem>
                         Colors can now be specified also by their "#RRGGBB" hexadecimal codes.
+                      </listitem>
+                    </itemizedlist>
+                </revdescription>
+            </revision>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revdescription>
+                    <itemizedlist>
+                      <listitem>
+                        <literal>bar(a, b, ...)</literal> where a and b are scalars is interpreted as <literal>bar(x, y, ...)</literal> and no more as <literal>bar(y, width, ...)</literal>.
                       </listitem>
                     </itemizedlist>
                 </revdescription>
