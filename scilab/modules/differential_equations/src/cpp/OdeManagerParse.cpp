@@ -13,6 +13,7 @@
 
 #include "OdeManager.hxx"
 #include "odeparameters.hxx"
+#include "complexHelpers.hxx"
 
 extern "C"
 {
@@ -157,11 +158,9 @@ types::Double *OdeManager::parseInitialCondition(types::typed_list &in, bool bIs
 
         pDblY = prevManager->m_pDblY0->clone(); // Just for the size and dimensions
         pDblY->setComplex(prevManager->m_odeIsComplex);
-        std::copy(pdblPrevYFinal, pdblPrevYFinal+iNbEq, pDblY->get());
-        if (pDblY->isComplex())
-        {
-            std::copy(pdblPrevYFinal+iNbEq, pdblPrevYFinal+2*iNbEq, pDblY->getImg());
-        }
+
+        copyComplexVectorToDouble(pdblPrevYFinal, pDblY->get(), pDblY->getImg(), prevManager->m_iNbEq, prevManager->m_odeIsComplex);
+
         m_odeIsComplex = prevManager->m_odeIsComplex;
     }
     return pDblY;
@@ -632,7 +631,7 @@ void OdeManager::parseOptions(types::optional_list &opt)
 
     if (m_odeIsExtension == false)
     {
-            // Determine if ode is complex (can be already detected if Y0 is complex)
+        // Determine if ode is complex (can be already detected if Y0 is complex)
         // in the case where RHS is a Scilab function
         functionKind what = isDAE() ? RES : RHS;
     
@@ -641,15 +640,15 @@ void OdeManager::parseOptions(types::optional_list &opt)
             types::typed_list in;
             callOpening(what, in, m_dblT0);
             computeFunction(in, what);
-            if (m_odeIsComplex) // complexify Y0 (a clone of user Y0)
-            {
-                m_pDblY0->setComplex(true);
-                if (isDAE())
-                {
-                    m_pDblYp0->setComplex(true);                        
-                }
-            }
         }    
+        if (m_odeIsComplex) // complexify Y0 and also Yp0 if solving a DAE (clones of user Y0 and Yp0)
+        {
+            m_pDblY0->setComplex(true);
+            if (isDAE())
+            {
+                m_pDblYp0->setComplex(true);                        
+            }
+        }
     }
 
     if (m_odeIsExtension && m_odeIsComplex && prevManager->m_odeIsComplex == false)
