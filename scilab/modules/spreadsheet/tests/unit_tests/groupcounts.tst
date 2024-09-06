@@ -223,7 +223,7 @@ expected = table(m, values, "VariableNames", ["monthname_dt", "GroupCount"]);
 assert_checkequal(G, expected);
 
 // groupbins contains datetime or duration
-rand("seed", 0)
+rand("seed", 0);
 time = datetime(2024, 4, floor(30*rand(10,1)+1));
 x = ["a"; "b"; "a"; "a"; "b"; "c"; "b"; "c"; "c"; "a"];
 y = floor(15 * rand(10, 1));
@@ -247,8 +247,8 @@ expected = table(str, str2, [4; 1; 2; 2; 1], "VariableNames", ["time", "x", "Gro
 assert_checkequal(G, expected);
 
 G = groupcounts(t, "time", caldays(10));
-str = ["[ 2024-04-01, 2024-04-11 )"; "[ 2024-04-11, 2024-04-21 ]"];
-expected = table(str, [4; 3], "VariableNames", ["time", "GroupCount"]);
+str = ["[ 2024-04-01, 2024-04-11 )"; "[ 2024-04-11, 2024-04-21 )"; "[ 2024-04-21, 2024-05-01 ]"];
+expected = table(str, [4; 2; 4], "VariableNames", ["time", "GroupCount"]);
 assert_checkequal(G, expected);
 
 G = groupcounts(t, "time", hours(72));
