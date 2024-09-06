@@ -116,17 +116,16 @@
         <title>例</title>
         <programlisting role="example"><![CDATA[
     //ニコルス線図
-    clf
+    clf()
     subplot(1,2,1)
     nicholschart();
-
     subplot(1,2,2)
     mod = [-35:5:-10 -6 -3 -1 -0.2 1 2 3 6];
     nicholschart(mod, -[1 20 40 80 160 180],["khaki" "paleturquoise"]);
     ]]></programlisting>
         <para>
             <scilab:image localized="true">
-                clf
+                clf()
                 subplot(1,2,1)
                 nicholschart()
                 subplot(1,2,2)
@@ -144,12 +143,16 @@
     tau = 0.2;
     xsi = 1.2;
     PID = syslin('c',(1/(2*xsi*tau*s))*(1+2*xsi*tau*s+tau^2*s^2));
-    clf
+    clf()
     black([Plant;Plant*PID ],0.01,100,["Plant";"Plant and PID corrector"]);
 
     // 右下隅にキャプションを移動
     gca().children(1).legend_location="in_lower_right";
-    h = nicholschart(,,'wheat');
+
+    // Add the Nichols frame and tune its labels color
+    h = nicholschart();
+    h.phaseFrame.foreground = color("wheat");
+    h.gainFrame.foreground = color("wheat");
     h.gainLabels.font_foreground = color("orange");
     ]]></programlisting>
         <para>
@@ -162,10 +165,12 @@
                 xsi = 1.2;
                 PID = syslin('c',(1/(2*xsi*tau*s))*(1+2*xsi*tau*s+tau^2*s^2));
                 clf
-                black([Plant;Plant*PID ],0.01,100,["Plant"; "Plant and PID corrector"]);
+                black([Plant;Plant*PID ],0.01,100,["Plant";"Plant and PID corrector"]);
                 //move the caption in the lower right corner
                 gca().children(1).legend_location="in_lower_right";
-                h = nicholschart(,,'wheat');
+                h = nicholschart();
+                h.phaseFrame.foreground = color("wheat");
+                h.gainFrame.foreground = color("wheat");
                 h.gainLabels.font_foreground = color("orange");
             </scilab:image>
         </para>
