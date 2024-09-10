@@ -43,6 +43,15 @@ void setMessageBoxTitle(int ID, char * title);
 void setMessageBoxMessage(int ID, char * message);
 
 /**
+ * Set the password mode of the MessageBox
+ *
+ * @param ID the ID of the MessageBox
+ * @param isPassword true is a password will be entered
+ * @param iSize number of entries
+ */
+void setMessageBoxPasswordMode(int ID, int * isPassword, int iSize);
+
+/**
  * Set the message of the MessageBox (multi-line)
  *
  * @param ID the ID of the MessageBox

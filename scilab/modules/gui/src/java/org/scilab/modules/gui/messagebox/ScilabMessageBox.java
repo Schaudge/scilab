@@ -81,6 +81,14 @@ public class ScilabMessageBox extends ScilabUIElement implements MessageBox {
     }
 
     /**
+     * Set the password mode of the MessageBox
+     * @param isPassword true is a password will be entered
+     */
+    public void setPasswordMode(int[] isPassword) {
+        ScilabBridge.setPasswordMode(this, isPassword);
+    }
+
+    /**
      * Get the index of the button clicked
      * @return the index of the button clicked
      */

@@ -349,6 +349,15 @@ public class CallScilabBridge {
     }
 
     /**
+     * Set the MessageBox password mode
+     * @param id the id of the messageBox
+     * @param isPassword true is a password will be entered
+     */
+    public static void setMessageBoxPasswordMode(int id, int[] isPassword) {
+        ((MessageBox) UIElementMapper.getCorrespondingUIElement(id)).setPasswordMode(isPassword);
+    }
+
+    /**
      * Display this chooser and wait for user selection
      * @param id the id of the messageBox
      */

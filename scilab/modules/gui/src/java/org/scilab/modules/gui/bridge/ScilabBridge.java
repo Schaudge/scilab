@@ -2450,7 +2450,7 @@ public class ScilabBridge {
 
     /**
      * Set the message of the MessageBox
-     * @param messageBox the MessageBox we want to set the mask of
+     * @param messageBox the MessageBox we want to set the message of
      * @param message the message to set
      */
     public static void setMessage(MessageBox messageBox, String message) {
@@ -2459,11 +2459,20 @@ public class ScilabBridge {
 
     /**
      * Set the message of the MessageBox (multi-line)
-     * @param messageBox the MessageBox we want to set the mask of
+     * @param messageBox the MessageBox we want to set the message of
      * @param message the message to set
      */
     public static void setMessage(MessageBox messageBox, String[] message) {
         ScilabMessageBoxBridge.setMessage(messageBox, message);
+    }
+
+    /**
+     * Set the password mode of the MessageBox
+     * @param messageBox the MessageBox we want to set the password mode of
+     * @param isPassword true is a password will be entered
+     */
+    public static void setPasswordMode(MessageBox messageBox, int[] isPassword) {
+        ScilabMessageBoxBridge.setPasswordMode(messageBox, isPassword);
     }
 
     /**

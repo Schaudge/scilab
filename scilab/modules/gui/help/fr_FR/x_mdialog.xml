@@ -31,12 +31,19 @@
                 </listitem>
             </varlistentry>
             <varlistentry>
-                <term>default_input_vector</term>
+                <term>default_inputs_vector</term>
                 <listitem>
                     <para>n vecteurs colonnes de chaînes de caractères,
-                        <literal>default_input_vector(i)</literal> la valeur initiale du i-ème
+                        <literal>default_inputs_vector(i)</literal> la valeur initiale du i-ème
                         paramètre
                     </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>ispassword</term>
+                <listitem>
+                    <para>vecteur colonne de n booléens: si la valeur de <literal>ispassword(i)</literal> est <literal>%T</literal>, l'i-ème entrée servira à saisir un mot de passe, les caractères saisis par l'utilisateur seront cachés. La valeur par défaut est <literal>%F</literal>.</para>
+                    <note>Ce paramètre n'est pas géré pour le cas matrice.</note>
                 </listitem>
             </varlistentry>
             <varlistentry>
@@ -92,6 +99,9 @@ ph=evstr(sig(3))
 rep=x_mdialog(['Simulation d''un systeme';'avec un regulateur PI'],...
               ['gain P';'gain I'],[' ';' '])
  ]]></programlisting>
+        <programlisting role="example"><![CDATA[
+cred = x_mdialog("Entrez vos identifiants", ["Nom d''utilisateur :"; "Mot de passe :"],["scilab"; "motdepassescilab"],[%f; %t])
+        ]]></programlisting>
     </refsection>
     <refsection role="see also">
         <title>Voir aussi</title>
@@ -118,5 +128,14 @@ rep=x_mdialog(['Simulation d''un systeme';'avec un regulateur PI'],...
                 <link linkend="execstr">execstr</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection>
+        <title>Historique</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revremark>Ajout du paramètre <literal>ispassword</literal>.</revremark>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

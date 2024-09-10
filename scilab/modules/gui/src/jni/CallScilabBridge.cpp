@@ -513,6 +513,38 @@ throw GiwsException::JniCallMethodException(curEnv);
 }
 }
 
+void CallScilabBridge::setMessageBoxPasswordMode (JavaVM * jvm_, int id, int const* isPassword, int isPasswordSize){
+
+JNIEnv * curEnv = NULL;
+jvm_->AttachCurrentThread(reinterpret_cast<void **>(&curEnv), NULL);
+jclass cls = initClass(curEnv);
+if ( cls == NULL) {
+throw GiwsException::JniCallMethodException(curEnv);
+}
+
+static jmethodID voidsetMessageBoxPasswordModejintintjintArray_intintID = curEnv->GetStaticMethodID(cls, "setMessageBoxPasswordMode", "(I[I)V" ) ;
+if (voidsetMessageBoxPasswordModejintintjintArray_intintID == NULL) {
+throw GiwsException::JniMethodNotFoundException(curEnv, "setMessageBoxPasswordMode");
+}
+                
+jintArray isPassword_ = curEnv->NewIntArray( isPasswordSize ) ;
+
+if (isPassword_ == NULL)
+{
+// check that allocation succeed
+throw GiwsException::JniBadAllocException(curEnv);
+}
+
+curEnv->SetIntArrayRegion( isPassword_, 0, isPasswordSize, (jint*)(isPassword) ) ;
+
+
+                         curEnv->CallStaticVoidMethod(cls, voidsetMessageBoxPasswordModejintintjintArray_intintID ,id, isPassword_);
+                        curEnv->DeleteLocalRef(isPassword_);
+if (curEnv->ExceptionCheck()) {
+throw GiwsException::JniCallMethodException(curEnv);
+}
+}
+
 void CallScilabBridge::messageBoxDisplayAndWait (JavaVM * jvm_, int id){
 
 JNIEnv * curEnv = NULL;

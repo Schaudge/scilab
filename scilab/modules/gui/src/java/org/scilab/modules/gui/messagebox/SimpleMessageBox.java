@@ -53,6 +53,12 @@ public interface SimpleMessageBox {
     void setMessage(String[] message);
 
     /**
+     * Set the password mode of the MessageBox
+     * @param isPassword true is a password will be entered
+     */
+    void setPasswordMode(int[] isPassword);
+
+    /**
      * Display this MessageBox and wait for user choice
      */
     void displayAndWait();

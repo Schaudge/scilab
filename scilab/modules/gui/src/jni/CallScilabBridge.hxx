@@ -214,6 +214,8 @@ static void setMessageBoxMessage(JavaVM * jvm_, int id, char const* message);
 
 static void setMessageBoxMessage(JavaVM * jvm_, int id, char const* const* message, int messageSize);
 
+static void setMessageBoxPasswordMode(JavaVM* jvm_, int id, int const* isPassword, int isPasswordSize);
+
 static void messageBoxDisplayAndWait(JavaVM * jvm_, int id);
 
 static int getMessageBoxSelectedButton(JavaVM * jvm_, int id);

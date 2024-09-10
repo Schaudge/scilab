@@ -24,6 +24,12 @@
                 </listitem>
             </varlistentry>
             <varlistentry>
+                <term>ispassword</term>
+                <listitem>
+                    <para>Boolean scalar: when <literal>%T</literal>, this dialog will be used to get a password, the characters typed by the user will be hidden and returned value will contains a single string. Default value is <literal>%F</literal>.</para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
                 <term>result</term>
                 <listitem>
                     <para>ユーザの応答:
