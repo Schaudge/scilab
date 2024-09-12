@@ -1313,22 +1313,24 @@ void RunVisitorT<T>::visitprivate(const FunctionDec & e)
         }
     }
 
-    types::Macro* pMacro = const_cast<ast::FunctionDec&>(e).getMacro();
-    // no need to recreate the same Macro of the same exp (ie: define a macro in a for exp)
-    if (pMacro == nullptr)
+    types::Macro* pMacro = nullptr;
+    if (e.isLambda())
     {
-        if (e.isLambda())
-        {
-            pMacro = new types::Macro(*pVarList, const_cast<SeqExp&>(static_cast<const SeqExp&>(e.getBody())), L"script");
-        }
-        else
+        // in case of lambda, recreate the Macro because the input argument at the lambda creation may change.
+        pMacro = new types::Macro(*pVarList, const_cast<SeqExp&>(static_cast<const SeqExp&>(e.getBody())), L"script");
+    }
+    else
+    {
+        // no need to recreate the same Macro of the same exp (ie: define a macro in a for exp)
+        pMacro = const_cast<ast::FunctionDec&>(e).getMacro();
+        if (pMacro == nullptr)
         {
             pMacro = new types::Macro(e.getSymbol().getName(), *pVarList, *pRetList, const_cast<SeqExp&>(static_cast<const SeqExp&>(e.getBody())), L"script");
+            const_cast<ast::FunctionDec&>(e).setMacro(pMacro);
         }
-
-        const_cast<ast::FunctionDec&>(e).setMacro(pMacro);
-        pMacro->setLines(e.getLocation().first_line, e.getLocation().last_line);
     }
+
+    pMacro->setLines(e.getLocation().first_line, e.getLocation().last_line);
 
     if (ctx->isprotected(symbol::Symbol(pMacro->getName())))
     {
