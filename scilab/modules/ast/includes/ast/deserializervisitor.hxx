@@ -534,6 +534,7 @@ private :
             {
                 exps_t* exps = get_exps();
                 exp = new ArgumentDec(loc, *(*exps)[0], *(*exps)[1], *(*exps)[2], *(*exps)[3], *(*exps)[4]);
+                delete exps;
                 break;
             }
             case 39:

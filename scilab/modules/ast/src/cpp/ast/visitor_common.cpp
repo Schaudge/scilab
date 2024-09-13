@@ -2607,8 +2607,10 @@ std::wstring printTypeDimsInfo(types::InternalType *pIT)
         {
             types::String* pStr = out[0]->getAs<types::String>();
             ostr << pStr->get(0);
+            pStr->killMe();
         }
-    }    
+    }
+
     return ostr.str();
 }
 
