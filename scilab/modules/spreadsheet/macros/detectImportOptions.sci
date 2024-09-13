@@ -14,6 +14,7 @@ function opts = detectImportOptions(filename, varargin)
     fname = "detectImportOptions";
     delim = "";
     decimal = [];
+    numHeaderLines = [];
 
     if nargin == 0 then
         error(msprintf(_("%s: Wrong number of input arguments: At least %d expected.\n"), fname, 1));
@@ -68,6 +69,15 @@ function opts = detectImportOptions(filename, varargin)
                 if decimal == "" then
                     error(msprintf(_("%s: Wrong value for %s argument #%d: A non-empty string expected.\n"), fname, "Decimal", i+1));
                 end
+
+            case "NumHeaderLines"
+                numHeaderLines = varargin(i+1);
+                if type(numHeaderLines) <> 1 then
+                    error(msprintf(_("%s: Wrong type for %s argument #%d: A double expected.\n"), fname, "NumHeaderLines", i+1));
+                end
+                if size(numHeaderLines, "*") > 1 then
+                    error(msprintf(_("%s: Wrong size for %s argument #%d: A non-empty value expected.\n"), fname, "NumHeaderLines", i+1));
+                end
             end
         end 
     end
@@ -76,8 +86,13 @@ function opts = detectImportOptions(filename, varargin)
         f($) = [];
     end
 
-    // detect header
-    [header, c , l] = detectHeader(f);
+    if numHeaderLines <> [] then
+        l = 1:numHeaderLines;
+        header = f(l);
+    else
+        // detect header
+        [header, c , l] = detectHeader(f);
+    end
 
     // detect delimiter
     datalines = [1:size(f, "r")];

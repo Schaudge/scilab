@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
+<set!--
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  * Copyright (C) 2024 - 3DS - Adeline CARNIS
  *
@@ -80,8 +80,8 @@
                     </para>
                     <para/>
                     <para>
-                        <emphasis role="bold">Import as variable</emphasis> generates a table or timeseries from data and setted 
-                        options stored in the <literal>ans</literal> variable. The result is displayed in Scilab console.
+                        <emphasis role="bold">Import as variable</emphasis> generates a table or timeseries (from data and selected 
+                        options) stored in the <literal>ans</literal> variable. The result is displayed in Scilab console.
                     </para>
                     <para/>
                     <para>
@@ -103,6 +103,7 @@
                         <literal>uiimport</literal> automatically detects the delimiter and decimal separator of the file. 
                         But the user can change them using the popupmenus.
                     </para>
+                    <para>The number of header lines can be set by the user.</para>
                     <para/>
                     <para>
                         <inlinemediaobject>
