@@ -1614,6 +1614,18 @@ void RunVisitorT<T>::visitprivate(const TryCatchExp  &e)
                 const_cast<Exp*>(&e.getTry())->resetReturn();
                 const_cast<TryCatchExp*>(&e)->setReturn();
             }
+
+            if (e.getTry().isContinue())
+            {
+                const_cast<Exp*>(&e.getTry())->resetContinue();
+                const_cast<TryCatchExp*>(&e)->setContinue();
+            }
+
+            if (e.getTry().isBreak())
+            {
+                const_cast<Exp*>(&e.getTry())->resetBreak();
+                const_cast<TryCatchExp*>(&e)->setBreak();
+            }
         }
         catch (const RecursionException& /* re */)
         {
@@ -1663,6 +1675,18 @@ void RunVisitorT<T>::visitprivate(const TryCatchExp  &e)
             {
                 const_cast<Exp*>(&e.getCatch())->resetReturn();
                 const_cast<TryCatchExp*>(&e)->setReturn();
+            }
+
+            if (e.getCatch().isContinue())
+            {
+                const_cast<Exp*>(&e.getCatch())->resetContinue();
+                const_cast<TryCatchExp*>(&e)->setContinue();
+            }
+
+            if (e.getCatch().isBreak())
+            {
+                const_cast<Exp*>(&e.getCatch())->resetBreak();
+                const_cast<TryCatchExp*>(&e)->setBreak();
             }
         }
         catch (ScilabException &)
