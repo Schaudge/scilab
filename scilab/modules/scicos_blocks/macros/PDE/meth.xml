@@ -22,4 +22,7 @@
 -->
 
 <DecisionTree>
-    <Node condition = "delta > 0" decision = "type_meth = 1"/>
+    <Node condition="delta &gt; 0" decision="type_meth = 1" />
+    <Node condition="delta &lt; 0" decision="type_meth = 3" />
+    <Node condition="delta == 0" decision="type_meth = 2" />
+</DecisionTree>
