@@ -20,5 +20,5 @@
 errmsg = ["mclose(1";"^";"Error: syntax error, unexpected end of line, expecting "","" or )"];
 assert_checkerror("execstr(""mclose(1"")", errmsg);
 
-errmsg = ["mclose(1°";"       ^~~^";"Error: syntax error, unexpected identifier, expecting end of file"];
+errmsg = ["mclose(1°";"       ^~~^";"Error: Can''t convert ''1°'' to a valid number nor identifier"];
 assert_checkerror("execstr(""mclose(1°"")", errmsg);
