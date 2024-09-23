@@ -261,6 +261,7 @@
     <ClCompile Include="sci_typeof.cpp" />
     <ClCompile Include="sci_warning.cpp" />
     <ClCompile Include="sci_what.cpp" />
+    <ClCompile Include="sci_getdeprecated.cpp" />
     <ClCompile Include="sci_where.cpp" />
     <ClCompile Include="sci_who.cpp" />
     <ClCompile Include="sci_with_module.cpp" />
