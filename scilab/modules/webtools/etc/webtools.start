@@ -12,7 +12,7 @@
 
 // Load  functions libraries
 // =============================================================================
-load('SCI/modules/webtools/macros/lib');
+// load('SCI/modules/webtools/macros/lib');
 
 // Initialize CURL environment
 // =============================================================================

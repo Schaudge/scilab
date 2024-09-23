@@ -1,6 +1,6 @@
 /*
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
- * Copyright (C) 2024 - Dassault Systèmes S.E. - Cédric DELAMARRE
+ * Copyright (C) 2024 - Dassault Systemes S.E. - Cedric DELAMARRE
  */
 
 #include "context.hxx"
@@ -15,6 +15,9 @@ extern "C" {
 std::unordered_map<std::wstring, std::wstring> getDeprecated()
 {
     return {
+        // Scilab 2025.0.0 => 2026.0.0
+        {L"impl", L"dae"},
+
         // Scilab 2024.1.0 => 2026.0.0
         {L"dassl", L"dae"},
         {L"dasrt", L"dae"},

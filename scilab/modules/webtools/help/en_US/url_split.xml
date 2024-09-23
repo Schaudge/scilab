@@ -155,7 +155,7 @@
             <revision>
                 <revnumber>2023.0.0</revnumber>
                 <revremark>
-                    Renamed <literal>url_split()</literal>.
+                    Renamed to <literal>url_split()</literal>.
                 </revremark>
             </revision>
         </revhistory>

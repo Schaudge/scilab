@@ -26,7 +26,6 @@ STACK_GATEWAY_PROTOTYPE(sci_copyfile);
 STACK_GATEWAY_PROTOTYPE(sci_movefile);
 STACK_GATEWAY_PROTOTYPE(sci_fscanfMat);
 STACK_GATEWAY_PROTOTYPE(sci_fprintfMat);
-STACK_GATEWAY_PROTOTYPE(sci_getURL);
 STACK_GATEWAY_PROTOTYPE(sci_tempname);
 /*--------------------------------------------------------------------------*/
 #endif /* __GW_FILEIO_H__ */

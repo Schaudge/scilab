@@ -158,20 +158,9 @@ msgid "%s: can not read file %s.\n"
 msgstr ""
 
 #
-# File: modules/fileio/sci_gateway/c/sci_getURL.c, line: 57
-# File: modules/fileio/sci_gateway/c/sci_getURL.c, line: 78
-# File: modules/fileio/sci_gateway/c/sci_getURL.c, line: 100
-# File: modules/fileio/sci_gateway/c/sci_getURL.c, line: 123
 # File: modules/fileio/sci_gateway/c/sci_splitURL.c, line: 55
 #, c-format
 msgid "%s: Wrong type for argument #%d: string expected.\n"
-msgstr ""
-
-#
-# File: modules/fileio/sci_gateway/c/sci_getURL.c, line: 165
-# File: modules/fileio/sci_gateway/c/sci_getURL.c, line: 178
-#, c-format
-msgid "%s: Could not create the output argument.\n"
 msgstr ""
 
 #
