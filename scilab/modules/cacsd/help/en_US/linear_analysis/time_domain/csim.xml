@@ -232,7 +232,7 @@ clf();plot2d([t',t'],[(csim(timefun,t,w))',0*t'])
                 <link linkend="ode">ode</link>
             </member>
             <member>
-                <link linkend="impl">impl</link>
+                <link linkend="dae">dae</link>
             </member>
         </simplelist>
     </refsection>

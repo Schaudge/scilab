@@ -17,11 +17,16 @@
 // <-- Short Description -->
 // [5i] is parsed as [5,i]
 
-clear i
-assert_checkerror("5i",["5i";"^~^";"Error: syntax error, unexpected identifier, expecting end of file"])
-assert_checkerror("[5i]",["[5i]";" ^~^";"Error: syntax error, unexpected identifier, expecting end of file"])
-assert_checkerror("[5 i]","Undefined variable: i")
-assert_checkerror("[5,i]","Undefined variable: i")
-i = 1
-assert_checkequal([5 i],[5,1])
-assert_checkequal([5,i],[5,1]) 
+clear e
+assert_checkerror("5e",["5e";"^~^";"Error: Can''t convert ''5e'' to a valid number nor identifier"])
+assert_checkerror("[5e]",["[5e]";" ^~^";"Error: Can''t convert ''5e'' to a valid number nor identifier"])
+assert_checkerror(".5e",[".5e";"^~~^";"Error: Can''t convert ''.5e'' to a valid number nor identifier"])
+assert_checkerror("[.5e]",["[.5e]";" ^~~^";"Error: Can''t convert ''.5e'' to a valid number nor identifier"])
+assert_checkerror("5en",["5en";"^~~^";"Error: Can''t convert ''5en'' to a valid number nor identifier"])
+assert_checkerror("[5en]",["[5en]";" ^~~^";"Error: Can''t convert ''5en'' to a valid number nor identifier"])
+assert_checkerror("[5 e]","Undefined variable: e")
+assert_checkerror("[5,e]","Undefined variable: e")
+e = 1
+assert_checkequal([5e1],[50])
+assert_checkequal([5 e],[5,1])
+assert_checkequal([5,e],[5,1]) 

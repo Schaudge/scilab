@@ -5,8 +5,9 @@
 
 demopath = get_absolute_file_path("dae.dem.gateway.sce");
 
-subdemolist = ["Spherical pendulum" ,"dae1/pend3d1.dem.sce" ;
-"Sliding pendulum"   ,"dae2/dae2.dem.gateway.sce"   ];
+subdemolist = ["Spherical pendulum" ,"dae1/pend3d1.dem.sce"           ; ..
+"Sliding pendulum"                  ,"dae2/dae2.dem.gateway.sce"      ; ..   
+"Chemical process (Implicit)"       , "dae_chimpl/dae_chimpl.dem.sce" ];
 
 subdemolist(:,2) = demopath + subdemolist(:,2);
 clear demopath;

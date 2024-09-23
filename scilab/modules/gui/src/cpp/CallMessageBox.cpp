@@ -32,7 +32,12 @@ void setMessageBoxMessage(int ID, char * message)
     CallScilabBridge::setMessageBoxMessage(getScilabJavaVM(), ID, message);
 }
 
-void setMessageBoxMultiLineMessage(int ID, char **message, int nbLines)
+void setMessageBoxPasswordMode(int ID, int * isPassword, int iSize)
+{
+    CallScilabBridge::setMessageBoxPasswordMode(getScilabJavaVM(), ID, isPassword, iSize);
+}
+
+void setMessageBoxMultiLineMessage(int ID, char** message, int nbLines)
 {
     CallScilabBridge::setMessageBoxMessage(getScilabJavaVM(), ID, message, nbLines);
 }

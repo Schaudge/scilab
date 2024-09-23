@@ -53,8 +53,9 @@ function [archap,la,lb,sig,resid]=armax(r,s,y,u,b0f,prf)
     // Auteur: J-Ph. Chancelier ENPC Cergrene
     //!
     // Copyright INRIA
-    [lhs,rhs]=argn(0)
-    if rhs==0,write(%io(2),"/ / y_t = 0.2*u_{t-1}+0.01*e(t)");
+
+    if nargin == 0 then
+        write(%io(2),"/ / y_t = 0.2*u_{t-1}+0.01*e(t)");
         write(%io(2)," rand(''normal''); u=rand(1,1000);");
         write(%io(2)," y=arsimul([1],[0,0.2],1,0.01,u);");
         write(%io(2)," [archap,a,b,sig,resid]=armax(0,1,y,u)");
@@ -63,20 +64,49 @@ function [archap,la,lb,sig,resid]=armax(r,s,y,u,b0f,prf)
         y=arsimul([1],[0,0.2],1,0.01,u);
         [archap,la,lb,sig,resid]=armax(0,1,y,u,1);
         return
+    elseif nargin == 4 then
+        [archap, la, lb, sig, resid] = %armax(r, s, y, u)
+    elseif nargin == 5 then
+        [archap, la, lb, sig, resid] = %armax(r, s, y, u, b0f)
+    elseif nargin == 6 then
+        [archap, la, lb, sig, resid] = %armax(r, s, y, u, b0f, prf)
+    else
+        error(msprintf(gettext("%s: Wrong number of input argument.\n"),"armax"));
     end
-    if rhs<=5,prf=1;end
-    if rhs<=4,b0f=0;end
+endfunction
+
+function [archap, la, lb, sig, resid] = %armax(r, s, y, u, b0f, prf)
+    arguments
+        r {mustBeA(r, "double"), mustBeGreaterThanOrEqual(r, 0)}
+        s {mustBeA(s, "double"), mustBeGreaterThanOrEqual(s, -1)}
+        y
+        u
+        b0f {mustBeA(b0f, "double")} = 0
+        prf {mustBeA(prf, "double")} = 1
+    end
+
     [ny,n2]=size(y)
     [nu,n2u]=size(u)
     // Compute zz matrix as
     // zz(:,j)=[ y(t-1),...,y(t-r),u(t),...,u(t-s)]', with  t=t0-1+j
     // zz can be computed from t = t0
     t0=max(max(r,s)+1,1);
-    if r==0;if s==-1;error(msprintf(gettext("%s: Wrong value for input arguments: If %s and %s nothing to identify.\n"),"armax","r==0","s==-1"))
-    end;end
+    if r == 0 then 
+        if s == -1 then
+            error(msprintf(gettext("%s: Wrong value for input arguments: If %s and %s nothing to identify.\n"),"armax","r==0","s==-1"))
+        end
+    end
     z=[];
-    if r>=1;for i=1:r,z=[z ; y(:,t0-i:(n2-(i)))];end;end
-    if s>=-1;for i=b0f:s,z=[z ; u(:,t0-i:(n2-(i)))];end;end
+    if r>=1 then
+        for i=1:r
+            z=[z ; y(:,t0-i:(n2-(i)))];
+        end
+    end
+    if s>=-1 then 
+        for i=b0f:s
+            z=[z ; u(:,t0-i:(n2-(i)))];
+        end
+    end
     zz= z*z';
     zy= z*y(:,t0:n2)';
     // Rank test

@@ -2725,6 +2725,8 @@ if test "$SCILAB_BINARY_VERSION" != "$DETECTED_VERSION"; then
             -e "s|SCI_VERSION_WIDE_STRING L\".*\"|SCI_VERSION_WIDE_STRING L\"scilab-branch-$SCILAB_VERSION_MAJOR.$SCILAB_VERSION_MINOR\"|" \
             -e "s|DEFAULT_SCI_VERSION_MESSAGE L\".*\"|DEFAULT_SCI_VERSION_MESSAGE L\"scilab-branch-$SCILAB_VERSION_MAJOR.$SCILAB_VERSION_MINOR\"|" \
             ${SCI_SRCDIR}/modules/core/includes/version.h ${SCI_SRCDIR}/modules/core/includes/version.h.{in,vc}
+    # put the correct text in DOCKER_TAG
+    sed -i -e "s|value: \"$DETECTED_VERSION\"|value: \"$SCILAB_BINARY_VERSION\"" ${SCI_SRCDIR}/../.gitlab-ci.yml
     # update some help pages
     sed -i -e "s|scilab-[[0-9]]\+\(\.[[0-9]]\+\)\+|scilab-$SCILAB_BINARY_VERSION|" $(find ${SCI_SRCDIR} -iname 'banner.xml')
     # update rc files

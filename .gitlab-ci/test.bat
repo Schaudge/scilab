@@ -42,7 +42,7 @@ if errorlevel 1 (
 call "%INSTALLER_DIR%\%SCI_VERSION_STRING%.bin.%ARCH%.exe" ^
   /TASKS=!desktopicon,!AssociateSCESCI,!AssociateTSTDEM,!AssociateSCICOS,!AssociateSOD ^
   /NOICONS /SUPPRESSMSGBOXES /SILENT /SP- ^
-  /LOG="%LOG_PATH%\log_iss_install_%CI_COMMIT_SHORT_SHA%.txt" ^
+  /LOG="%LOG_PATH%\test_iss_install_%CI_COMMIT_SHORT_SHA%.log" ^
   /DIR="%INSTALL_DIR%"
 
 if errorlevel 1 (
@@ -82,5 +82,5 @@ copy "%LOG_PATH%\%TEST%.xml" "%SCILAB_COMMON_PATH%\%SCI_VERSION_STRING%\test\"
 if errorlevel 1 exit 1
 
 rem copy the logs
-if exist "%LOG_PATH%\log_iss_install_%CI_COMMIT_SHORT_SHA%.txt" copy "%LOG_PATH%\log_iss_install_%CI_COMMIT_SHORT_SHA%.txt" "%SCILAB_COMMON_PATH%\%SCI_VERSION_STRING%\log\"
+if exist "%LOG_PATH%\test_iss_install_%CI_COMMIT_SHORT_SHA%.log" copy "%LOG_PATH%\test_iss_install_%CI_COMMIT_SHORT_SHA%.log" "%SCILAB_COMMON_PATH%\%SCI_VERSION_STRING%\log\"
 if errorlevel 1 exit 1

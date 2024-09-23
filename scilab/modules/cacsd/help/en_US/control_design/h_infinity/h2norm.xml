@@ -74,6 +74,10 @@
                     <literal>Sl</literal> is now checked for non-discrete (continuous or undefined)
                     time linear dynamical system.
                 </revremark>
+                <revnumber>2025.0.0</revnumber>
+                <revremark>
+                    <literal>h2norm(Sl [,tol])</literal> is obsolete when <literal>Sl</literal> is a matrix of doubles and will be removed in 2026.0.0.
+                </revremark>
             </revision>
         </revhistory>
     </refsection>

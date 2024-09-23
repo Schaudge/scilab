@@ -49,6 +49,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -125,6 +126,8 @@ public class SwingScilabMessageBox extends JDialog implements SimpleMessageBox, 
     private String initialValue;
     private int initialValueSize;
     private String userValue;
+    private JPasswordField passwordTextField;
+    private int[] isPassword;
 
     /**
      * Used for x_choose
@@ -223,6 +226,14 @@ public class SwingScilabMessageBox extends JDialog implements SimpleMessageBox, 
             message += "<div>" + mess[line] + "</div>";
         }
         message += mess[line] + "</HTML>";
+    }
+
+    /**
+     * Set the password mode of the MessageBox
+     * @param isPassword true is a password will be entered
+     */
+    public void setPasswordMode(int[] isPassword) {
+        this.isPassword = isPassword;
     }
 
     /**
@@ -469,11 +480,20 @@ public class SwingScilabMessageBox extends JDialog implements SimpleMessageBox, 
                         c = new JCheckBox();
                         ((JCheckBox) c).setSelected(false);
                     } else {
-                        c = new JTextField(initial);
+                        if ((isPassword != null) && (isPassword[col * lineLabels.length + line] != 0)) {
+                            c = new JPasswordField(initial);
 
-                        // force an initial width when the initial text is too small
-                        if (initial.length() < X_MDIALOG_TEXTFIELD_SIZE) {
-                            ((JTextField) c).setColumns(X_MDIALOG_TEXTFIELD_SIZE);
+                            // force an initial width when the initial text is too small
+                            if (initial.length() < X_MDIALOG_TEXTFIELD_SIZE) {
+                                ((JPasswordField) c).setColumns(X_MDIALOG_TEXTFIELD_SIZE);
+                            }
+                        } else {
+                            c = new JTextField(initial);
+
+                            // force an initial width when the initial text is too small
+                            if (initial.length() < X_MDIALOG_TEXTFIELD_SIZE) {
+                                ((JTextField) c).setColumns(X_MDIALOG_TEXTFIELD_SIZE);
+                            }
                         }
                     }
 
@@ -605,12 +625,16 @@ public class SwingScilabMessageBox extends JDialog implements SimpleMessageBox, 
             objs[0] = messageScrollPane;
 
             // Editable text zone
-            textArea = new JTextArea(initialValue);
-            textArea.setRows(initialValueSize);
-            JScrollPane scrollPane = new JScrollPane(textArea);
-
-            objs[1] = scrollPane;
-
+            if (isPassword[0] != 0) {
+                passwordTextField = new JPasswordField(initialValue);
+                objs[1] = passwordTextField;
+            } else {
+                textArea = new JTextArea(initialValue);
+                textArea.setRows(initialValueSize);
+                JScrollPane scrollPane = new JScrollPane(textArea);
+                objs[1] = scrollPane;
+            }
+            
             // And now the buttons
             buttons = new Object[2];
             btnOK.addActionListener(this);
@@ -744,11 +768,17 @@ public class SwingScilabMessageBox extends JDialog implements SimpleMessageBox, 
         if (ae.getSource() == btnOK) {
             // For a x_dialog, get the user answer
             if (scilabDialogType == X_DIALOG_TYPE) {
-                userValue = textArea.getText();
+                if (isPassword[0] != 0) {
+                    userValue = new String(passwordTextField.getPassword());
+                } else {
+                    userValue = textArea.getText();
+                }
             } else if (scilabDialogType == X_MDIALOG_TYPE) {
                 for (int textFieldIndex = 0; textFieldIndex < textFields.length; textFieldIndex++) {
                     final Component c = textFields[textFieldIndex];
-                    if (c instanceof JTextField) {
+                    if (c instanceof JPasswordField) {
+                        userValues[textFieldIndex] = new String(((JPasswordField) c).getPassword());
+                    } else if (c instanceof JTextField) {
                         userValues[textFieldIndex] = ((JTextField) c).getText();
                     } else if (c instanceof JCheckBox) {
                         if (((JCheckBox) c).isSelected()) {

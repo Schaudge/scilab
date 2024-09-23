@@ -19,8 +19,12 @@ function [Stmp,Ws]=colregul(Sl,Alfa,Beta);
     // Sl is asummed left invertible i.e. ss2tf(Sl) full column rank
     //!
 
-    [LHS,RHS]=argn(0);
-    if RHS==1 then Alfa=0;Beta=0;end
+    arguments
+        Sl {mustBeA(Sl, ["r", "lss"])}
+        Alfa {mustBeA(Alfa, "double")} = 0
+        Beta {mustBeA(Beta, "double")} = 0
+    end
+
     flag=0;
     Sl1=Sl(1)
     if Sl1(1)=="r" then

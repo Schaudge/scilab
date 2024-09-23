@@ -69,7 +69,7 @@
     <gateway name="sci_datatip_set_style"           function="datatipSetStyle"          type="0" />
     <gateway name="sci_datatip_set_display"         function="datatipSetDisplay"        type="0" />
     <gateway name="sci_datatip_set_interp"          function="datatipSetInterp"         type="0" />
-    <gateway name="sci_datatip_set_orient"          function="datatipSetOrient"         type="0" />
+    <gateway name="sci_datatip_set_orient"          function="datatipSetOrientation"    type="0" />
     <gateway name="sci_figure"                      function="figure"                   type="0" />
     <gateway name="sci_saveGui"                     function="saveGui"                  type="0" />
     <gateway name="sci_loadGui"                     function="loadGui"                  type="0" />

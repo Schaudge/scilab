@@ -63,6 +63,7 @@ static bool read_struct(hid_t dataset, VarInfo6& info);
 static bool read_cell(hid_t dataset, VarInfo6& info);
 static bool read_handles(hid_t dataset, VarInfo6& info);
 static bool read_macro(hid_t dataset, VarInfo6& info);
+static bool read_lambda(hid_t dataset, VarInfo6& info);
 
 static void generateInfo(VarInfo6& info);
 static int getDimsNode(hid_t dataset, int* complex, std::vector<int>& dims);
@@ -421,6 +422,12 @@ static bool read_data(hid_t dataset, VarInfo6& info)
     {
         info.type = sci_c_function;
         return read_macro(dataset, info);
+    }
+
+    if (type == g_SCILAB_CLASS_LAMBDA)
+    {
+        info.type = sci_c_function;
+        return read_lambda(dataset, info);
     }
 
     Scierror(999, _("%s: Invalid HDF5 Scilab format.\n"), "listvar_in_hdf5");
@@ -843,7 +850,15 @@ static bool read_macro(hid_t dataset, VarInfo6& info)
     generateInfo(info);
     return true;
 }
-
+static bool read_lambda(hid_t dataset, VarInfo6& info)
+{
+    info.size = 0;
+    info.dims = 2;
+    info.pdims = {1, 1};
+    closeList6(dataset);
+    generateInfo(info);
+    return true;
+}
 
 static void generateInfo(VarInfo6& info)
 {

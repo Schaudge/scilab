@@ -48,25 +48,25 @@ int sci_datatip_set_orient(char *fname, void* pvApiCtx)
 
     if (nbInputArgument(pvApiCtx) == 2)
     {
-        sciErr = getVarAddressFromPosition(pvApiCtx, 1, &piAddr);
-        if (sciErr.iErr)
-        {
-            printError(&sciErr, 0);
-            return 1;
-        }
-
-        iErr = getScalarHandle(pvApiCtx, piAddr, &llHandle);
-        if (iErr)
-        {
-            Scierror(999, _("%s: Can not read input argument #%d.\n"), fname, 1);
-            return 1;
-        }
-
-        iDatatipUID = getObjectFromHandle((unsigned long) llHandle);
-
         if (checkInputArgumentType(pvApiCtx, 1, sci_handles))
         {
-            getGraphicObjectProperty(iDatatipUID, __GO_TYPE__, jni_int, (void**) &piType);
+            sciErr = getVarAddressFromPosition(pvApiCtx, 1, &piAddr);
+            if (sciErr.iErr)
+            {
+                printError(&sciErr, 0);
+                return 1;
+            }
+
+            iErr = getScalarHandle(pvApiCtx, piAddr, &llHandle);
+            if (iErr)
+            {
+                Scierror(999, _("%s: Can not read input argument #%d.\n"), fname, 1);
+                return 1;
+            }
+
+            iDatatipUID = getObjectFromHandle((unsigned long)llHandle);
+
+            getGraphicObjectProperty(iDatatipUID, __GO_TYPE__, jni_int, (void**)&piType);
             if (iType == __GO_DATATIP__)
             {
                 if (checkInputArgumentType(pvApiCtx, 2, sci_strings))
@@ -187,13 +187,13 @@ int sci_datatip_set_orient(char *fname, void* pvApiCtx)
                     }
                     else
                     {
-                        Scierror(999, _("%s: Wrong dimension for input argument #%d: string expected.\n"), fname, 2);
+                        Scierror(999, _("%s: Wrong dimension for input argument #%d: A string expected.\n"), fname, 2);
                         return 1;
                     }
                 }
                 else
                 {
-                    Scierror(999, _("%s: Wrong type for input argument #%d: string expected.\n"), fname, 2);
+                    Scierror(999, _("%s: Wrong type for input argument #%d: A string expected.\n"), fname, 2);
                     return 1;
                 }
             }

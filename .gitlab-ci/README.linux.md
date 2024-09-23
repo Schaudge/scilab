@@ -5,7 +5,7 @@ From the reference documentation:
 - [Gitlab Runner in a container](https://docs.gitlab.com/runner/install/docker.html)
 - [GitLab Runner docker executor](https://docs.gitlab.com/runner/executors/docker.html)
 
-Our Linux CI uses specific docker images to prepare the built environment (`gitlab-runner-helper`),  run a build (`linux-builder-$BRANCH`) and execute the tests (`linux-build-$BRANCH` for now).
+Our Linux CI uses specific docker images to prepare the built environment (`gitlab-runner-helper`),  run a build (`linux-builder`) and execute the tests.
 All these images will be used during the pipeline execution.
 
 After having installed `docker` on your machine, you can register your machine and store the configuration on `$HOME/.gitlab-runner` with the command:

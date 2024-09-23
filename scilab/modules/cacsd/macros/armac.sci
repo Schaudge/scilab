@@ -23,12 +23,16 @@ function [ar]=armac(a,b,d,ny,nu,sig)
     //
     //!
 
-    [na,la]=size(a);
-    if na<>ny then
-        error(msprintf(gettext("%s: Wrong size for input argument #%d: row dimension must be equal to %d.\n"),..
-        "armac",1, ny));
-
+    arguments
+        a (ny, :) {mustBeA(a, "double")}
+        b {mustBeA(b, "double")}
+        d (ny, :) {mustBeA(d, "double")}
+        ny (1,1) {mustBeA(ny, "double"), mustBeInteger}
+        nu (1,1) {mustBeA(nu, "double"), mustBeInteger}
+        sig (ny, ny) {mustBeA(sig, "double")}
     end
+
+
     [nb,lb]=size(b);
     if nb<>0 & nb<>ny then
         error(msprintf(gettext("%s: Wrong size for input argument #%d: row dimension must be equal to %d.\n"),..
@@ -40,11 +44,6 @@ function [ar]=armac(a,b,d,ny,nu,sig)
             "armac",2,"nu"));
         end;
     end
-    [nd,ld]=size(d);
-    if nd<>ny then
-        error(msprintf(gettext("%s: Wrong size for input argument #%d: row dimension must be equal to %d.\n"),..
-        "armac",3, ny));
 
-    end
     ar=tlist(["ar","a","b","d","ny","nu","sig"],a,b,d,ny,nu,sig);
 endfunction

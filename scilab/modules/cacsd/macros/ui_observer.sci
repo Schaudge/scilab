@@ -65,11 +65,17 @@ function [UIobs,J,N]=ui_observer(Sys,reject,C1,D1,flag,Alfa,Beta)
     //2nd ex: nx=2;ny=3;nwu=2;Sys=ssrand(ny,nwu,nx);
     //        C1=rand(1,nx);D1=[0,1];
     //        UIobs=ui_observer(Sys,1,C1,D1);
-    [LHS,RHS]=argn(0);
-    if RHS==6 then Beta=-1;end
-    if RHS==5 then Beta=-1;Alfa=-1;end
-    if RHS==4 then Beta=-1;Alfa=-1;flag="st";end
-    if RHS==3 then Beta=-1;Alfa=-1;flag="st";D1=[];end
+
+    arguments
+        Sys  {mustBeA(Sys, "lss")}
+        reject {mustBeA(reject, "double"), mustBeInteger}
+        C1 {mustBeA(C1, "double"), mustBeReal}
+        D1 {mustBeA(D1, "double"), mustBeReal} = []
+        flag {mustBeA(flag, "string"), mustBeMember(flag, ["ge", "st", "pp"])}= "st"
+        Alfa {mustBeA(Alfa, "double")} = -1
+        Beta {mustBeA(Alfa, "double")} = -1
+    end
+
     if size(C1,2) ~= size(Sys("A"),1) then
         msg = _("%s: Incompatible input arguments #%d and #%d: state dimension of #%d must be equal to the column dimension of #%d.\n")
         error(msprintf(msg, "ui_observer", 1, 3, 1, 3))

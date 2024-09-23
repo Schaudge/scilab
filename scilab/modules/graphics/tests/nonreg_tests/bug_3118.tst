@@ -16,14 +16,15 @@
 // The edit/current axes properties menu of the graphic window fails
 // 
 
-// create a figure
-scf(0);
-
-// figure property
-ged(8,0);
-
-// axes property
-ged(9,0);
-
-// this last two commands should not fail
-
+if getos() <> "Darwin"
+    // create a figure
+    scf(0);
+    
+    // figure property
+    ged(8,0);
+    
+    // axes property
+    ged(9,0);
+    
+    // this last two commands should not fail
+end

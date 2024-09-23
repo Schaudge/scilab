@@ -1,5 +1,5 @@
 # Scilab ( http://www.scilab.org/ ) - This file is part of Scilab
-# Copyright (C) Dassault Systemes - 2022 - Clement DAVID
+# Copyright (C) Dassault Systemes - 2022-2024 - Clement DAVID
 # Copyright (C) Dassault Systemes - 2022 - Cedric DELAMARRE
 
 stages:
@@ -37,16 +37,16 @@ variables:
     value: "scilab-branch-${BRANCH}-${CI_COMMIT_SHORT_SHA}"
     description: "Scilab version string to set"
   DOCKER_LINUX_BUILDER:
-    value: "${CI_REGISTRY_IMAGE}/linux-builder-${BRANCH}"
+    value: "${CI_REGISTRY_IMAGE}/linux-builder"
     description: "Docker image to build Scilab on Linux"
   DOCKER_LINUX_PREBUILD:
-    value: "${CI_REGISTRY_IMAGE}/linux-prebuild-${BRANCH}"
+    value: "${CI_REGISTRY_IMAGE}/linux-prebuild"
     description: "Docker image to build Scilab prerequirements on Linux"
   DOCKER_WINDOWS_BUILDER:
-    value: "${CI_REGISTRY_IMAGE}/windows-builder-${BRANCH}"
+    value: "${CI_REGISTRY_IMAGE}/windows-builder"
     description: "Docker image to build Scilab on Windows"
   DOCKER_TAG:
-    value: "latest"
+    value: "2025.0.0"
     description: "Docker tag to publish image on"
   SCILAB_COMMON_PATH:
     value: "${CI_PROJECT_DIR}\\..\\..\\..\\..\\scilab"
@@ -63,9 +63,9 @@ workflow:
         GIT_CLEAN_FLAGS: "none"
         BRANCH: "${CI_DEFAULT_BRANCH}"
         SCI_VERSION_STRING: "${CI_PROJECT_PATH_SLUG}-${BRANCH}-${CI_COMMIT_SHORT_SHA}"
-        DOCKER_LINUX_BUILDER: "registry.gitlab.com/scilab/scilab/linux-builder-${BRANCH}"
-        DOCKER_LINUX_PREBUILD: "registry.gitlab.com/scilab/scilab/linux-prebuild-${BRANCH}"
-        DOCKER_WINDOWS_BUILDER: "registry.gitlab.com/scilab/scilab/windows-builder-${BRANCH}"
+        DOCKER_LINUX_BUILDER: "registry.gitlab.com/scilab/scilab/linux-builder"
+        DOCKER_LINUX_PREBUILD: "registry.gitlab.com/scilab/scilab/linux-prebuild"
+        DOCKER_WINDOWS_BUILDER: "registry.gitlab.com/scilab/scilab/windows-builder"
     # Scheduled pipeline
     - if: $CI_PIPELINE_SOURCE == "schedule"
     # Release, use the default branch and prebuild docker images
@@ -73,9 +73,9 @@ workflow:
       variables:
         BRANCH: "${CI_DEFAULT_BRANCH}"
         SCI_VERSION_STRING: "scilab-${CI_COMMIT_TAG}"
-        DOCKER_LINUX_BUILDER: "${CI_REGISTRY_IMAGE}/linux-builder-${BRANCH}"
-        DOCKER_LINUX_PREBUILD: "${CI_REGISTRY_IMAGE}/linux-prebuild-${BRANCH}"
-        DOCKER_WINDOWS_BUILDER: "${CI_REGISTRY_IMAGE}/windows-builder-${BRANCH}"
+        DOCKER_LINUX_BUILDER: "${CI_REGISTRY_IMAGE}/linux-builder"
+        DOCKER_LINUX_PREBUILD: "${CI_REGISTRY_IMAGE}/linux-prebuild"
+        DOCKER_WINDOWS_BUILDER: "${CI_REGISTRY_IMAGE}/windows-builder"
     # on merge request with env. modification, set specific docker image tag
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes: &DOCKER_CHANGES
@@ -90,9 +90,9 @@ workflow:
         GIT_CLEAN_FLAGS: "-fX **.bin **/lib"
         BRANCH: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}"
         SCI_VERSION_STRING: "scilab-mr${CI_MERGE_REQUEST_IID}-${CI_COMMIT_SHORT_SHA}"
-        DOCKER_LINUX_BUILDER: "${CI_REGISTRY_IMAGE}/linux-builder-${BRANCH}"
-        DOCKER_LINUX_PREBUILD: "${CI_REGISTRY_IMAGE}/linux-prebuild-${BRANCH}"
-        DOCKER_WINDOWS_BUILDER: "${CI_REGISTRY_IMAGE}/windows-builder-${BRANCH}"
+        DOCKER_LINUX_BUILDER: "${CI_REGISTRY_IMAGE}/linux-builder"
+        DOCKER_LINUX_PREBUILD: "${CI_REGISTRY_IMAGE}/linux-prebuild"
+        DOCKER_WINDOWS_BUILDER: "${CI_REGISTRY_IMAGE}/windows-builder"
         DOCKER_TAG: "mr${CI_MERGE_REQUEST_IID}"
     # run on merge request
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"

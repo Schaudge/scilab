@@ -32,9 +32,13 @@
             <parameter name="id" type="int"/>
             <parameter name="message" type="String"/>
         </method>
-        <method name="setMessageBoxMessage" returnType="void" modifier="static">
+         <method name="setMessageBoxMessage" returnType="void" modifier="static">
             <parameter name="id" type="int"/>
             <parameter name="message" type="String[]"/>
+        </method>
+        <method name="setMessageBoxPasswordMode" returnType="void" modifier="static">
+            <parameter name="id" type="int"/>
+            <parameter name="isPassword" type="int[]"/>
         </method>
         <method name="messageBoxDisplayAndWait" returnType="void" modifier="static">
             <parameter name="id" type="int"/>

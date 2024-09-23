@@ -7,10 +7,14 @@
 // along with this program.
 function s=zp2ss(Z,P,K,dt)
     //zero pole gain to state space (simo system)
-    if argn(2)<4 then dt=[];end
-    if type(Z)<>1 then
-        error(msprintf(_("%s: Wrong type for input argument #%d: Real or complex array expected.\n"),"zp2ss",1))
+
+    arguments
+        Z {mustBeA(Z, "double")}
+        P {mustBeA(P, "double")}
+        K {mustBeA(K, "double")}
+        dt {mustBeA(dt, ["double", "string"]), mustBeScalarOrEmpty} = []
     end
+
     siso=and(size(K)==1)
     if siso then Z=Z(:);end
 
@@ -20,21 +24,12 @@ function s=zp2ss(Z,P,K,dt)
         end
     end
 
-    if type(P)<>1 then
-        error(msprintf(_("%s: Wrong type for input argument #%d: Real or complex vector expected.\n"),"zp2ss",2))
-    end
     if ~isreal(poly(P,'x')) then
         error(msprintf(_("%s: Wrong value for input argument #%d: complex poles  must appear in complex conjugate pairs.\n"),"zp2ss",2))
     end
 
-    if type(K)<>1  then
-        error(msprintf(_("%s: Wrong type for input argument #%d: A real vector expected.\n"),"zp2ss",3))
-    end
     if Z<>[]&(size(K,"*")<>size(Z,2)) then
         error(msprintf(_("%s: Incompatible input arguments #%d and #%d: Same column dimensions ""expected.\n"),"zp2ss",1,3))
-    end
-    if and(type(dt)<>[1 10])|and(size(dt,"*")<>[0 1]) then
-        error(msprintf(_("%s: Wrong type for input argument #%d: A scalar or a string expected.\n"),"zp2ss",4))
     end
 
     if siso then

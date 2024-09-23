@@ -226,9 +226,6 @@ try xcos_simulate(scs_m, 4); catch disp(lasterror()); end
             <member>
                 <link linkend="odedc">odedc</link>
             </member>
-            <member>
-                <link linkend="impl">impl</link>
-            </member>
         </simplelist>
     </refsection>
     <refsection>

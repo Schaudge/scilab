@@ -16,8 +16,13 @@ function [A,b]=aff2ab(lme,dimX,D,flag)
     //Y=lme(X,D)= affine fct of Xi's;
     //[A,b]=matrix representation of lme in canonical basis.
     // if flag=='sp' A matrix is return in sparse storage.
-    [LHS,RHS]=argn(0)
-    if RHS==3 then flag="f";end
+
+    arguments
+        lme {mustBeA(lme, "function")}
+        dimX (:, 2) {mustBeA(dimX, "double"), mustBeInteger, mustBeNonnegative}
+        D {mustBeA(D, "list")}
+        flag (1,1) {mustBeA(flag, "string"), mustBeMember(flag, ["f", "sp"])} = "f"
+    end
 
     nvars=0;
     for k=dimX'

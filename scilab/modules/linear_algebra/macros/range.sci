@@ -15,13 +15,9 @@ function [X,dim]=range(A,k)
     // Computation of Range A^k ; the first dim rows of X span the
     // range of A^k.
     //!
-    if argn(2)==1 then k=1,end
-    k=double(k)
-    if int(k)<>k|k<0 then
-        error(msprintf(gettext("%s: Wrong value for input argument #%d: Non-negative integer expected.\n"),"range",2));
-    end
-    if size(A,1)<>size(A,2)|~isreal(A) then
-        error(msprintf(gettext("%s: Wrong size for input argument #%d: A square matrix expected.\n"),"range",1));
+    arguments
+        A {mustBeA(A, "double"), mustBeReal}
+        k (1,1) double {mustBeA(k, ["double", "int"]), mustBeInteger, mustBeNonnegative} = 1
     end
 
     if k==0 then

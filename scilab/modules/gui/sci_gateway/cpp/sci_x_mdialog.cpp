@@ -34,12 +34,14 @@ int sci_x_mdialog(char *fname, void* pvApiCtx)
     int* piAddrlineLabelsAdr = NULL;
     int* piAddrdefaultValuesAdr = NULL;
     int* piAddrcolumnLabelsAdr = NULL;
+    int* piPasswordAddr = NULL;
     double* emptyMatrixAdr = NULL;
 
     int nbRow = 0, nbCol = 0;
     int nbRowDefaultValues = 0, nbColDefaultValues = 0;
     int nbRowLineLabels = 0, nbColLineLabels = 0;
     int nbRowColumnLabels = 0, nbColColumnLabels = 0;
+    int nbRowPassword = 0, nbColPassword = 0;
 
     int messageBoxID = 0;
 
@@ -48,13 +50,15 @@ int sci_x_mdialog(char *fname, void* pvApiCtx)
     char **columnLabelsAdr = NULL;
     char **defaultValuesAdr = NULL;
 
+    int* piPassword;
+
     int userValueSize = 0;
     char **userValue = NULL;
 
     CheckInputArgument(pvApiCtx, 3, 4);
     CheckOutputArgument(pvApiCtx, 0, 1);
 
-    /* READ THE LABELS */
+    /* READ THE TITLE (GENERAL DIALOG COMMENT) */
     if ((checkInputArgumentType(pvApiCtx, 1, sci_strings)))
     {
         sciErr = getVarAddressFromPosition(pvApiCtx, 1, &piAddrlabelsAdr);
@@ -67,7 +71,7 @@ int sci_x_mdialog(char *fname, void* pvApiCtx)
         // Retrieve a matrix of string at position 1.
         if (getAllocatedMatrixOfString(pvApiCtx, piAddrlabelsAdr, &nbRow, &nbCol, &labelsAdr))
         {
-            Scierror(202, _("%s: Wrong type for argument #%d: string expected.\n"), fname, 1);
+            Scierror(999, _("%s: Wrong type for argument #%d: string expected.\n"), fname, 1);
             return 1;
         }
     }
@@ -86,7 +90,7 @@ int sci_x_mdialog(char *fname, void* pvApiCtx)
     setMessageBoxMultiLineMessage(messageBoxID, labelsAdr, nbCol * nbRow);
     freeAllocatedMatrixOfString(nbRow, nbCol, labelsAdr);
 
-    /* READ THE LINE LABELS */
+    /* READ THE LABELS OR LINE LABELS */
     if (checkInputArgumentType(pvApiCtx, 2, sci_strings))
     {
         sciErr = getVarAddressFromPosition(pvApiCtx, 2, &piAddrlineLabelsAdr);
@@ -99,7 +103,7 @@ int sci_x_mdialog(char *fname, void* pvApiCtx)
         // Retrieve a matrix of string at position 2.
         if (getAllocatedMatrixOfString(pvApiCtx, piAddrlineLabelsAdr, &nbRowLineLabels, &nbColLineLabels, &lineLabelsAdr))
         {
-            Scierror(202, _("%s: Wrong type for argument #%d: string expected.\n"), fname, 2);
+            Scierror(999, _("%s: Wrong type for argument #%d: string expected.\n"), fname, 2);
             return 1;
         }
 
@@ -121,7 +125,7 @@ int sci_x_mdialog(char *fname, void* pvApiCtx)
     /* READ THE COLUMN LABELS or DEFAULT VALUES */
     if (checkInputArgumentType(pvApiCtx, 3, sci_strings))
     {
-        if (nbInputArgument(pvApiCtx) == 3)
+        if (nbInputArgument(pvApiCtx) >= 3)
         {
             sciErr = getVarAddressFromPosition(pvApiCtx, 3, &piAddrdefaultValuesAdr);
             if (sciErr.iErr)
@@ -133,7 +137,7 @@ int sci_x_mdialog(char *fname, void* pvApiCtx)
             // Retrieve a matrix of string at position 3.
             if (getAllocatedMatrixOfString(pvApiCtx, piAddrdefaultValuesAdr, &nbRowDefaultValues, &nbColDefaultValues, &defaultValuesAdr))
             {
-                Scierror(202, _("%s: Wrong type for argument #%d: string expected.\n"), fname, 3);
+                Scierror(999, _("%s: Wrong type for argument #%d: string expected.\n"), fname, 3);
                 return 1;
             }
 
@@ -159,7 +163,7 @@ int sci_x_mdialog(char *fname, void* pvApiCtx)
             // Retrieve a matrix of string at position 3.
             if (getAllocatedMatrixOfString(pvApiCtx, piAddrcolumnLabelsAdr, &nbRowColumnLabels, &nbColColumnLabels, &columnLabelsAdr))
             {
-                Scierror(202, _("%s: Wrong type for argument #%d: string expected.\n"), fname, 3);
+                Scierror(999, _("%s: Wrong type for argument #%d: string expected.\n"), fname, 3);
                 return 1;
             }
 
@@ -181,7 +185,7 @@ int sci_x_mdialog(char *fname, void* pvApiCtx)
 
     if (nbInputArgument(pvApiCtx) == 4)
     {
-        /* READ  DEFAULT VALUES */
+        /* READ DEFAULT VALUES */
         if (checkInputArgumentType(pvApiCtx, 4, sci_strings))
         {
             sciErr = getVarAddressFromPosition(pvApiCtx, 4, &piAddrdefaultValuesAdr);
@@ -195,7 +199,7 @@ int sci_x_mdialog(char *fname, void* pvApiCtx)
             // DO NOT FORGET TO RELEASE MEMORY via freeAllocatedMatrixOfString(nbRowDefaultValues, nbColDefaultValues, defaultValuesAdr).
             if (getAllocatedMatrixOfString(pvApiCtx, piAddrdefaultValuesAdr, &nbRowDefaultValues, &nbColDefaultValues, &defaultValuesAdr))
             {
-                Scierror(202, _("%s: Wrong type for argument #%d: string expected.\n"), fname, 4);
+                Scierror(999, _("%s: Wrong type for argument #%d: string expected.\n"), fname, 4);
                 return 1;
             }
 
@@ -208,9 +212,33 @@ int sci_x_mdialog(char *fname, void* pvApiCtx)
             setMessageBoxDefaultInput(messageBoxID, defaultValuesAdr, nbColDefaultValues * nbRowDefaultValues);
             freeArrayOfString(defaultValuesAdr, nbColDefaultValues * nbRowDefaultValues);
         }
+        else if (checkInputArgumentType(pvApiCtx, 4, sci_boolean))
+        {
+            sciErr = getVarAddressFromPosition(pvApiCtx, 4, &piPasswordAddr);
+            if (sciErr.iErr)
+            {
+                printError(&sciErr, 0);
+                return 1;
+            }
+
+            sciErr = getMatrixOfBoolean(pvApiCtx, piPasswordAddr, &nbRowPassword, &nbColPassword, &piPassword);
+            if (sciErr.iErr)
+            {
+                Scierror(999, _("%s: Wrong type for argument #%d: Boolean vector expected.\n"), fname, 4);
+                return 1;
+            }
+
+            if ((nbRowLineLabels != nbRowPassword) || (nbColLineLabels != nbColPassword))
+            {
+                Scierror(999, _("%s: Wrong size for input argument #%d: Boolean vector expected.\n"), fname, 4);
+                return FALSE;
+            }
+
+            setMessageBoxPasswordMode(messageBoxID, piPassword, nbRowPassword * nbColPassword);
+        }
         else
         {
-            Scierror(999, _("%s: Wrong type for input argument #%d: Matrix of strings expected.\n"), fname, 4);
+            Scierror(999, _("%s: Wrong type for input argument #%d: Boolean vector expected.\n"), fname, 4);
             return FALSE;
         }
     }
@@ -240,7 +268,7 @@ int sci_x_mdialog(char *fname, void* pvApiCtx)
         nbCol = 1;
         nbRowDefaultValues = nbColLineLabels * nbRowLineLabels;
         nbColDefaultValues = 1;
-        if (nbInputArgument(pvApiCtx) == 4)
+        if ((nbInputArgument(pvApiCtx) == 4) && (nbRowPassword * nbColPassword == 0))
         {
             nbColDefaultValues = nbColColumnLabels * nbRowColumnLabels;
         }

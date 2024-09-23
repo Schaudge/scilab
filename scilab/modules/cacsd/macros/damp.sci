@@ -12,15 +12,16 @@ function [wn,z,p] = damp(R,dt1)
     //   The variable R  must be a real or complex array of roots, a
     //   polynomial array or  a linear dynamical system
 
-    if argn(2)<1 then
-        error(msprintf(_("%s: Wrong number of input arguments: %d or %d expected.\n"),"damp",1,2))
+    arguments
+        R {mustBeA(R, ["lss", "r", "zpk", "polynomial", "double"])}
+        dt1 {mustBeA(dt1, ["double", "string"]), mustBeScalarOrEmpty}= []
     end
+
+    
     //handling optional argument dt1
-    if argn(2)==1 then
-        dt1=[];
-    else
+    if dt1 <> [] then
         if type(dt1)==1 then
-            if size(dt1,"*")<>1|dt1<0 then
+            if dt1<0 then
                 error(msprintf(_("%s: Wrong type for input argument #%d: Real non negative scalar expected.\n"),..
                 "damp",2))
             end
@@ -33,9 +34,6 @@ function [wn,z,p] = damp(R,dt1)
                 error(msprintf(_("%s: Wrong value for input argument #%d: Must be in the set {%s}.\n"),..
                 "damp",2,"""c"", ""d"""))
             end
-        else
-            error(msprintf(_("%s: Wrong type for input argument #%d: Scalar or string expected.\n"),..
-            "damp",2))
         end
     end
 

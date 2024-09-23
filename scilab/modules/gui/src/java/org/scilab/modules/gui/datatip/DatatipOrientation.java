@@ -204,7 +204,7 @@ public class DatatipOrientation {
                 GraphicController.getController().setProperty(datatipUid, __GO_DATATIP_AUTOORIENTATION__, true);
                 break;
             default:
-                String errorMsg = "error(msprintf(_( \"%s: Unknown input argument #%d: ''%s'' is not valid.\n\"),\"datatipSetOrientation\",2,\"" + datatipOrientation + "\"));";
+                String errorMsg = "error(msprintf(_( \"%s: Unknown input argument #%d: ''%s'' is not valid.\\n\"),\"datatipSetOrientation\",2,\"" + datatipOrientation + "\"));";
                 InterpreterManagement.requestScilabExec(errorMsg);
         }
     }

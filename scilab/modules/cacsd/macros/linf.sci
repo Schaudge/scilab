@@ -19,10 +19,26 @@ function [n]=linf(g,eps,tol)
     //-- tol threshold for imaginary axis poles.
     // See also: h_norm
     //!
-    if type(g)==1,if norm(g)==0,n=0,return,end,end,
 
-    if and(typeof(g)<>["rational","state-space"]) then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space or a transfer function expected.\n"),"linf",1))
+    arguments
+        g {mustBeA(g, ["double", "r", "lss"])}
+        eps (1,1) {mustBeA(eps, "double")} = 1e-7
+        tol (1,1) {mustBeA(tol, "double")} = 1000*%eps
+    end
+
+    if type(g)==1 then
+        msg = "%s: %s(g [, eps, tol]) is obsolete when g is a matrix of doubles.\n"
+        msg = msprintf(msg, "linf", "linf");
+        msg = [msg, msprintf(_("This feature will be permanently removed in Scilab %s"), "2026.0.0")]
+        warning(msg) 
+
+        if norm(g)==0 then
+            n=0;
+            return
+        else
+            msg = gettext("%s: Wrong type for input argument #%d: Linear state space or a transfer function expected.\n")
+            error(msprintf(msg, "linf", 1))
+        end
     end
     if g.dt<>"c"&g.dt<>[] then
         error(msprintf(gettext("%s: Wrong value for input argument #%d: Continuous time system expected.\n"),"linf",1))
@@ -30,11 +46,6 @@ function [n]=linf(g,eps,tol)
     g.dt="c"
     if typeof(g)=="rational" then g=tf2ss(g),end
 
-    [lhs,rhs]=argn(0),
-    select rhs,
-    case 1 then eps=1e-7,tol=1000*%eps,
-    case 2 then tol=1000*%eps,
-    end,
     [a,b,c,d]=g(2:5),[t,t]=size(a),
     p=ctr_gram(g),q=obs_gram(g);
     //Algorithm:

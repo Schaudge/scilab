@@ -136,6 +136,11 @@
 #define SCI_CLOSE_ARGS		        SCI_RPAREN
 #define SCI_ENDFUNCTION		        L"endfunction"
 
+// Syntax to have lambda declaration
+#define SCI_LAMBDA  		        L"#"
+#define SCI_OPEN_LAMBDA		        SCI_LPAREN
+#define SCI_CLOSE_LAMBDA	        SCI_RPAREN
+
 // Syntax to have select control structure
 #define SCI_SELECT		            L"select"
 #define SCI_CASE		            L"case"

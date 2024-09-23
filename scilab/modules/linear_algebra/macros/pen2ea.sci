@@ -12,6 +12,10 @@
 // along with this program.
 
 function [e,a]=pen2ea(f)
-    e=coeff(f,1);
-    a=-coeff(f,0);
+    arguments
+        f {mustBeA(f, ["double", "polynomial"])}
+    end
+    
+    e = coeff(f,1);
+    a = -coeff(f,0);
 endfunction

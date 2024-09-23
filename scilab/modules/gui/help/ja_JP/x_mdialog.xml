@@ -56,12 +56,19 @@
                 </listitem>
             </varlistentry>
             <varlistentry>
-                <term>default_input_matrix</term>
+                <term>default_inputs_matrix</term>
                 <listitem>
                     <para>文字列の n x m 行列,
-                        <literal>default_input_matrix(i,j)</literal> は
+                        <literal>default_inputs_matrix(i,j)</literal> は
                         指定する行列の要素(i,j)の初期値です
                     </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>ispassword</term>
+                <listitem>
+                    <para>n column vector of booleans: if <literal>ispassword(i)</literal> value is <literal>%T</literal>, the ith entry/input will be used to get a password, the characters typed by the user will be hidden and returned value will contains a single string. Default value is <literal>%F</literal>.</para>
+                    <note>This parameter is not managed for matrix case.</note>
                 </listitem>
             </varlistentry>
             <varlistentry>

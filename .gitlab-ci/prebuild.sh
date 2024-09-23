@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/env bash
 
 ARCH=$(cc -print-multiarch)
 
@@ -58,7 +58,7 @@ export PATH="/usr/local/bin:$INSTALLUSRDIR/bin:$PATH"
 JDK_VERSION=17.0.7+7
 JRE_VERSION=17.0.7_7
 ANT_VERSION=1.10.5
-OPENBLAS_VERSION=0.3.27
+OPENBLAS_VERSION=0.3.28
 ARPACK_VERSION=3.9.1
 CURL_VERSION=7.64.1
 EIGEN_VERSION=3.3.2
@@ -77,7 +77,6 @@ ZLIB_VERSION=1.2.11
 XZ_VERSION=5.4.4
 JOGL_VERSION=2.5.0
 OPENXLSX_VERSION=0.3.2
-FOP_VERSION=2.0
 LIBARCHIVE_VERSION=3.7.1
 
 # CppServer and its deps
@@ -117,7 +116,6 @@ make_versions() {
     echo "XZ_VERSION            = $XZ_VERSION"
     echo "JOGL_VERSION          = $JOGL_VERSION"
     echo "OPENXLSX_VERSION      = $OPENXLSX_VERSION"
-    echo "FOP_VERSION           = $FOP_VERSION"
     echo "LIBARCHIVE_VERSION    = $LIBARCHIVE_VERSION"
     echo "CPPSERVER_VERSION     = $CPPSERVER_VERSION"
     echo "ASIO_VERSION          = $ASIO_VERSION"
@@ -159,16 +157,17 @@ download_dependencies() {
 
     [ ! -f OpenXLSX-$OPENXLSX_VERSION.tar.gz ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/OpenXLSX-$OPENXLSX_VERSION.tar.gz
 
-    # xmlgraphics-commons is included within FOP
-    # Batik is included within FOP
-    [ ! -f fop-$FOP_VERSION-bin.zip ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/fop-$FOP_VERSION-bin.zip
-
     # This archive contains .jar and directories that have been copied from Scilab prerequirements
     # JavaFX/openjfx is only shipped as JARs, no rebuild is needed for now
     curl -L --time-cond -o thirdparty.zip "https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/thirdparty-scilab-branch-${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME}.zip"
     if ! unzip -qt "thirdparty.zip"; then
         # use thirdparty from the target branch
         curl -L -o thirdparty.zip "https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/thirdparty-scilab-branch-${BRANCH}.zip"
+    fi
+    #FIXME: hard-coded branch name, remove before merge
+    if ! unzip -qt "thirdparty.zip"; then
+        # fallback to the default branch
+        curl -L -o thirdparty.zip "https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/thirdparty-scilab-branch-update-thirdparty-jars.zip"
     fi
     if ! unzip -qt "thirdparty.zip"; then
         # fallback to the default branch
@@ -359,11 +358,13 @@ make_binary_directory() {
     cp -d /usr/local/lib/libsciquadmath.so* "$LIBTHIRDPARTYDIR/redist/"
     cp -d /usr/local/lib/libscigfortran.so* "$LIBTHIRDPARTYDIR/redist/"
     cp -d /usr/local/lib/libscigcc_s.so* "$LIBTHIRDPARTYDIR/redist/"
+    cp -d /usr/local/lib/libscigomp.so* "$LIBTHIRDPARTYDIR/redist/"
     cp -d /usr/local/lib/libscistdc++.so* "$LIBTHIRDPARTYDIR/redist/"
 
     cp -d /usr/local/lib/libsciquadmath.so* "$INSTALLUSRDIR/lib/"
     cp -d /usr/local/lib/libscigfortran.so* "$INSTALLUSRDIR/lib/"
     cp -d /usr/local/lib/libscigcc_s.so* "$INSTALLUSRDIR/lib/"
+    cp -d /usr/local/lib/libscigomp.so* "$INSTALLUSRDIR/lib/"
     cp -d /usr/local/lib/libscistdc++.so* "$INSTALLUSRDIR/lib/"
 
     # In case these libraries are not found on the system.
@@ -394,32 +395,6 @@ make_jar() {
     JAVATHIRDPARTYDIR=$INSTALLROOTDIR/thirdparty
     mkdir -p "$JAVATHIRDPARTYDIR"
 
-    # XMLGraphics (included in FOP)
-    # Batik (included in FOP)
-    # FOP
-    rm -f "$JAVATHIRDPARTYDIR/fop-*" 
-    rm -fr fop-$FOP_VERSION
-    unzip "$DOWNLOADDIR/fop-$FOP_VERSION-bin.zip" fop-$FOP_VERSION/build/*.jar fop-$FOP_VERSION/lib/*.jar
-    rm -f "$JAVATHIRDPARTYDIR"/fop* 
-    cp -a fop-$FOP_VERSION/build/fop.jar "$JAVATHIRDPARTYDIR/" 
-    rm -f "$JAVATHIRDPARTYDIR/avalon-framework*" 
-    cp -a fop-$FOP_VERSION/lib/avalon-framework-*.jar "$JAVATHIRDPARTYDIR/avalon-framework.jar" 
-    rm -f "$JAVATHIRDPARTYDIR/batik-*" 
-    cp -a fop-$FOP_VERSION/lib/batik-all-*.jar "$JAVATHIRDPARTYDIR/batik-all.jar" 
-    rm -f "$JAVATHIRDPARTYDIR/commons-io-*" 
-    cp -a fop-$FOP_VERSION/lib/commons-io-*.jar "$JAVATHIRDPARTYDIR/commons-io.jar" 
-    rm -f "$JAVATHIRDPARTYDIR/commons-logging-*" 
-    cp -a fop-$FOP_VERSION/lib/commons-logging-*.jar "$JAVATHIRDPARTYDIR/commons-logging.jar" 
-    rm -f "$JAVATHIRDPARTYDIR/fontbox-*" 
-    cp -a fop-$FOP_VERSION/lib/fontbox-*.jar "$JAVATHIRDPARTYDIR/fontbox.jar" 
-    rm -f "$JAVATHIRDPARTYDIR/xml-apis-ext-*" 
-    cp -a fop-$FOP_VERSION/lib/xml-apis-ext*.jar "$JAVATHIRDPARTYDIR/xml-apis-ext.jar" 
-    rm -f "$JAVATHIRDPARTYDIR/xml-apis-1*" 
-    cp -a fop-$FOP_VERSION/lib/xml-apis-1*.jar "$JAVATHIRDPARTYDIR/xml-apis.jar" 
-    rm -f "$JAVATHIRDPARTYDIR/xmlgraphics-commons*" 
-    cp -a fop-$FOP_VERSION/lib/xmlgraphics-commons-*.jar "$JAVATHIRDPARTYDIR/xmlgraphics-commons.jar" 
-    rm -fr fop-$FOP_VERSION
-
     # copy .jar from scilab prerequirements
     cd "$DOWNLOADDIR" || exit 1
     rm -rf thirdparty
@@ -427,12 +402,75 @@ make_jar() {
     cd thirdparty || exit 1
     unzip "$DOWNLOADDIR/thirdparty.zip"
     # remove .jar already managed
-    rm xml* fontbox* commons* batik* avalon* fop.jar gluegen2-rt.jar jogl2.jar gluegen-rt.jar jogl-all.jar
+    rm gluegen*.jar jogl*.jar
     # Copy all JARs from thirdparty.zip
-    cp -a ./* "$JAVATHIRDPARTYDIR"
-    # Copy flexdock to be sure prerequirements archive will be regenerated when flexdock version changes
-    # TODO: add all JARs below and remove global copy using ./*
-    cp -a flexdock-1.2.5.jar "$JAVATHIRDPARTYDIR/flexdock-1.2.5.jar"
+    # JAR versions are enforced to trigger a prerequirement rebuild on upgrade
+    cp -a -t "$JAVATHIRDPARTYDIR"           \
+        Saxon-HE-12.4.jar                   \
+        activation-1.1.1.jar                \
+        antlr4-runtime-4.13.1.jar           \
+        asm-3.3.1.jar                       \
+        avalon-framework-4.1.4.jar          \
+        batik-all-1.17.jar                  \
+        checkstyle-10.17.0.jar              \
+        cobertura-2.1.1.jar                 \
+        commons-beanutils-1.9.4.jar         \
+        commons-codec-1.15.jar              \
+        commons-collections-3.2.2.jar       \
+        commons-io-2.11.0.jar               \
+        commons-logging-1.1.1.jar           \
+        checkstyle/                         \
+        docbook/                            \
+        ecj-3.37.0.jar                      \
+        flatlaf-3.4.1.jar                   \
+        flexdock-1.2.5.jar                  \
+        fontbox-2.0.27.jar                  \
+        fonts/scilabsymbols.ttf             \
+        fop-2.9.jar                         \
+        fop-core-2.9.jar                    \
+        fop-events-2.9.jar                  \
+        fop-util-2.9.jar                    \
+        freehep-graphics2d-2.4.jar          \
+        freehep-graphicsbase-2.4.jar        \
+        freehep-graphicsio-2.4.jar          \
+        freehep-graphicsio-emf-2.4.jar      \
+        freehep-io-2.2.2.jar                \
+        guava-33.2.0-jre.jar                \
+        httpclient5-5.1.3.jar               \
+        httpcore5-5.1.3.jar                 \
+        istack-commons-runtime-4.2.0.jar    \
+        jakarta.activation-2.0.1.jar        \
+        jakarta.activation-api-2.1.3.jar    \
+        javafx.base.jar                     \
+        javafx.graphics.jar                 \
+        javafx.swing.jar                    \
+        javax.activation-api-1.2.0.jar      \
+        javax.annotation-api-1.3.2.jar      \
+        jaxb-api-2.3.1.jar                  \
+        jaxb-impl-2.3.1.jar                 \
+        jaxb-runtime-2.3.1.jar              \
+        jeuclid-core-3.1.14.jar             \
+        jgoodies-looks-2.7.0.jar            \
+        jgraphx-2.1.0.7.jar                 \
+        jhall-2.0.jar                       \
+        jlatexmath-1.0.7.jar                \
+        jlatexmath-font-cyrillic-1.0.7.jar  \
+        jlatexmath-font-greek-1.0.7.jar     \
+        jlatexmath-fop-1.0.7.jar            \
+        jrosetta-API-1.0.4.jar              \
+        jrosetta-engine-1.0.4.jar           \
+        junit-4.10.jar                      \
+        lucene-analysis-common-9.10.0.jar   \
+        lucene-core-9.10.0.jar              \
+        lucene-queryparser-9.10.0.jar       \
+        qdox-1.12.jar                       \
+        skinlf-1.2.3.jar                    \
+        slf4j-api-1.7.25.jar                \
+        xml-apis-1.4.01.jar                 \
+        xml-apis-ext-1.3.04.jar             \
+        xmlgraphics-commons-2.9.jar         \
+        xmlresolver-6.0.4.jar               \
+        || exit 1
 }
 
 make_archive() {
@@ -455,7 +493,7 @@ build_openblas() {
 
     tar -xzf "$DOWNLOADDIR/OpenBLAS-$OPENBLAS_VERSION.tar.gz"
     cd OpenBLAS-$OPENBLAS_VERSION || exit 1
-    make -j"$(nproc)" DYNAMIC_ARCH=1 NO_AVX2=1 NO_STATIC=1 NO_LAPACKE=1
+    make -j"$(nproc)" TARGET=NEHALEM DYNAMIC_ARCH=1 NO_AVX2=1 NO_STATIC=1 NO_LAPACKE=1
 
     # install openblas for runtime usage
     cp libopenblas.so "$INSTALLUSRDIR/lib/libopenblas.so.$OPENBLAS_VERSION"
@@ -960,7 +998,7 @@ build_gluegen() {
     rm -fr jcpp && mv jcpp-v$JOGL_VERSION jcpp
 
     cd make || exit 1
-    "$ANT_HOME/bin/ant"
+    "$ANT_HOME/bin/ant" || exit 1
 
     cd "$BUILDDIR/gluegen-v$JOGL_VERSION" || exit 1
     cp -a build/obj/libgluegen_rt.so "$INSTALLROOTDIR/lib/thirdparty"
@@ -975,7 +1013,7 @@ build_jogl() {
 
     cd jogl-v$JOGL_VERSION/make || exit 1
 
-    "$ANT_HOME/bin/ant"
+    "$ANT_HOME/bin/ant" || exit 1
 
     cd "$BUILDDIR/jogl-v$JOGL_VERSION" || exit 1
     cp -a -t "$INSTALLROOTDIR/lib/thirdparty" build/lib/libjogl_desktop.so build/lib/libnativewindow_awt.so build/lib/libnativewindow_drm.so build/lib/libnativewindow_x11.so build/lib/libnewt_drm.so build/lib/libnewt_head.so
@@ -1101,13 +1139,13 @@ do
         rm -rf "$INSTALLROOTDIR"
         create_folders
         echo "Download prerequirements sources"
-        download_dependencies > "$LOGDIR/downloads.log" 2>&1 || (tail --lines=100 "$LOGDIR/downloads.log/log"; exit 1)
+        download_dependencies > "$LOGDIR/prebuild_downloads.log" 2>&1 || (tail --lines=100 "$LOGDIR/prebuild_downloads.log"; exit 1)
         echo "Build prerequirements"
-        make_all > "$LOGDIR/build_all.log" 2>&1 || (tail --lines=100 "$LOGDIR/build_all.log"; exit 1)
+        make_all > "$LOGDIR/prebuild_build_all.log" 2>&1 || (tail --lines=100 "$LOGDIR/prebuild_build_all.log"; exit 1)
         echo "Create binary"
-        make_binary_directory > "$LOGDIR/binary.log" 2>&1 || (tail --lines=100 "$LOGDIR/binary.log"; exit 1)
+        make_binary_directory > "$LOGDIR/prebuild_binary.log" 2>&1 || (tail --lines=100 "$LOGDIR/prebuild_binary.log"; exit 1)
         echo "Make jar"
-        make_jar > "$LOGDIR/jar.log" 2>&1 || (tail --lines=100 "$LOGDIR/jar.log"; exit 1)
+        make_jar > "$LOGDIR/prebuild_jar.log" 2>&1 || (tail --lines=100 "$LOGDIR/prebuild_jar.log"; exit 1)
         make_archive
         shift
         ;;

@@ -119,6 +119,10 @@ function c=legend(varargin)
 
     drawlater()
     c=captions(H,leg)
+    if c == [] then
+        // return immediately (to avoid to return a struct see issue #17275)
+        return
+    end
     if options_codes(kopt)<0 then
         c.background=f.background
     else

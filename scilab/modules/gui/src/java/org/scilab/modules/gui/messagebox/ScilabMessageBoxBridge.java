@@ -67,6 +67,15 @@ public class ScilabMessageBoxBridge {
     }
 
     /**
+     * Set the password mode of the MessageBox
+     * @param messageBox the MessageBox we want to set the password mode of
+     * @param isPassword true is a password will be entered
+     */
+    public static void setPasswordMode(MessageBox messageBox, int[] isPassword) {
+        messageBox.getAsSimpleMessageBox().setPasswordMode(isPassword);
+    }
+
+    /**
      * Display this MessgeBox and wait for user selection
      * @param messageBox the MessageBox we want to display
      */

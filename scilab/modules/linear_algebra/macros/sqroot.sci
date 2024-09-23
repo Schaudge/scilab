@@ -12,6 +12,10 @@
 // along with this program.
 
 function [S]=sqroot(Q)
+    arguments
+        Q {mustBeA(Q, "double")}
+    end
+    
     Q1=(Q+Q')/2;
     if norm(Q1-Q,1) > 100*%eps then
         warning(msprintf(gettext("%s: Wrong size for input argument #%d: Symmetric expected"),"sqroot",1));

@@ -24,9 +24,11 @@ function [J]=fstabst(Stplant,r)
     //               j21 j22]
     // K is a stablizing controller iff K=LFT(J,r,Q) with Q stable
     //!
-    if and(typeof(Stplant)<>["rational","state-space"]) then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space or a transfer function expected.\n"),"fstabst",1))
+    arguments
+        Stplant {mustBeA(Stplant, ["r", "lss"])}
+        r (1,2) {mustBeA(r, "double")}
     end
+
     if Stplant.dt<>"c" then
         error(msprintf(gettext("%s: Wrong type for argument #%d: In continuous time expected.\n"),"fstabst",1))
     end

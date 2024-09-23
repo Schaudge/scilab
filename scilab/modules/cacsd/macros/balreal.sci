@@ -13,12 +13,10 @@
 
 function [slb,u]=balreal(a)
 
-    [lhs,rhs]=argn(0)
-
-    if typeof(a)<>"state-space" then
-        msg = _("%s: Argument #%d: Linear state space expected.\n");
-        error(msprintf(msg, "balreal", 1));
+    arguments
+        a {mustBeA(a, "lss")}
     end
+
     [a,b,c,d,x0,dom]=a(2:7);
     if dom==[] then
         msg = _("%s: Argument #%d: Undefined time domain.\n");
@@ -37,5 +35,5 @@ function [slb,u]=balreal(a)
     b=diag(ll)*b
     c=c*diag(lli)
     slb=syslin(dom,a,b,c,d,diag(ll)*r*x0),
-    if lhs==2 then u=ri*diag(lli),end
+    if nargout==2 then u=ri*diag(lli),end
 endfunction

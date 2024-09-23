@@ -23,6 +23,11 @@ function [ac,bc,u,ind]=canon(a,b)
     //!
     //1: block-hessenberg form
 
+    arguments
+        a {mustBeA(a, "double")}
+        b {mustBeA(b, "double")}
+    end
+
     // Was : [ac,bc,u,ro]=contr(a,b,[1.d-10*norm([a,b],1),1.d-10]);
     [n,u,ro,V,ac,bc]=contr(a,b,1.d-10*norm([a,b],1));
     //2:zeroing what is to the right of under-diagonal blocks

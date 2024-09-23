@@ -18,10 +18,11 @@ function [Bk,Ck]=fullrfk(A,k)
     // For k=1 fullrfk is the same as fullrf.
     // F.D (1990)
     //!
-    [lhs,rhs]=argn(0);
-    if rhs==1,
-        k=1;
+    arguments
+        A {mustBeA(A, "double")}
+        k (1,1) {mustBeA(k, "double"), mustBeInteger, mustBeNonnegative} = 1
     end
+
     [n,n]=size(A);
     //k=0
     if k==0,

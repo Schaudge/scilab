@@ -12,16 +12,22 @@
 // along with this program.
 
 function   [den,num,err]=arl2(y,den0,n,imp,all)
-    [lhs,rhs]=argn(0);
+
+    arguments
+        y {mustBeA(y, ["double", "polynomial"])}
+        den0 (1,1) {mustBeA(den0, "polynomial")}
+        n (1,1) {mustBeA(n, "double"), mustBeInteger}
+        imp (1,1) {mustBeA(imp, ["double", "string"])} = 0
+        all (1,1) {mustBeA(all, "string"), mustBeMember(all, ["one", "all"])} = "one"
+    end
+
     // test the system type 'c' 'd' or dt
-    if rhs <= 4 then all="one";end
-    if rhs <= 3 then imp=0;end
     if all=="all" then
         [den,num,err]=arl2_ius(y,den0,n,imp,all);
     else
         [den,num,err]=arl2_ius(y,den0,n,imp);
     end;
-    if lhs<=1 then
+    if nargout <= 1 then
         den=syslin("d",num,den);
     end
 endfunction

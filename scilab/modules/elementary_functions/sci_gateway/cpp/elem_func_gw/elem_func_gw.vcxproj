@@ -262,6 +262,7 @@ lib /DEF:"$(ProjectDir)elementary_functions_Import.def" /SUBSYSTEM:WINDOWS /MACH
     <ClCompile Include="..\sci_tanh.cpp" />
     <ClCompile Include="..\sci_tril.cpp" />
     <ClCompile Include="..\sci_triu.cpp" />
+    <ClCompile Include="..\sci_vander.cpp" />
     <ClCompile Include="..\sci_zeros.cpp" />
     <ClCompile Include="..\sci_real.cpp" />
     <ClCompile Include="..\sci_issquare.cpp" />

@@ -118,6 +118,17 @@
                                 </para>
                             </listitem>
                         </varlistentry>
+                        <varlistentry>
+                            <term>timeout</term>
+                            <listitem>
+                                <para>
+                                    Set the maximum time in seconds that you allow the request to take.
+                                    Millseconds can be set by using a floating point value. 
+                                    ie: 0.5 will set a timeout of 500 ms.
+                                    When the timeout is reached, the function returns an error.
+                                </para>
+                            </listitem>
+                        </varlistentry>
                     </variablelist>
                 </listitem>
             </varlistentry>

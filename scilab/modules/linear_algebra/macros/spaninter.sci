@@ -20,11 +20,16 @@ function [x,dim]=spaninter(a,b,tol)
     // dim        dimension of subspace A inter B.
     // tol        threshold (sqrt(%eps) is the default value).
 
+    arguments
+        a {mustBeA(a, "double")}
+        b {mustBeA(b, "double")}
+        tol (1,1) {mustBeA(tol, "double")} = sqrt(%eps)
+    end
+
     [lhs,rhs]=argn(0);
     [na,ma]=size(a);[nb,mb]=size(b);
     if ma*na==0 then dim=0;x=eye(nb,nb);return;end
     if mb*nb==0 then dim=0;x=eye(na,na);return;end
-    if rhs==2 then tol=sqrt(%eps);end
     if na <> nb then
         error(msprintf(gettext("%s: Incompatible input arguments #%d and #%d: Same sizes expected.\n"),"spaninter",1,2));
     end

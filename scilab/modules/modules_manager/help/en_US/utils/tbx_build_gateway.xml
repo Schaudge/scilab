@@ -39,14 +39,26 @@
                     <para>2 or 3 columns string matrix giving the table of pairs 'scilab-name', 'interface name', ['language']</para>
                     <para>
                         <literal>language</literal> can be :
-                        <listitem>
-                            <para>csci : C entry point for API Scilab ( default value )</para>
-                            <para>fsci : Fortran entry point for API Scilab</para>
-                            <para>cmex : C mexlib entry point for MexLib</para>
-                            <para>fmex : Fortran mexlib entry point for MexLib</para>
-                            <para>cppsci : C++ entry point for C++ API Scilab</para>
-                            <para>cppsciopt : C++ entry point for C++ API Scilab with optional arguments</para>
-                        </listitem>
+                        <itemizedlist>
+                            <listitem>
+                                <para><literal>"csci"</literal>: C entry point for API Scilab (default value)</para>
+                            </listitem>
+                            <listitem>
+                                <para><literal>"fsci"</literal>: Fortran entry point for API Scilab</para>
+                            </listitem>
+                            <listitem>
+                                <para><literal>"cmex"</literal>: C mexlib entry point for MexLib</para>
+                            </listitem>
+                            <listitem>
+                                <para><literal>"fmex"</literal>: Fortran mexlib entry point for MexLib</para>
+                            </listitem>
+                            <listitem>
+                                <para><literal>"cppsci"</literal>: C++ entry point for C++ API Scilab</para>
+                            </listitem>
+                            <listitem>
+                                <para><literal>"cppsciopt"</literal>: C++ entry point for C++ API Scilab with optional arguments</para>
+                            </listitem>
+                        </itemizedlist>
                     </para>
                 </listitem>
             </varlistentry>

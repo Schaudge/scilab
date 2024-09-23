@@ -17,7 +17,10 @@ function [sl]=tf2ss(h,tol)
     // sl = linear system in state-space representation (syslin list)
     //!
 
-    [lhs,rhs]=argn(0)
+    arguments
+        h {mustBeA(h, ["double", "polynomial", "r"])}
+        tol {mustBeA(tol, "double")}= []
+    end
 
     if type(h)<=2 then
         sl=syslin([],[],[],[],h);
@@ -73,7 +76,7 @@ function [sl]=tf2ss(h,tol)
         [k,l]=find(u<>0) //get the permutation
         u=u(k,l);c=c(:,k)*u; b=diag(1 ./diag(u))*b(k,:);
 
-        if rhs<2 then
+        if tol == [] then
             [no,u]=contr(a',c',%eps);
         else
             [no,u]=contr(a',c',tol);

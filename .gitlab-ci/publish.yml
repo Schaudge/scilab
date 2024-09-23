@@ -42,8 +42,8 @@ archive_test_results:
     paths:
       - "${SCI_VERSION_STRING}/archive_test_results.csv"
       - "${SCI_VERSION_STRING}/*/*.xml"
-      - "${SCI_VERSION_STRING}/*/*.tst"
-      - "${SCI_VERSION_STRING}/*/*.res"
-      - "${SCI_VERSION_STRING}/*/*.err"
-      - "${SCI_VERSION_STRING}/*/*.dia.tmp"
-      - "${SCI_VERSION_STRING}/*/*.dia"
+      - "${SCI_VERSION_STRING}/*/*/*.tst"
+      - "${SCI_VERSION_STRING}/*/*/*.res"
+      - "${SCI_VERSION_STRING}/*/*/*.err"
+      - "${SCI_VERSION_STRING}/*/*/*.dia.tmp"
+      - "${SCI_VERSION_STRING}/*/*/*.dia"

@@ -65,7 +65,8 @@ static types::InternalType* import_cell(hid_t dataset);
 static types::InternalType* import_handles(hid_t dataset);
 static types::InternalType* import_sparse(hid_t dataset);
 static types::InternalType* import_boolean_sparse(hid_t dataset);
-static types::InternalType* import_macro(hid_t dataset);
+static types::InternalType* import_macro(hid_t dataset, bool islambda = false);
+static types::InternalType* import_lambda(hid_t dataset);
 static types::InternalType* import_usertype(hid_t dataset);
 
 
@@ -257,6 +258,11 @@ types::InternalType* import_data(hid_t dataset)
     if (type == g_SCILAB_CLASS_MACRO)
     {
         return import_macro(dataset);
+    }
+
+    if (type == g_SCILAB_CLASS_LAMBDA)
+    {
+        return import_lambda(dataset);
     }
 
     if (type == g_SCILAB_CLASS_VOID)
@@ -1023,7 +1029,12 @@ static types::InternalType* import_handles(hid_t dataset)
     return handles;
 }
 
-static types::InternalType* import_macro(hid_t dataset)
+static types::InternalType* import_lambda(hid_t dataset)
+{
+    return import_macro(dataset, true);
+}
+
+static types::InternalType* import_macro(hid_t dataset, bool islambda /*false*/)
 {
     int complex = 0;
     int dims = 0;
@@ -1067,35 +1078,38 @@ static types::InternalType* import_macro(hid_t dataset)
         closeDataSet(inputNode);
     }
 
-    //outputs
-    hid_t outputNode = getDataSetIdFromName(dataset, "outputs");
-    size = getDatasetInfo(outputNode, &complex, &dims, d.data());
-    if (size < 0)
+    if (islambda == false)
     {
-        delete inputList;
-        delete outputList;
-        closeList6(dataset);
-        return nullptr;
-    }
-    std::vector<char*> outputNames(size);
-
-    if (size != 0)
-    {
-        readStringMatrix(outputNode, outputNames.data());
-
-        for (auto & output : outputNames)
+        // outputs
+        hid_t outputNode = getDataSetIdFromName(dataset, "outputs");
+        size = getDatasetInfo(outputNode, &complex, &dims, d.data());
+        if (size < 0)
         {
-            wchar_t* woutput = to_wide_string(output);
-            symbol::Variable* var = ctx->getOrCreate(symbol::Symbol(woutput));
-            FREE(woutput);
-            outputList->push_back(var);
+            delete inputList;
+            delete outputList;
+            closeList6(dataset);
+            return nullptr;
         }
+        std::vector<char*> outputNames(size);
 
-        freeStringMatrix(outputNode, outputNames.data());
-    }
-    else
-    {
-        closeDataSet(outputNode);
+        if (size != 0)
+        {
+            readStringMatrix(outputNode, outputNames.data());
+
+            for (auto& output : outputNames)
+            {
+                wchar_t* woutput = to_wide_string(output);
+                symbol::Variable* var = ctx->getOrCreate(symbol::Symbol(woutput));
+                FREE(woutput);
+                outputList->push_back(var);
+            }
+
+            freeStringMatrix(outputNode, outputNames.data());
+        }
+        else
+        {
+            closeDataSet(outputNode);
+        }
     }
 
     //body
@@ -1115,7 +1129,47 @@ static types::InternalType* import_macro(hid_t dataset)
     body = ds.deserialize();
 
     //wname+1 is to remove "/" at the start of the var name from HDF5
-    types::Macro* macro = new types::Macro(L"", *inputList, *outputList, *body->getAs<ast::SeqExp>(), L"script");
+    types::Macro* macro = nullptr;
+    if (islambda)
+    {
+        std::unordered_map<std::wstring, types::InternalType*> captured;
+        hid_t refs = getDataSetIdFromName(dataset, "__refs__");
+        int count = getVariableNames6(refs, NULL);
+        if (count != 0)
+        {
+            std::vector<char*> vars(count);
+            count = getVariableNames6(refs, vars.data());
+            for (int i = 0; i < count; ++i)
+            {
+                hid_t ref = getDataSetIdFromName(refs, vars[i]);
+                if (ref == -1)
+                {
+                    closeList6(dataset);
+                    return nullptr;
+                }
+
+                types::InternalType* pIT = import_data(ref);
+                if (pIT == nullptr)
+                {
+                    closeList6(dataset);
+                    return nullptr;
+                }
+
+                wchar_t* varname = to_wide_string(vars[i]);
+                captured[varname] = pIT;
+                FREE(varname);
+            }
+        }
+
+        closeList6(refs);
+        macro = new types::Macro(*inputList, *body->getAs<ast::SeqExp>(), L"script", captured);
+
+    }
+    else
+    {
+        macro = new types::Macro(L"", *inputList, *outputList, *body->getAs<ast::SeqExp>(), L"script");
+    }
+
     delete body;
     closeList6(dataset);
     return macro;

@@ -6,13 +6,12 @@
 // For more information, see the COPYING file which you should have received
 // along with this program.
 function [z,p,k]=ss2zp(S)
-    if typeof(S)<>"state-space" then
-        error(msprintf(_("%s: Wrong type for input argument #%d: Linear state space system expected.\n"),"ss2zp",1))
+    arguments
+        S (:,1) {mustBeA(S, "lss")}
     end
+
     [ny,nu]=size(S)
-    if nu<>1 then
-        error(msprintf(_("%s: Wrong type for input argument #%d: a single input system expected.\n"),"ss2zp",1))
-    end
+    
     p=spec(S.A);
     z=[];
     k=[];

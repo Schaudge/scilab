@@ -5,7 +5,7 @@
 # This Dockerfile describe the configuration of a Linux Fedora image base system
 #
 
-ARG DISTRO=fedora:37
+ARG DISTRO=fedora:40
 FROM $DISTRO
 
 RUN dnf install -y \

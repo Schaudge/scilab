@@ -22,8 +22,14 @@ function [Q,M,i1]=pencan(E,A)
     //                         0,I ]
     //See glever,  penlaur
     //!
-    [LHS,RHS]=argn(0);
-    if RHS==1 then [E,A]=pen2ea(E);end
+    arguments
+        E {mustBeA(E, ["double", "polynomial"])}
+        A {mustBeA(A, "double")} = []
+    end
+    if nargin == 1 then
+        [E,A]=pen2ea(E);
+    end
+
     [Si,Pi,Di,index]=penlaur(E,A);
     [Q1,M1]=fullrf(Si);
     [Q2,M2]=fullrf(Pi);

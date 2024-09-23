@@ -34,34 +34,22 @@
                 <term>Name, Value</term>
                 <listitem>
                     <para>
-                        <emphasis role="bold">Name: 'Delimiter', Value: string</emphasis>: the column separator mark.
+                        Name: <emphasis role="bold">'Delimiter'</emphasis>, Value: <emphasis role="bold">string</emphasis>: 
+                        the column separator mark.
                     </para>
                     <para/>
                 </listitem>
                 <listitem>
                     <para>
-                        <emphasis role="bold">Name: 'Decimal', Value: string</emphasis>: the decimal mark, '.' or ','.
+                        Name: <emphasis role="bold">'Decimal'</emphasis>, Value: <emphasis role="bold">string</emphasis>: 
+                        the decimal mark, '.' or ','.
                     </para>
                     <para/>
                 </listitem>
                 <listitem>
                     <para>
-                        <emphasis role="bold">Name: 'StartTime', duration or datetime value</emphasis>: 
-                        pecifies the start time of the timeseries.
-                    </para>
-                    <para/>
-                </listitem>
-                <listitem>
-                    <para>
-                        <emphasis role="bold">Name: 'TimeStep', Value: duration or calendarDuration value</emphasis>: 
-                        time step.
-                    </para>
-                    <para/>
-                </listitem>
-                <listitem>
-                    <para>
-                        <emphasis role="bold">Name: 'SampleRate', Value: real scalar</emphasis>: 
-                        number of samples per second (Hz).
+                        Name: <emphasis role="bold">'NumHeaderLines'</emphasis>, Value: <emphasis role="bold">double</emphasis>: 
+                        the number of header lines.
                     </para>
                     <para/>
                 </listitem>

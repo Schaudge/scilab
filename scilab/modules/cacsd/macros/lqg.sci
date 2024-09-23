@@ -55,7 +55,7 @@ function K=lqg(P,varargin)
         Kc=lqr(P(o1,i2));
         Kf=lqe(P(o2,i1));
         K=obscont(P(o2,i2),Kc,Kf);
-    elseif or(size(varargin)==(2:4)) then //K=lqg(P,Qxu,Qwv [,Qi [,#dof]])
+    elseif or(size(varargin)==(2:4)) then //K=lqg(P,Qxu,Qwv [,Qi [,dof]])
         [ny,nu,nx]=size(P);
         Qxu=varargin(1);
         Qwv=varargin(2);
@@ -83,10 +83,10 @@ function K=lqg(P,varargin)
         else //K=lqg(P,Qxu,Qwv,Qi)
             Qi=varargin(3);
             if size(varargin)==3 then
-                #dof=2;
+                dof=2;
             else
-                #dof=varargin(4);
-                if type(#dof)<>1|and(#dof<>[1 2]) then
+                dof=varargin(4);
+                if type(dof)<>1|and(dof<>[1 2]) then
                     error(msprintf(_("%s: Wrong value for input argument #%d: Must be in the set {%s}.\n"),"lqg",5,"1,2"))
                 end
             end
@@ -122,7 +122,7 @@ function K=lqg(P,varargin)
                 zeros(ny,nx) zeros(ny,ny)];
             end
 
-            if #dof==2 then //2 degrees if freedom
+            if dof==2 then //2 degrees if freedom
                 K=syslin(P.dt,A,[zeros(nx,ny) -Kf;[eye(ny,ny) -eye(ny,ny)]*dt],-Kc);
             else
                 //1 degree of freedom

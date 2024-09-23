@@ -71,8 +71,8 @@ function  bar(varargin)
     // bar([h,] y,..)
     // --------------
     msg = gettext("%s: Argument #%d: Decimal number(s) expected.\n")
-    if length(ListArg)>0 & (length(ListArg)==1 | and(type(ListArg(2))~=[1 8]) | ..
-        (length(ListArg(2))==1 & ListArg(2)>0 & ListArg(2)<=1))  // is width
+    if length(ListArg)>0 & (length(ListArg)==1 | and(type(ListArg(2))~=[1 8]) | ...
+        (length(ListArg(1)) > 1 & length(ListArg(2))==1 & ListArg(2)>0 & ListArg(2)<=1))  // is width
         Y = ListArg(1)
         if isvector(Y)
             Y = Y(:)

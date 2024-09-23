@@ -1,6 +1,5 @@
 function [R,n,sval,rcnd]=findR(s,y,u,meth,alg,jobd,tol,printw)
-    R=[];n=[];sval=[];rcnd=[];
-    [nargout,nargin] = argn(0)
+
     //FINDR   Preprocesses the input-output data for estimating the matrices
     //of a linear time-invariant dynamical system, using Cholesky or
     //(fast) QR factorization and subspace identification techniques
@@ -79,29 +78,28 @@ function [R,n,sval,rcnd]=findR(s,y,u,meth,alg,jobd,tol,printw)
     //        V. Sima, July 2000.
     //
 
-    nin = nargin;
+    arguments
+        s (1, 1) {mustBeA(s, "double"), mustBeInteger}
+        y {mustBeA(y, "double")}
+        u {mustBeA(u, "double")} = []
+        meth {mustBeA(meth, "double"), mustBeMember(meth, [1, 2])} = 1
+        alg {mustBeA(alg, "double"), mustBeMember(alg, [1, 2, 3])} = 1
+        jobd {mustBeA(jobd, "double"), mustBeMember(jobd, [1, 2])} = 2
+        tol {mustBeA(tol, "double"), mustBeVector} = [0, -1]
+        printw (1,1) {mustBeA(printw, "double"), mustBeMember(printw, [0, 1])} = 0
+    end
+
+    R=[];n=[];sval=[];rcnd=[];
     //
     // Assumes one batch only.
     batch = 4;
     conct = 2;
     //
-    if nin<8 then
-        printw = 0;
-    end
-    if nin<7 then
-        tol(1:2) = [0,-1]
-    end
-    if nin<6 then jobd = 2; end
+    
     if jobd==[] then jobd = 2,end
-
-    if nin<5 then alg = 1;end
     if alg==[] then alg = 1;end
-
-    if nin<4 then meth = 1;end
     if meth==[] then meth = 1;end
-    if nin<3 then
-        u = [];
-    end
+
     //
     if meth==1 then
         [R,n,sval] = sorder(meth,alg,jobd,batch,conct,s,y,u,tol,printw);

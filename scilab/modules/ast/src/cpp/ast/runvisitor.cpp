@@ -57,7 +57,6 @@ extern "C"
 #include "storeCommand.h"
 #include "prompt.h"
 #include "scilabRead.h"
-#include "InitScilab.h"
 }
 
 namespace ast
@@ -268,7 +267,7 @@ void RunVisitorT<T>::visitprivate(const CellExp & e)
             }
         }
 
-        // only comments in the line, 
+        // only comments in the line,
         // don't count them and go to the next one
         if(iCurrentCols == 0)
         {
@@ -332,7 +331,7 @@ void RunVisitorT<T>::visitprivate(const CellExp & e)
             clearResult();
         }
 
-        // increment row iterator only 
+        // increment row iterator only
         // when the row is not empty
         if(j)
         {
@@ -408,6 +407,7 @@ void RunVisitorT<T>::visitprivate(const FieldExp &e)
     }
     catch (std::wstring & err)
     {
+        clearResult();
         CoverageInstance::stopChrono((void*)&e);
         throw InternalError(err.c_str(), 999, e.getTail()->getLocation());
     }
@@ -982,12 +982,12 @@ void RunVisitorT<T>::visitprivate(const ReturnExp &e)
     else
     {
         //return(x)
-
-        if (e.getParent() == nullptr || e.getParent()->isAssignExp() == false)
+        if (isLambda() == false && (e.getParent() == nullptr || e.getParent()->isAssignExp() == false))
         {
             CoverageInstance::stopChrono((void*)&e);
             throw InternalError(_W("With input arguments, return / resume expects output arguments.\n"), 999, e.getLocation());
         }
+
         //in case of CallExp, we can return only one value
         int iSaveExpectedSize = getExpectedSize();
         setExpectedSize(1);
@@ -1304,24 +1304,33 @@ void RunVisitorT<T>::visitprivate(const FunctionDec & e)
 
     //get output parameters list
     std::vector<symbol::Variable*>* pRetList = new std::vector<symbol::Variable*>();
-    const exps_t & rets = e.getReturns().getVars();
-    for (const auto ret : rets)
+    if (e.isLambda() == false)
     {
-        pRetList->push_back(ret->getAs<SimpleVar>()->getStack());
-    }
-
-    types::Macro* pMacro = const_cast<ast::FunctionDec&>(e).getMacro();
-    if (pMacro == nullptr)
-    {
-        pMacro = new types::Macro(e.getSymbol().getName(), *pVarList, *pRetList, const_cast<SeqExp&>(static_cast<const SeqExp&>(e.getBody())), L"script");
-        pMacro->setLines(e.getLocation().first_line, e.getLocation().last_line);
-        if (e.getMacro())
+        const exps_t& rets = e.getReturns().getVars();
+        for (const auto ret : rets)
         {
-            pMacro->setFileName(e.getMacro()->getFileName());
+            pRetList->push_back(ret->getAs<SimpleVar>()->getStack());
         }
-
-        const_cast<ast::FunctionDec&>(e).setMacro(pMacro);
     }
+
+    types::Macro* pMacro = nullptr;
+    if (e.isLambda())
+    {
+        // in case of lambda, recreate the Macro because the input argument at the lambda creation may change.
+        pMacro = new types::Macro(*pVarList, const_cast<SeqExp&>(static_cast<const SeqExp&>(e.getBody())), L"script");
+    }
+    else
+    {
+        // no need to recreate the same Macro of the same exp (ie: define a macro in a for exp)
+        pMacro = const_cast<ast::FunctionDec&>(e).getMacro();
+        if (pMacro == nullptr)
+        {
+            pMacro = new types::Macro(e.getSymbol().getName(), *pVarList, *pRetList, const_cast<SeqExp&>(static_cast<const SeqExp&>(e.getBody())), L"script");
+            const_cast<ast::FunctionDec&>(e).setMacro(pMacro);
+        }
+    }
+
+    pMacro->setLines(e.getLocation().first_line, e.getLocation().last_line);
 
     if (ctx->isprotected(symbol::Symbol(pMacro->getName())))
     {
@@ -1332,7 +1341,11 @@ void RunVisitorT<T>::visitprivate(const FunctionDec & e)
         throw InternalError(os.str(), 999, e.getLocation());
     }
 
-    if (ctx->addMacro(pMacro) == false)
+    if (pMacro->isLambda())
+    {
+        setResult(pMacro);
+    }
+    else if (ctx->addMacro(pMacro) == false)
     {
         char pstError[1024];
         char* pstFuncName = wide_string_to_UTF8(e.getSymbol().getName().c_str());
@@ -1601,6 +1614,18 @@ void RunVisitorT<T>::visitprivate(const TryCatchExp  &e)
                 const_cast<Exp*>(&e.getTry())->resetReturn();
                 const_cast<TryCatchExp*>(&e)->setReturn();
             }
+
+            if (e.getTry().isContinue())
+            {
+                const_cast<Exp*>(&e.getTry())->resetContinue();
+                const_cast<TryCatchExp*>(&e)->setContinue();
+            }
+
+            if (e.getTry().isBreak())
+            {
+                const_cast<Exp*>(&e.getTry())->resetBreak();
+                const_cast<TryCatchExp*>(&e)->setBreak();
+            }
         }
         catch (const RecursionException& /* re */)
         {
@@ -1650,6 +1675,18 @@ void RunVisitorT<T>::visitprivate(const TryCatchExp  &e)
             {
                 const_cast<Exp*>(&e.getCatch())->resetReturn();
                 const_cast<TryCatchExp*>(&e)->setReturn();
+            }
+
+            if (e.getCatch().isContinue())
+            {
+                const_cast<Exp*>(&e.getCatch())->resetContinue();
+                const_cast<TryCatchExp*>(&e)->setContinue();
+            }
+
+            if (e.getCatch().isBreak())
+            {
+                const_cast<Exp*>(&e.getCatch())->resetBreak();
+                const_cast<TryCatchExp*>(&e)->setBreak();
             }
         }
         catch (ScilabException &)

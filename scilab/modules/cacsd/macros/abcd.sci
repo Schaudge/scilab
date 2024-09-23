@@ -12,15 +12,16 @@
 
 function [A,B,C,D]=abcd(sl)
     // Retrieves [A,B,C,D] matrices from linear system sl
+    // type: lss for state-space, r for rational
+    arguments
+        sl {mustBeA(sl, ["lss", "r"])}
+    end
 
     select typeof(sl)
     case "state-space" then
         [A,B,C,D]=sl(2:5)
-        return;
     case "rational" then
         w=tf2ss(sl);
         [A,B,C,D]=w(2:5)
-    else
-        error(msprintf(_("%s: Wrong type for input argument: Linear dynamical system expected.\n"),"abcd"))
     end
 endfunction

@@ -13,16 +13,9 @@
 
 function [sl,name]=bloc2ss(syst)
     //
-
-    [lhs,rhs]=argn(0)
-
-    if type(syst)<>15 then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: A list expected.\n"),"bloc2ss",1))
-    end;
-    syst1=syst(1);
-    if syst1(1)<>"blocd" then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: A list expected.\n"),"bloc2ss",1))
-    end;
+    arguments
+        syst {mustBeA(syst, "blocd")}
+    end
 
     nsyst=size(syst)
     dom=[]
@@ -63,7 +56,7 @@ function [sl,name]=bloc2ss(syst)
     nio=[prod(size(lentrees)),prod(size(lsorties))]
     //
     lliens=[lliens lentrees lsorties]
-    if lhs==2 then
+    if nargout==2 then
         in_names=[]
         for kvar=lentrees
             obj=syst(kvar)

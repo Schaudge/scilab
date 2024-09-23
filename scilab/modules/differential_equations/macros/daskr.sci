@@ -11,6 +11,9 @@
 
 function [varargout] = daskr(varargin)
     warnobsolete("dae", "2026.0.0");
+    if nargout == 0 then
+        nargout = 1;
+    end
     c = "[" + strcat("varargout(" + string(1:nargout) + ")", ", ") + "] = %_daskr(varargin(:))";
     execstr(c);
 endfunction

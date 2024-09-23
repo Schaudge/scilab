@@ -18,14 +18,11 @@ function [x]=nehari(r,tol)
     //                  Y in Hoo
     //!
 
-    if argn(2)<1 then
-        error(msprintf(gettext("%s: Wrong number of input argument(s): At least %d expected.\n"),..
-        "nehari",1))
+    arguments
+        r {mustBeA(r, "lss")}
+        tol (1,1) {mustBeA(tol, "double"), mustBeReal, mustBePositive}= 1e-6
     end
 
-    if typeof(r)<>"state-space" then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space expected.\n"),"nehari",1))
-    end
     if r.dt==[] then
         warning(msprintf(gettext("%s: Input argument #%d is assumed continuous time.\n"),"nehari",1));
         r.dt="c"
@@ -33,18 +30,7 @@ function [x]=nehari(r,tol)
     if r.dt<>"c" then
         error(msprintf(gettext("%s: Wrong value for input argument #%d: Continuous time system expected.\n"),"nehari",1))
     end
-    //
-    if argn(2)==1 then
-        tol=1e-6
-    else
-        if type(tol)<>1|size(tol,"*")<>1 then
-            error(msprintf(gettext("%s: Wrong type for input argument: Scalar expected.\n"),"nehari",2))
-        end
-        if ~isreal(tol)|tol<=0 then
-            error(msprintf(gettext( "%s: Input argument #%d must be strictly positive.\n"),"nehari",2))
-        end
-    end;
-
+    
     //norm of Hankel operator
     //-----------------------
     nk=nophkel(r),nn=nk+tol,

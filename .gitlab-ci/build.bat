@@ -33,7 +33,7 @@ IF %ERRORLEVEL% NEQ 0 (
     curl.exe -k -o prereq.zip https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements/prerequirements-scilab-branch-%CI_DEFAULT_BRANCH%-windows_x64.zip
     unzip.exe -qt prereq.zip
 )
-unzip -o prereq.zip -d scilab > %LOG_PATH%\log_prereq_%CI_COMMIT_SHORT_SHA%.txt
+unzip -o prereq.zip -d scilab > %LOG_PATH%\build_prereq_%CI_COMMIT_SHORT_SHA%.log
 
 REM display svn revision
 type scilab\svn-info.txt
@@ -69,23 +69,24 @@ if exist modules\core\includes\version.h sed -i ^
 echo SCIVERSION=%SCI_VERSION_STRING% >Version.incl
 
 REM build with Visual Studio and Intel compilers
-devenv Scilab.sln /build "Release|x64" /project dumpexts > ..\%LOG_PATH%\log_dumpexts_%CI_COMMIT_SHORT_SHA%.txt
-devenv Scilab.sln /build "Release|x64" > ..\%LOG_PATH%\log_build_%CI_COMMIT_SHORT_SHA%.txt
-IF %ERRORLEVEL% NEQ 0 tail --lines=20 ..\%LOG_PATH%\log_build_%CI_COMMIT_SHORT_SHA%.txt 1>&2 & exit 1
-devenv Scilab.sln /build "Release|x64" /project buildhelp > ..\%LOG_PATH%\log_buildhelp_%CI_COMMIT_SHORT_SHA%.txt
-IF %ERRORLEVEL% NEQ 0 tail --lines=20 ..\%LOG_PATH%\log_buildhelp_%CI_COMMIT_SHORT_SHA%.txt 1>&2 & exit 1
-devenv Scilab.sln /build "Release|x64" /project buildjavadoc > ..\%LOG_PATH%\log_buildjavadoc_%CI_COMMIT_SHORT_SHA%.txt
-IF %ERRORLEVEL% NEQ 0 tail --lines=20 ..\%LOG_PATH%\log_buildjavadoc_%CI_COMMIT_SHORT_SHA%.txt 1>&2 & exit 1
+devenv Scilab.sln /build "Release|x64" /project dumpexts > ..\%LOG_PATH%\build_dumpexts_%CI_COMMIT_SHORT_SHA%.log
+IF %ERRORLEVEL% NEQ 0 tail --lines=20 ..\%LOG_PATH%\build_dumpexts_%CI_COMMIT_SHORT_SHA%.log 1>&2 & exit 1
+devenv Scilab.sln /build "Release|x64" > ..\%LOG_PATH%\build_sln_%CI_COMMIT_SHORT_SHA%.log
+IF %ERRORLEVEL% NEQ 0 tail --lines=20 ..\%LOG_PATH%\build_sln_%CI_COMMIT_SHORT_SHA%.log 1>&2 & exit 1
+devenv Scilab.sln /build "Release|x64" /project buildhelp > ..\%LOG_PATH%\build_help_%CI_COMMIT_SHORT_SHA%.log
+IF %ERRORLEVEL% NEQ 0 tail --lines=20 ..\%LOG_PATH%\build_help_%CI_COMMIT_SHORT_SHA%.log 1>&2 & exit 1
+devenv Scilab.sln /build "Release|x64" /project buildjavadoc > ..\%LOG_PATH%\build_javadoc_%CI_COMMIT_SHORT_SHA%.log
+IF %ERRORLEVEL% NEQ 0 tail --lines=20 ..\%LOG_PATH%\build_javadoc_%CI_COMMIT_SHORT_SHA%.log 1>&2 & exit 1
 
 REM Package with Inno Setup 6
 if exist "Scilab.iss" del /f "Scilab.iss"
-bin\WScilex-cli.exe -nb -f "tools\innosetup\Create_ISS.sce" > ..\%LOG_PATH%\log_iss_%CI_COMMIT_SHORT_SHA%.txt
-IF %ERRORLEVEL% NEQ 0 tail --lines=20 ..\%LOG_PATH%\log_iss_%CI_COMMIT_SHORT_SHA%.txt 1>&2 & exit 1
+bin\WScilex-cli.exe -nb -f "tools\innosetup\Create_ISS.sce" > ..\%LOG_PATH%\build_iss_%CI_COMMIT_SHORT_SHA%.log
+IF %ERRORLEVEL% NEQ 0 tail --lines=20 ..\%LOG_PATH%\build_iss_%CI_COMMIT_SHORT_SHA%.log 1>&2 & exit 1
 if not exist "Scilab.iss" exit 1
 set ISS_MR=0
 if "%CI_PIPELINE_SOURCE%" == "merge_request_event" set ISS_MR=1
-"C:\Program Files (x86)\Inno Setup 6\iscc.exe" Scilab.iss /DMR=%ISS_MR% >> ..\%LOG_PATH%\log_iss_%CI_COMMIT_SHORT_SHA%.txt
-IF %ERRORLEVEL% NEQ 0 tail --lines=20 ..\%LOG_PATH%\log_iss_%CI_COMMIT_SHORT_SHA%.txt 1>&2 & exit 1
+"C:\Program Files (x86)\Inno Setup 6\iscc.exe" Scilab.iss /DMR=%ISS_MR% >> ..\%LOG_PATH%\build_iss_%CI_COMMIT_SHORT_SHA%.log
+IF %ERRORLEVEL% NEQ 0 tail --lines=20 ..\%LOG_PATH%\build_iss_%CI_COMMIT_SHORT_SHA%.log 1>&2 & exit 1
 
 copy "..\%SCI_VERSION_STRING%\" "%SCILAB_COMMON_PATH%\%SCI_VERSION_STRING%\log\"
 IF %ERRORLEVEL% NEQ 0 exit 1

@@ -19,9 +19,16 @@ function [S,P,D,index]=projspec(A,tol)
     //D = Nilpotent operator at 0
     //index = index of the 0 eigenvalue
     //!
-    [LHS,RHS]=argn(0)
-    [n,n]=size(A);
-    if RHS==1 then tol=1.d-6;end;
+    arguments
+        A {mustBeA(A, "double")}
+        tol (1,1) {mustBeA(tol, "double")} = 1.d-6
+    end
+
+    [m,n]=size(A);
+    if m <> n then
+        error(msprintf(_("%s: Wrong size for input argument #%d: Square matrix expected.\n"), "projspec", 1));
+    end
+
     // A=0 ?
     if norm(A,1) < %eps*n*n
         P=eye(A),D=A,S=0*P;index=1;

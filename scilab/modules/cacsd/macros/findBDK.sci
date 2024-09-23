@@ -1,6 +1,5 @@
 function [B,D,K,Q,Ry,S,rcnd]=findBDK(s,n,l,R,A,C,meth,job,nsmpl,tol,printw)
-    B=[];D=[];K=[];Q=[];Ry=[];S=[];rcnd=[];
-    [nargout,nargin] = argn(0)
+
     //FINDBDK  Finds the system matrices B and D and the Kalman gain of a discrete-time
     //         system, given the system order, the matrices A and C, and the relevant
     //         part of the R factor of the concatenated block-Hankel matrices, using
@@ -74,21 +73,27 @@ function [B,D,K,Q,Ry,S,rcnd]=findBDK(s,n,l,R,A,C,meth,job,nsmpl,tol,printw)
     //        V. Sima, July 2000.
     //
 
-    nin = nargin;
+    arguments
+        s (1, 1) {mustBeA(s, "double"), mustBeInteger}
+        n (1, 1) {mustBeA(n, "double"), mustBeInteger}
+        l (1, 1) {mustBeA(l, "double"), mustBeInteger}
+        R {mustBeA(R, "double")}
+        A {mustBeA(A, "double"), mustBeSquare}
+        C {mustBeA(C, "double")}
+        meth {mustBeA(meth, "double"), mustBeMember(meth, [1, 2])} = 2
+        job {mustBeA(job, "double"), mustBeMember(job, [1, 2])} = 2
+        nsmpl {mustBeA(nsmpl, "double"), mustBeInteger} = 0
+        tol {mustBeA(tol, "double")} = 0
+        printw (1,1) {mustBeA(printw, "double"), mustBeMember(printw, [0, 1])} = 0
+    end
+
+    B=[];D=[];K=[];Q=[];Ry=[];S=[];rcnd=[];
     nout = nargout;
     //
-    if nin<11 then printw = 0;end
-    if nin<10 then tol = 0;end
     if tol==[] then tol = 0,end
-    if nin<9 then nsmpl = 0;end
     if nsmpl==[] then nsmpl = 0;end
-    if nin<8 then job = 2;end
     if job==[] then job = 2;end
-    if nin<7 then meth = 2;end
     if meth == [] then meth = 2;end
-    if nin<6 then
-        error(msprintf(gettext("%s: Wrong number of input arguments: %d to %d expected.\n"),"findBDK",6,11));
-    end
     //
     jobl = job+2;
     //

@@ -66,6 +66,7 @@ public:
         WithinTry,
         WithinCatch,
         WithinFunction,
+        WithinLambda,
         WithinSelect,
         WithinSwitch,
         WithinCase,

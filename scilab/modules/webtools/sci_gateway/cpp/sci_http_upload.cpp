@@ -29,7 +29,6 @@ extern "C"
 #include "getFullFilename.h"
 }
 
-static void cleanup(std::vector<char*> files);
 /*--------------------------------------------------------------------------*/
 static const char fname[] = "http_upload";
 types::Function::ReturnValue sci_http_upload(types::typed_list &in, types::optional_list &opt, int _iRetCount, types::typed_list &out)
@@ -53,35 +52,95 @@ types::Function::ReturnValue sci_http_upload(types::typed_list &in, types::optio
         return types::Function::Error;
     }
 
-    // get input file name
-    if(in[1]->isString() == false)
+    // get input file  and filename
+    std::vector<std::pair<std::string, std::string>> files;
+    if(in[1]->isString())
     {
-        Scierror(999, _("%s: Wrong type for input argument #%d: A matrix string expected.\n"), fname, 2);
-        return types::Function::Error;
+        types::String* pStrFiles = in[1]->getAs<types::String>();
+        for (int i = 0; i < pStrFiles->getSize(); i++)
+        {
+            wchar_t* pwcFileName = getFullFilenameW(pStrFiles->get(i));
+            char* pcFileName = wide_string_to_UTF8(pwcFileName);
+            files.push_back({pcFileName, ""});
+            FREE(pcFileName);
+            FREE(pwcFileName);
+        }
     }
-
-    types::String* pStrFiles = in[1]->getAs<types::String>();
-    std::vector<char*> files;
-    for(int i = 0; i < pStrFiles->getSize(); i++)
+    else if (in[1]->isStruct())
     {
-        wchar_t* pwcFileName = getFullFilenameW(pStrFiles->get(i));
-        files.push_back(wide_string_to_UTF8(pwcFileName));
-        FREE(pwcFileName);
+        types::Struct* pStruct = in[1]->getAs<types::Struct>();
+        if (pStruct->isEmpty())
+        {
+            Scierror(999, _("%s: Wrong size for input argument #%d: Non-empty struct expected.\n"), fname, 2);
+            return types::Function::Error;
+        }
+
+        types::SingleStruct* pSST = pStruct->get(0);
+        if (pSST->exists(L"local") == false || pSST->exists(L"remote") == false)
+        {
+            Scierror(999, _("%s: Wrong value for input argument #%d: Fields \"%s\" and \"%s\" expected.\n"), fname, 2, "local", "remote");
+            return types::Function::Error;        
+        }
+
+        for (int i = 0; i < pStruct->getSize(); i++)
+        {
+            types::SingleStruct* pSST = pStruct->get(i);
+            types::InternalType* pITLocal = pSST->get(L"local");
+            if (pITLocal->isString() == false || pITLocal->getAs<types::String>()->isScalar() == false)
+            {
+                Scierror(999, _("%s: Wrong size for input argument #%d, element %d, field %s: Scalar string expected.\n"), fname, 2, i+1, "local");
+                return types::Function::Error;
+            }
+
+            types::InternalType* pITRemote = pSST->get(L"remote");
+            if (pITRemote->isString() == false || pITRemote->getAs<types::String>()->isScalar() == false)
+            {
+                Scierror(999, _("%s: Wrong size for input argument #%d, element %d, field %s: Scalar string expected.\n"), fname, 2, i+1, "remote");
+                return types::Function::Error;
+            }
+
+            wchar_t* pwcFile = getFullFilenameW(pITLocal->getAs<types::String>()->get(0));
+            char* pcLocal = wide_string_to_UTF8(pwcFile);
+            char* pcRemote = wide_string_to_UTF8(pITRemote->getAs<types::String>()->get(0));
+            files.push_back({pcLocal, pcRemote});
+            FREE(pwcFile);
+            FREE(pcLocal);
+            FREE(pcRemote);
+        }
+    }
+    else
+    {
+        Scierror(999, _("%s: Wrong type for input argument #%d: A matrix string or struct expected.\n"), fname, 2);
+        return types::Function::Error;
     }
 
     // get variable name server side
-    if(in[2]->isString() == false || in[2]->getAs<types::String>()->isScalar() == false)
+    if(in[2]->isString() == false)
     {
-        Scierror(999, _("%s: Wrong type for input argument #%d: A scalar string expected.\n"), fname, 3);
-        cleanup(files);
+        Scierror(999, _("%s: Wrong type for input argument #%d: A string expected.\n"), fname, 3);
         return types::Function::Error;
+    }
+
+    if (in[2]->getAs<types::String>()->isScalar() == false && 
+        in[1]->getAs<types::GenericType>()->getSize() != in[2]->getAs<types::GenericType>()->getSize())
+    {
+        Scierror(999, _("%s: Wrong size for input argument #%d: A Scalar or same size as #%d expected.\n"), fname, 3, 2);
+        return types::Function::Error;
+    }
+
+    types::String* pStrVarNames = in[2]->getAs<types::String>();
+    std::vector<std::string> vectVarNames;
+    for (int i = 0; i < pStrVarNames->getSize(); i++)
+    {
+        char* pcVarName = wide_string_to_UTF8(pStrVarNames->get(i));
+        vectVarNames.push_back(pcVarName);
+        FREE(pcVarName);
     }
 
     SciCurl query;
     if(query.init() == false)
     {
         Scierror(999, _("%s: CURL initialization failed.\n"), fname);
-        cleanup(files);
         return types::Function::Error;
     }
 
@@ -129,13 +188,13 @@ types::Function::ReturnValue sci_http_upload(types::typed_list &in, types::optio
     }
 
     // Add file to form after data in case data contents is mandatory for file upload (identifier, ticket, ...)
-    char* pcVarName = wide_string_to_UTF8(in[2]->getAs<types::String>()->get(0));
+    int iIncr = pStrVarNames->isScalar() ? 0 : 1;
+    int iPos = 0;
     for (auto f : files)
     {
-        query.addFileToForm(pcVarName, f);
+        query.addFileToForm(vectVarNames[iPos], f.first, f.second);
+        iPos += iIncr;
     }
-    FREE(pcVarName);
-    cleanup(files);
 
     // specific optional argument
     for (const auto& o : opt)
@@ -196,13 +255,4 @@ types::Function::ReturnValue sci_http_upload(types::typed_list &in, types::optio
     }
 
     return types::Function::OK;
-}
-
-
-static void cleanup(std::vector<char*> files)
-{
-    for(auto& file : files)
-    {
-        FREE(file);
-    }
 }

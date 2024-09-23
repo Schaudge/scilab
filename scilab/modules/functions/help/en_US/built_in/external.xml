@@ -67,9 +67,6 @@ optim(list(costfunc,a1,b1,c1),....
                 <link linkend="optim">optim</link>
             </member>
             <member>
-                <link linkend="impl">impl</link>
-            </member>
-            <member>
                 <link linkend="dae">dae</link>
             </member>
             <member>

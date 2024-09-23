@@ -216,6 +216,15 @@ dt = datetime(2023, 1, 1:5)';
 ts = timeseries(dt, [1 2 3].*. ones(5,1));
 expected = [string(dt), string([1 2 3].*. ones(5,1))];
 checkstring(ts, expected);
+
+ts.Time = datetime(2024, 9, 10:14);
+expected = [string(datetime(2024, 9, 10:14)'), string([1 2 3].*. ones(5,1))];
+checkstring(ts, expected);
+
+ts.Time = hours(1:5);
+expected = [string(hours(1:5)'), string([1 2 3].*. ones(5,1))];
+checkstring(ts, expected);
+
 // -----------------------------------------------------------------------
 // Errors
 // -----------------------------------------------------------------------

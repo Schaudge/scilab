@@ -17,6 +17,12 @@ function h=trfmod(h,job)
     //     job='f' : visualization of natural frequencies and damping
     //
     //!
+
+    arguments
+        h {mustBeA(h, ["r", "lss"])}
+        job {mustBeA(job, "string"), mustBeMember(job, ["p", "f"])}= "p"
+    end
+
     select typeof(h)
     case "rational" then
         if size(h("num"))<>[1 1] then
@@ -41,17 +47,12 @@ function h=trfmod(h,job)
         al(:,i)=ai+b
         num=-(real(poly(al,"s"))-den)*ci
         h=syslin(h(7),num+h(5)*den,den);
-    else
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space or a transfer function expected.\n"),"trfmod",1))
     end
-
 
     //
     ft = format();
     format("v", 15);
 
-    [lhs,rhs]=argn(0)
-    if rhs==1 then job="p",end
     //
     if type(h("num"))==1 then h("num")=poly(h("num"),varn(h("den")),"c"),end
     if type(h("den"))==1 then h("den")=poly(h("den"),varn(h("num")),"c"),end

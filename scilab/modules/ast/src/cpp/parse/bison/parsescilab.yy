@@ -130,7 +130,7 @@ static void print_rules(const std::string& _parent, const double _value)
 %defines
 
 // error displayed in Scilab
-%define parse.error detailed
+//%define parse.error detailed
 
 %union
 {
@@ -209,6 +209,8 @@ static void print_rules(const std::string& _parent, const double _value)
 
 %token QUOTE            "'"
 %token NOT              "~ or @"
+%token ARROW            "->"
+%token SHARP            "#"
 %token DOLLAR           "$"
 %token COMMA            ","
 %token COLON            ":"
@@ -357,6 +359,7 @@ static void print_rules(const std::string& _parent, const double _value)
 %type <t_seq_exp>           functionBody
 
  // Function Declaration
+%type <t_function_dec>      lambdaFunctionDeclaration
 %type <t_function_dec>      functionDeclaration
 %type <t_list_var>          functionDeclarationReturns
 %type <t_list_var>          functionDeclarationArguments
@@ -757,6 +760,33 @@ FUNCTION ID ASSIGN ID functionDeclarationArguments functionDeclarationBreak func
 ;
 
 /*
+** -*- LAMBDA FUNCTION DECLARATION -*-
+*/
+/* How to declare a lambda function */
+lambdaFunctionDeclaration :
+SHARP functionDeclarationArguments ARROW LPAREN functionBody RPAREN {
+                        print_rules("lambdaFunctionDeclaration", "SHARP functionDeclarationArguments ARROW LPAREN functionBody RPAREN");
+                        $5->setVerbose(true);
+                        $$ = new ast::FunctionDec(@$, *new ast::ArrayListVar(@2, *$2), *$5);
+                        }
+| SHARP functionDeclarationArguments ARROW EOL LPAREN functionBody RPAREN {
+                        print_rules("lambdaFunctionDeclaration", "SHARP functionDeclarationArguments ARROW LPAREN functionBody RPAREN");
+                        $6->setVerbose(true);
+                        $$ = new ast::FunctionDec(@$, *new ast::ArrayListVar(@2, *$2), *$6);
+                        }
+| SHARP functionDeclarationArguments ARROW LPAREN EOL functionBody RPAREN {
+                        print_rules("lambdaFunctionDeclaration", "SHARP functionDeclarationArguments ARROW LPAREN EOL functionBody RPAREN");
+                        $6->setVerbose(true);
+                        $$ = new ast::FunctionDec(@$, *new ast::ArrayListVar(@2, *$2), *$6);
+                        }
+| SHARP functionDeclarationArguments ARROW EOL LPAREN EOL functionBody RPAREN {
+                        print_rules("lambdaFunctionDeclaration", "SHARP functionDeclarationArguments ARROW EOL LPAREN EOL functionBody RPAREN");
+                        $7->setVerbose(true);
+                        $$ = new ast::FunctionDec(@$, *new ast::ArrayListVar(@2, *$2), *$7);
+                        }
+;
+
+/*
 ** -*- ENDFUNCTION or END -*-
 */
 endfunction :
@@ -1034,6 +1064,7 @@ NOT variable                %prec NOT       { $$ = new ast::NotExp(@$, *$2); pri
     $$ = new ast::ListExp(@$, *$1, *($2->getStep().clone()), *($2->getEnd().clone()), $2->hasExplicitStep());
     delete($2);
 }
+| lambdaFunctionDeclaration                 { $$ = $1; print_rules("variable", "lambdaFunctionDeclaration"); }
 | matrix                                    { $$ = $1; print_rules("variable", "matrix");}
 | cell                                      { $$ = $1; print_rules("variable", "cell");}
 | operation             %prec UPLEVEL       { $$ = $1; print_rules("variable", "operation");}
@@ -1258,26 +1289,26 @@ ARGUMENTS EOL argumentsDeclarations END           { $$ = $3; print_rules("argume
 ** -*- ARGUMENTS DECLARATIONS -*-
 */
 argumentsDeclarations :
-argumentsDeclarations argumentDeclaration lineEnd       { 
+argumentsDeclarations argumentDeclaration lineEnd       {
         $$->getExps().push_back($2);
         $$ = $1;
         print_rules("argumentsDeclarations", "argumentsDeclarations EOL argumentDeclaration EOL");
     }
-| argumentsDeclarations COMMENT EOL                     { 
+| argumentsDeclarations COMMENT EOL                     {
         $$->getExps().push_back(new ast::CommentExp(@2, $2));
         $$ = $1;
         print_rules("argumentsDeclarations", "argumentsDeclarations EOL argumentDeclaration EOL");
     }
-| argumentDeclaration lineEnd                           { 
+| argumentDeclaration lineEnd                           {
         ast::exps_t* tmp = new ast::exps_t;
         tmp->push_back($1);
-        $$ = new ast::ArgumentsExp(@$, *tmp); 
+        $$ = new ast::ArgumentsExp(@$, *tmp);
         print_rules("argumentsDeclarations", "argumentDeclaration EOL");
     }
-| COMMENT EOL                                           { 
+| COMMENT EOL                                           {
         ast::exps_t* tmp = new ast::exps_t;
         tmp->push_back(new ast::CommentExp(@1, $1));
-        $$ = new ast::ArgumentsExp(@$, *tmp); 
+        $$ = new ast::ArgumentsExp(@$, *tmp);
     }
 ;
 
@@ -1285,7 +1316,7 @@ argumentsDeclarations argumentDeclaration lineEnd       {
 ** -*- SINGLE ARGUMENT DECLARATION -*-
 */
 argumentDeclaration :
-argumentName argumentDimension argumentValidators argumentDefaultValue           { 
+argumentName argumentDimension argumentValidators argumentDefaultValue           {
     $$ = new ast::ArgumentDec(@$,
                                 *$1,
                                 *$2,
@@ -1294,7 +1325,7 @@ argumentName argumentDimension argumentValidators argumentDefaultValue          
                                 *$4);
                                 print_rules("argumentDeclaration", "ID LPAREN RPAREN ID");
 }
-| argumentName argumentDimension ID argumentValidators argumentDefaultValue       { 
+| argumentName argumentDimension ID argumentValidators argumentDefaultValue       {
     $$ = new ast::ArgumentDec(@$,
                                 *$1,
                                 *$2,
@@ -1309,8 +1340,8 @@ argumentName argumentDimension argumentValidators argumentDefaultValue          
 ** -*- ARGUMENT NAME -*-
 */
 argumentName :
-ID          { $$ = new ast::SimpleVar(@$, symbol::Symbol(*$1)); print_rules("argumentName", "ID");} 
-| ID DOT ID { $$ = new ast::FieldExp(@$, *new ast::SimpleVar(@1, symbol::Symbol(*$1)), *new ast::SimpleVar(@3, symbol::Symbol(*$3))); print_rules("argumentName", "ID DOT ID");} 
+ID          { $$ = new ast::SimpleVar(@$, symbol::Symbol(*$1)); print_rules("argumentName", "ID");}
+| ID DOT ID { $$ = new ast::FieldExp(@$, *new ast::SimpleVar(@1, symbol::Symbol(*$1)), *new ast::SimpleVar(@3, symbol::Symbol(*$3))); print_rules("argumentName", "ID DOT ID");}
 ;
 
 /*
@@ -1324,7 +1355,7 @@ LPAREN functionArgs RPAREN              { $$ = new ast::ArrayListVar(@$, *$2); }
 /*
 ** -*- ARGUMENT DIMENSION -*-
 */
-argumentValidators : 
+argumentValidators :
 LBRACE functionArgs RBRACE              { $$ = new ast::ArrayListVar(@$, *$2); }
 | /* Epsilon */                         { $$ = new ast::NilExp(@$); }
 ;

@@ -77,6 +77,10 @@
                   <literal>Sl</literal>は、非離散（連続または未定義）
                   の時間領域線形システムであることが検査されるようになりました。
                 </revremark>
+                <revnumber>2025.0.0</revnumber>
+                <revremark>
+                    <literal>h2norm(Sl [,tol])</literal> is obsolete when <literal>Sl</literal> is a matrix of doubles and will be removed in 2026.0.0.
+                </revremark>
             </revision>
         </revhistory>
     </refsection>

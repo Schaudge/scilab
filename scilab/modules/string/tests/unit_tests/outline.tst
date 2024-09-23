@@ -3,6 +3,8 @@
 // Copyright (C) 2024 - UTC - Stephane MOTTELET
 //
 
+// <-- TEST WITH GRAPHIC -->
+
 data.d0 = [];
 data.d = 1;
 data.D = rand(5, 5);
@@ -41,16 +43,24 @@ data.ml = mlist(["e","x"],1);
 jimport java.lang.String;
 data.j = String.new("Hello world");
 data.x = xmlReadStr("<root><a att=""foo"" rib=""bar""><b>Hello</b></a></root>");
-data.dt = datetime();
-data.DT = [datetime() datetime() datetime()];
+data.dt = datetime(2024, 7, 4);
+data.DT = [datetime(2024, 7, 4) datetime(2024, 7, 4) datetime(2024, 7, 4)];
 data.dura = duration(1);
 data.caldura = caldays(1);
 data.DURA = [duration(1) duration(1) duration(1)];
-data.DT = [datetime() datetime() datetime()];
+data.DT = [datetime(2024, 7, 4) datetime(2024, 7, 4) datetime(2024, 7, 4)];
 data.table = table(["AF"; "NA"], ["Africa"; "North America"]);
 data.ts = timeseries(hours(1:2)', ["AF"; "NA"], ["Africa"; "North America"]);
 
-data
+// data.fig = gcf(); // figure_size is not always the same
+data.ax = gca();
+grayplot(1:10,1:10,rand(10,10))
+data.gp = gce();
+x = 1:10;
+X = ndgrid(x);
+[fx, fy] =  (rand(X)-0.5, rand(X)-0.5);
+champ(x, x, fx, fy);
+data.champ = gce();
 
 data.tlist1 = tlist(["t1", "x"], 1);
 data.mlist1 = mlist(["t1", "x"], 2);
@@ -66,3 +76,5 @@ for i = fieldnames(data)'
 	data(i)
 	disp(data(i))
 end
+
+data

@@ -37,7 +37,7 @@
                 <term>tol</term>
                 <listitem>
                     <para>
-                        実数 (ランク定義の閾値 (<literal>contr</literal>参照)
+                        実数 (ランク定義の閾値 (<link linkend="contr">contr</link>参照)
                     </para>
                 </listitem>
             </varlistentry>

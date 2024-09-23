@@ -34,6 +34,11 @@ function [Xp,dima,dimb,dim]=spantwo(A,B)
     //[Xp,dimc,dimu,dim]=spantwo(CO,UO);    //Kalman decomposition
     //Slcan=ss2ss(Sl,inv(Xp));
 
+    arguments
+        A {mustBeA(A, "double")}
+        B {mustBeA(B, "double")}
+    end
+
     [X1,dim,dima]=spanplus(A,B);Xp=X1';
     B1B2B3=Xp*B;B1B2B3=B1B2B3(1:dim,:);
     [W,dimb]=rowcomp(B1B2B3);W=W(dim:-1:1,:);

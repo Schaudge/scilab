@@ -48,15 +48,18 @@ function [arc,resid]=armax1(r,s,q,y,u,b0f)
     //      If q=0, it is a sequential version of the least squares algorithm given
     //      in armax function
 
-    [lhs,rhs]=argn(0)
-    if rhs<=5,b0f=0;end
+    arguments
+        r (1,1) {mustBeA(r, "double"), mustBeInteger, mustBeNonnegative}
+        s (1,1) {mustBeA(s, "double"), mustBeInteger, mustBeGreaterThanOrEqual(s, -1)}
+        q (1,1) {mustBeA(q, "double"), mustBeInteger}
+        y {mustBeA(y, "double")}
+        u {mustBeA(u, "double"), mustBeEqualDims(u, y)}
+        b0f (1,1) {mustBeA(b0f, "double"), mustBeInteger} = 0
+    end
+
     if s==-1,b0f=0;end // Seems not natural, but makes things work
     u=matrix(u,1,-1);y=matrix(y,1,-1); //make u and y row vectors
     [n1,n2]=size(y)
-    if size(y,"*")<>size(u,"*") then
-        error(msprintf(gettext("%s: Incompatible input arguments #%d and #%d: Same numbers of elements expected.\n"),..
-        "armax1",4,5));
-    end
     //
     t0=max(max(r,s+1),1)+1;
     if r<>0;XTM1=y((t0-1):-1:(t0-r));else XTM1=[];end

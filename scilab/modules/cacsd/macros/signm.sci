@@ -22,15 +22,8 @@ function x = signm(a)
     //   This macro is called by the function sign to compute square matrix
     //   sign function.
 
-    rhs = argn(2);
-    if rhs <> 1 then
-        error(msprintf(gettext("%s: Wrong number of input argument(s): %d expected.\n"),"signm", 1));
-    end
-
-    [m, n] = size(a);
-
-    if m <> n then
-        error(msprintf(gettext("%s: Wrong size for input argument #%d: Square matrix expected.\n"),"signm",1));
+    arguments
+        a {mustBeA(a, "double"), mustBeReal, mustBeSquare}
     end
 
     flag = or(a <> a');

@@ -195,9 +195,8 @@ function out = duration(varargin)
                 %isNaN = isnan(vals(:,5))
                 if or(%isNaN) then
                     vals(%isNaN, 5) = 0;
-                else
-                    vals(:, 5) = vals(:, 5) * 1000;
                 end
+                vals(:, 5) = vals(:, 5) * 1000;
             else
                 vals(:, 5) = 0;
             end

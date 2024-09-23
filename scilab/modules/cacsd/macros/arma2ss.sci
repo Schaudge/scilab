@@ -15,9 +15,10 @@ function [S,Sn]=arma2ss(Ar)
     //     output transfer
     //Sn  : a discrete state space data structure (syslin) the noise input to
     //     output transfer
-    if typeof(Ar)<>"ar" then
-        error(msprintf(_("%s : Wrong type for input argument #%d: An armax system expected.\n"),"arma2ss",1))
+    arguments
+        Ar {mustBeA(Ar, "ar")}
     end
+
     a=Ar.a;
     b=Ar.b;
     d=Ar.d;

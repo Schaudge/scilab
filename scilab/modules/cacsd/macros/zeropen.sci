@@ -16,6 +16,10 @@ function [Z,U]=zeropen(Sl)
     //U*[-sI+A |B;   [ Z |0;
     //      C  |D] = [ * |*]
 
+    arguments
+        Sl {mustBeA(Sl, ["r", "lss"])}
+    end
+
     s=poly(0,"s");
     [A,B,C,D]=abcd(Sl);
     BD=[B;D];

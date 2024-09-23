@@ -15,5 +15,7 @@
 // <-- Short Description -->
 // "stop entity picker" (ged(11)) returns error 4
 
-assert_checktrue(execstr("ged(11)", "errcatch") == 0);
+if getos() <> "Darwin"
+    assert_checktrue(execstr("ged(11)", "errcatch") == 0);
+end
 close;

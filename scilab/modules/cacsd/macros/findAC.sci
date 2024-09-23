@@ -1,6 +1,5 @@
 function [A,C,rcnd]=findAC(s,n,l,R,meth,tol,printw)
-    A=[];C=[];rcnd=[];
-    [nargout,nargin] = argn(0)
+    
     //FINDAC  Finds the system matrices A and C of a discrete-time system, given the
     //        system order and the relevant part of the R factor of the concatenated
     //        block-Hankel matrices, using subspace identification techniques (MOESP
@@ -46,19 +45,20 @@ function [A,C,rcnd]=findAC(s,n,l,R,meth,tol,printw)
     //        Revisions:
     //
 
-    nin = nargin;
+    arguments
+        s (1, 1) {mustBeA(s, "double"), mustBeInteger}
+        n (1, 1) {mustBeA(n, "double"), mustBeInteger}
+        l (1, 1) {mustBeA(l, "double"), mustBeInteger}
+        R {mustBeA(R, "double")}
+        meth {mustBeA(meth, "double"), mustBeMember(meth, [1, 2, 3])} = 1
+        tol {mustBeA(tol, "double")} = 0
+        printw (1,1) {mustBeA(printw, "double"), mustBeMember(printw, [0, 1])} = 0
+    end
+
     nout = nargout;
-    //
-    if nin<7 then
-        printw = 0;
-    end
-    if nin<6 then tol = 0;end
     if tol==[] then tol = 0;end
-    if nin<5 then meth = 1;end
     if meth==[] then meth = 1;end
-    if nin<4 then
-        error(msprintf(gettext("%s: Wrong number of input arguments: %d to %d expected.\n"),"findAC",4,7));
-    end
+    A=[];C=[];rcnd=[];
     //
     // Compute system matrices A and C.
     job = 2;

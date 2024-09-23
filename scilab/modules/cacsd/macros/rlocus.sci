@@ -7,20 +7,20 @@
 // along with this program.
 function [kk,ol_poles,ol_zeros,cl_poles,AsymptotesOrigin,AsymptotesAngles]=rlocus(sys,kmax)
     //Calling sequence analysis
-    rhs=argn(2)
+    arguments
+        sys (1,1)
+        kmax {mustBeA(kmax, "double"), mustBeReal, mustBeNonnegative}= 0
+    end
 
     kmax_ind=0; //for error messages
     sltyp=typeof(sys)
     if and(sltyp<>["state-space" "rational" "zpk"]) then
         args=["sys","kmax"];
-        ierr=execstr("[kk,ol_poles,ol_zeros,cl_poles,AsymptotesOrigin,AsymptotesAngles]=%"+typeof(sys,"overload")+"_rlocus("+strcat(args(1:rhs),",")+")","errcatch")
+        ierr=execstr("[kk,ol_poles,ol_zeros,cl_poles,AsymptotesOrigin,AsymptotesAngles]=%"+typeof(sys,"overload")+"_rlocus("+strcat(args(1:nargin),",")+")","errcatch")
         if ierr<>0 then
             error(msprintf(_("%s: Wrong type for input argument #%d: Linear dynamical system expected.\n"),"rlocus",1))
         end
         return
-    end
-    if or(size(sys)<>1) then
-        error(msprintf(gettext("%s: Wrong value for input argument #%d: Single input, single output system expected.\n"),"rlocus",1));
     end
 
     if sltyp=="rational" then
@@ -38,15 +38,6 @@ function [kk,ol_poles,ol_zeros,cl_poles,AsymptotesOrigin,AsymptotesAngles]=rlocu
         k=sys.K
         den=real(poly(ol_poles,"x","r"))
         num=real(poly(ol_zeros,"x","r"))*k
-    end
-
-
-    if rhs<2 then
-        kmax=0,
-    else
-        if type(kmax)<>1|~isreal(kmax)|kmax<0 then
-            error(msprintf(gettext("%s: Wrong type for input argument #%d: A positive real expected.\n"),"rlocus",2));
-        end
     end
 
     inproper=degree(num)>degree(den)

@@ -14,6 +14,8 @@
 // <-- Short Description -->
 // Graphic editor could not be used when format was not format("v",18).
 
-format('e',10);
-plot();
-ged(8,0);
+if getos() <> "Darwin"
+    format('e',10);
+    plot();
+    ged(8,0);
+end

@@ -19,9 +19,12 @@ function [Q,M,rk]=fullrf(A,tol)
     // rk = rank(A) = #columns(Q) = #rows(M)
     //F.D.
     //!
-    [lhs,rhs]=argn(0)
+    arguments
+        A {mustBeA(A, "double")}
+        tol (1,1) {mustBeA(tol, "double") }= sqrt(%eps)
+    end
+
     na1=norm(A,1);
-    if rhs==1 then tol=sqrt(%eps);end
     if na1 < 1.d-10 then Q=[];M=[];rk=0;return;end
     tol1=tol*na1;
     [U,s,V,rk]=svd(A,tol1);

@@ -42,7 +42,7 @@
                 <term>tol</term>
                 <listitem>
                     <para>
-                        real (threshold for rank determination (see <literal>contr</literal>))
+                        real (threshold for rank determination (see <link linkend="contr">contr</link>))
                     </para>
                 </listitem>
             </varlistentry>

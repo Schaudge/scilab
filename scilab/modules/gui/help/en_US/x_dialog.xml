@@ -6,7 +6,10 @@
     </refnamediv>
     <refsynopsisdiv>
         <title>Syntax</title>
-        <synopsis>result=x_dialog(labels,valueini)</synopsis>
+        <synopsis>
+            result = x_dialog(labels, valueini)
+            result = x_dialog(labels, valueini, ispassword)
+        </synopsis>
     </refsynopsisdiv>
     <refsection>
         <title>Arguments</title>
@@ -21,6 +24,12 @@
                 <term>valueini</term>
                 <listitem>
                     <para>n column vector of strings, initial value suggested</para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>ispassword</term>
+                <listitem>
+                    <para>Boolean scalar: when <literal>%T</literal>, this dialog will be used to get a password, the characters typed by the user will be hidden and returned value will contains a single string. Default value is <literal>%F</literal>.</para>
                 </listitem>
             </varlistentry>
             <varlistentry>
@@ -42,6 +51,9 @@ gain=evstr(x_dialog('Value of gain ?','0.235'))
 x_dialog(['Method';'Enter sampling period'],'1')
 m=evstr(x_dialog('Enter a 3x3 matrix',['[0 0 0';'0 0 0';'0 0 0]']))
  ]]></programlisting>
+        <programlisting role="example"><![CDATA[
+passwd = x_dialog("Enter your password:","scilab", %t)
+ ]]></programlisting>
     </refsection>
     <refsection role="see also">
         <title>See also</title>
@@ -59,5 +71,14 @@ m=evstr(x_dialog('Enter a 3x3 matrix',['[0 0 0';'0 0 0';'0 0 0]']))
                 <link linkend="execstr">execstr</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection>
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revremark><literal>ispassword</literal> parameter added.</revremark>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

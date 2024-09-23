@@ -33,6 +33,10 @@ function [Inn,X,Gbar]=rowinout(G)
     // X is lxl and X (-s) X(s) = Identity (all-pass property).
     //
 
+    arguments
+        G {mustBeA(G, ["r", "lss"])}
+    end
+
     G1=G(1);
     flag="ss";if G1(1)=="r" then flag="tf";G=tf2ss(G);end
     [rows,cols]=size(G);

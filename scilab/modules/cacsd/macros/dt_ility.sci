@@ -19,11 +19,15 @@ function [m1,m2,u2,sl2]=dt_ility(sl,tol)
     //sl2=ss2ss(sl,u2)
     //!
 
-    [LHS,RHS]=argn(0)
-    if RHS==2 then
-        [n1,n2,u1,sl1]=st_ility(sl',tol);
-    else
+    arguments
+        sl {mustBeA(sl, "lss")}
+        tol {mustBeA(tol, "double")} = []
+    end
+
+    if tol == [] then
         [n1,n2,u1,sl1]=st_ility(sl');
+    else
+        [n1,n2,u1,sl1]=st_ility(sl',tol);
     end
     [nx,nx]=size(sl(2));
     u2=[u1(:,n1+1:nx),u1(:,n2+1:n1),u1(:,1:n2)];

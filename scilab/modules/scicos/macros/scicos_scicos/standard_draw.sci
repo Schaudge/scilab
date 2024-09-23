@@ -77,12 +77,12 @@ function standard_draw (o, frame, draw_ports, up)
     if frame then
         if With3D then  //** this is the code relative to the block's "window dressing"
             //**---------- 3D Mode ON -----------------------------------------------------------------------
-            #Color3D = options("3D")(2)
+            Color3D = options("3D")(2)
             // xpoly([orig(1)+e;orig(1)+sz(1);orig(1)+sz(1)],[orig(2)+sz(2);orig(2)+sz(2);orig(2)+e],'lines')
             xrect( orig(1)+e, orig(2)+sz(2), sz(1)-e, sz(2)-e) ;
             gh_e = gce(); //** new graphics :)
             gh_e.thickness = 0 ;
-            gh_e.foreground = #Color3D ;
+            gh_e.foreground = Color3D ;
 
             if coli<>[] then
                 gh_e.fill_mode = "on"  ;
@@ -99,7 +99,7 @@ function standard_draw (o, frame, draw_ports, up)
             orig(2)+sz(2)   , orig(2)+e
             orig(2)+e       , orig(2)+e];
 
-            xfpolys(xx,yy,-[1,1]*#Color3D); //** fill a set of polygons
+            xfpolys(xx,yy,-[1,1]*Color3D); //** fill a set of polygons
             gh_e = gce()              ;
             gh_c = gh_e.children(1:2) ;
             gh_c.foreground = default_color(0) ;

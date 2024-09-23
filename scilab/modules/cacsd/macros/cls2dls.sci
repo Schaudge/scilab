@@ -22,10 +22,13 @@ function [s1]=cls2dls(s,t,fp)
     // fp prevarping frequency in hertz
     //!
 
-    [lhs,rhs]=argn(0)
-    if typeof(s)<>"state-space"
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space expected.\n"),"cls2dls",1))
+    arguments
+        s {mustBeA(s, "lss")}
+        t (1,1) {mustBeA(t, "double")}
+        fp {mustBeA(fp, "double")} = []
     end
+
+
     if s.dt==[] then
         warning(msprintf(gettext("%s: Input argument %d is assumed continuous time.\n"),"cls2dls",1));
         s.dt="c";
@@ -33,8 +36,9 @@ function [s1]=cls2dls(s,t,fp)
     if s.dt<>"c" then
         error(msprintf(gettext("%s: Wrong value for input argument #%d: Continuous time system expected.\n"),"cls2dls",1))
     end
-    fs=1/t
-    if rhs==3 then fp=2*%pi*fp;fs=fp/tan(fp/fs/2)/2,end //prewarping
+
+    fs = 1/t;
+    if nargin==3 then fp=2*%pi*fp;fs=fp/tan(fp/fs/2)/2,end //prewarping
 
     a=2*fs*eye()-s(2)
     ad=a\(2*fs*eye()+s(2))

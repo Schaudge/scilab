@@ -12,8 +12,8 @@
 
 function it=invsyslin(t)
 
-    if typeof(t)<>"state-space" then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space expected.\n"),"invsyslin",1))
+    arguments
+        t {mustBeA(t, "lss")}
     end
 
     [p,m]=size(t.D);

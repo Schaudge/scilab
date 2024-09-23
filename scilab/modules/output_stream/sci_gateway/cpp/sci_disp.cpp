@@ -29,8 +29,6 @@ extern "C"
 
 types::Function::ReturnValue sci_disp(types::typed_list &in, int _iRetCount, types::typed_list &out)
 {
-    std::wostringstream ostr;
-
     if (in.empty())
     {
         Scierror(999, _("%s: Wrong number of input arguments: At least %d expected.\n"), "disp", 1);
@@ -39,6 +37,8 @@ types::Function::ReturnValue sci_disp(types::typed_list &in, int _iRetCount, typ
 
     for (auto it : in)
     {
+        std::wostringstream ostr;
+ 
         if (ConfigVariable::isPrintCompact() == false)
         {
             ostr << std::endl;

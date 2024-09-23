@@ -112,7 +112,11 @@ function tt = readtimeseries(varargin)
     hasvarnames = %t;
 
     if variableNames == [] then
-        variableNames = ["Time", "Var" + string(1:size(variableTypes, "*")-1)];
+        if names <> "" then
+            variableNames = names;
+        else
+            variableNames = ["Time", "Var" + string(1:size(variableTypes, "*")-1)];
+        end
         hasvarnames = %f;
     end
     
@@ -135,7 +139,7 @@ function tt = readtimeseries(varargin)
     if rowTimes == "" then
         idx = grep(variableTypes, "/^"+["datetime", "duration"]+"$/", "r");
     elseif type(rowTimes) == 10 then
-        idx = grep(variableNames, "/^"+rowTimes+"$/", "r")
+        idx = find(variableNames == rowTimes)
     end
 
     if idx == [] && ~nodate then

@@ -13,6 +13,11 @@
 
 function [t]=equil(p,q)
 
+    arguments
+        p {mustBeA(p, "double")}
+        q {mustBeA(q, "double")}
+    end
+
     t=chol(q);
     [u,s,u]=svd(t*p*t');
     s=diag(s);

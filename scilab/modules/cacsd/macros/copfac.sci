@@ -26,17 +26,17 @@ function [n,m,xt,yt]=copfac(g,polf,polc,tol)
     //-- tol is a threshold for detecting stable poles.
     //!
 
-    [lhs,rhs]=argn(0),
-    if rhs<1 then
-        error(msprintf(gettext("%s: Wrong number of input arguments: At least %d expected.\n"),"copfac",1))
+    arguments
+        g {mustBeA(g, ["lss", "r"])}
+        polf {mustBeA(polf, "double")} = -1
+        polc {mustBeA(polc, "double")} = -1
+        tol (1,1) {mustBeA(tol, "double"), mustBeReal, mustBeNonnegative} = 1000*%eps
     end
-    select typeof(g)
-    case "rational" then
+
+    if typeof(g) == "rational" then
         g=tf2ss(g)
-    case "state-space" then
-    else
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space or a transfer function expected.\n"),"copfac",1))
     end
+
     if g.dt<>"c" then
         error(msprintf(gettext("%s: Wrong type for argument #%d: In continuous time expected.\n"),"copfac",1))
     end
@@ -44,29 +44,20 @@ function [n,m,xt,yt]=copfac(g,polf,polc,tol)
     [r,p,t]=size(g);
     [a,b,c,d]=abcd(g),
     [n1,u1]=contr(a,b),[n2,u2]=contr(a',c'),
-    select rhs,
+    select nargin
     case 1 then
-        polc=-ones(1,n1),polf=-ones(1,n2),tol=1000*%eps,
+        polc = -ones(1,n1);
+        polf = -ones(1,n2);
     case 2 then
-        itol=2
-        tol=polf,polc=-ones(1,n1),polf=-ones(1,n2),
-    case 3 then
-        tol=1000*%eps,
-    else
-        itol=4
-    end,
-    if type(tol)<>1|size(tol,"*")<>1|~isreal(tol)|tol<=0 then
-        error(msprintf(gettext("%s: Wrong value for input argument #%d: Must be a positive scalar.\n"),"copfac",itol))
+        tol = polf;
+        polc = -ones(1,n1);
+        polf = -ones(1,n2),
     end
-    if type(polf)<>1 then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Vector of floats expected.\n"),"copfac",2))
-    end
+
     if size(polf,"*")<>n2 then
         error(msprintf(gettext( "%s: Wrong size for argument #%d: %d expected.\n"),"copfac",2,n2))
     end
-    if type(polc)<>1 then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Vector of floats expected.\n"),"copfac",3))
-    end
+
     if size(polc,"*")<>n1 then
         error(msprintf(gettext( "%s: Wrong size for argument #%d: %d expected.\n"),"copfac",3,n1))
     end

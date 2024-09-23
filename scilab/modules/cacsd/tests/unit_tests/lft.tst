@@ -42,18 +42,15 @@ assert_checktrue(T==lft(P,[2,2],R));
 P=[1 2 3; 4 5 6;7,8,9];R=[1 0;0 2];
 [T,t]=lft(P,[1,1],R);
 assert_checkalmostequal (T ,[-13/8 -1 0;-5/4 -1 0;0 0 2]);
-assert_checktrue(T==lft(P,[1,1],R,[1 1]));
 assert_checkequal(t,[1 1]);
 
 P=[1 2 3; 4 5 6;7,8,9];R=[1 0;0 2];
 T=lft(P,[2,2],R);
 assert_checkalmostequal (T ,-1);
-assert_checktrue(T==lft(P,[2,2],R,[0 0]));
 
 P=[1 2 3; 4 5 6;7,8,9];R=[1 0 1;0 2 1];
 T=lft(P,[1 1],R);
 assert_checkalmostequal (T ,[-13/8,-1,0,-3/8;-5/4,-1,0,-3/4;0,0,2,1]);
-assert_checktrue(T==lft(P,[1 1],R,[1 2]));
 
 P=[1 2 3; 4 5 6;7,8,9];R=[1 0 1;0 2 1];
 [T,t]=lft(P,[2 1],R);
@@ -68,7 +65,7 @@ assert_checkequal(t,[0 0]);
 T=lft(R,[2,2],P);
 assert_checkalmostequal (T ,[4/3 -5]);
 
-T=lft(R,[2,3],P,[0 1]);
+T=lft(R,[2,3],P);
 assert_checkequal (T ,[]);
 
 

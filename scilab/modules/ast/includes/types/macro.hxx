@@ -54,16 +54,17 @@ class EXTERN_AST Macro : public Callable
 {
 public :
     Macro() : Callable(),
-              m_Nargin(symbol::Context::getInstance()->getOrCreate(symbol::Symbol(L"nargin"))),
-              m_Nargout(symbol::Context::getInstance()->getOrCreate(symbol::Symbol(L"nargout"))),
-              m_Varargin(symbol::Context::getInstance()->getOrCreate(symbol::Symbol(L"varargin"))),
+            m_Nargin(symbol::Context::getInstance()->getOrCreate(symbol::Symbol(L"nargin"))),
+            m_Nargout(symbol::Context::getInstance()->getOrCreate(symbol::Symbol(L"nargout"))),
+            m_Varargin(symbol::Context::getInstance()->getOrCreate(symbol::Symbol(L"varargin"))),
             m_Varargout(symbol::Context::getInstance()->getOrCreate(symbol::Symbol(L"varargout"))) /*,
-              m_firstCall(true)*/
+            m_firstCall(true)*/
     {
     }
 
-    Macro(const std::wstring& _stName, std::vector<symbol::Variable*> &_inputArgs, std::vector<symbol::Variable*> &_outputArgs, ast::SeqExp &_body, const std::wstring& _stModule);
-    virtual                     ~Macro();
+    Macro(const std::wstring& _stName, std::vector<symbol::Variable*>& _inputArgs, std::vector<symbol::Variable*>& _outputArgs, ast::SeqExp& _body, const std::wstring& _stModule);
+    Macro(std::vector<symbol::Variable*>& _inputArgs, ast::SeqExp& _body, const std::wstring& _stModule, std::unordered_map<std::wstring, types::InternalType*> captured = {});
+    virtual ~Macro();
 
     // FIXME : Should not return NULL;
     Macro*                      clone() override;
@@ -79,6 +80,11 @@ public :
     bool                        isMacro() override
     {
         return true;
+    }
+
+    bool                        isLambda()
+    {
+        return m_isLambda;
     }
 
     void                        whoAmI() override;
@@ -137,6 +143,11 @@ public :
     void updateArguments();
     bool checkArgument(ast::Exp* exp);
     bool checkStaticDims(const std::vector<std::tuple<std::vector<int>, symbol::Variable*>>& dims);
+    inline const std::unordered_map<std::wstring, types::InternalType*>& getCaptured()
+    {
+        return m_captured;
+    }
+
   private:
     std::vector<symbol::Variable*>*     m_inputArgs;
     std::vector<symbol::Variable*>*     m_outputArgs;
@@ -150,6 +161,10 @@ public :
     std::map<symbol::Variable*, Macro*> m_submacro;
     std::wstring                        m_stPath;
     std::map<std::wstring, ARG>         m_arguments;
+
+    /*lambda*/
+    bool                                m_isLambda;
+    std::unordered_map<std::wstring, types::InternalType*> m_captured;
 };
 }
 

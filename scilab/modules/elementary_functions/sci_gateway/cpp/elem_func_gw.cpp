@@ -102,6 +102,7 @@ int ElemFuncModule::Load()
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"atanh", &sci_atanh, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"isvector", &sci_isvector, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"issquare", &sci_issquare, MODULE_NAME));
+    symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"vander", &sci_vander, MODULE_NAME));
     return 1;
 }
 

@@ -11,8 +11,9 @@
 // along with this program.
 
 function [K,Y,err]=leqe(P21,Qx)
-    if typeof(P21)<>"state-space" then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space expected.\n"),"leqe",1))
+    arguments
+        P21 {mustBeA(P21, "lss")}
+        Qx {mustBeA(Qx, "double")}
     end
 
     [A,B1,C2,D21,xo,dom]=P21(2:7)

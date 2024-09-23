@@ -12,6 +12,11 @@
 
 
 function [y]=dsimul(sld,u)
+    
+    arguments
+        sld {mustBeA(sld, "lss")}
+        u {mustBeA(u, "double")}
+    end
 
     [a,b,c,d,x0]=sld(2:6);
     y=c*ltitr(a,b,u,x0)+d*u;

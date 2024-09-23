@@ -38,15 +38,15 @@ function [L,M,T]= gfrancis(Plant,Model);
     // For more information on this approach, see
     // Krener, A. J., Optimal model matching controllers for linear
     // and nonlinear systems, Proceedings of NOLCOS, Bordeaux, 1992.
-    if typeof(Plant)<>"state-space" then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space expected.\n"),"gfrancis",1))
+    arguments
+        Plant {mustBeA(Plant, "lss")}
+        Model {mustBeA(Model, "lss")}
     end
+
     if Plant.dt<>"c" then
         error(msprintf(gettext("%s: Wrong value for input argument #%d: Continuous time system expected.\n"),"gfrancis",1))
     end
-    if typeof(Model)<>"state-space" then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space expected.\n"),"gfrancis",2))
-    end
+
     if Model.dt<>"c" then
         error(msprintf(gettext("%s: Wrong value for input argument #%d: Continuous time system expected.\n"),"gfrancis",2))
     end

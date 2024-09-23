@@ -29,27 +29,31 @@ int sci_x_dialog(char *fname, void* pvApiCtx)
 {
     SciErr sciErr;
 
-    int* piAddrlabelsAdr = NULL;
-    int* piAddrinitialValueAdr = NULL;
-    double* emptyMatrixAdr = NULL;
-
     int nbRow = 0, nbCol = 0;
-
     int messageBoxID = 0;
+    double* pdblEmptyMatrixAdr = NULL;
 
-    char **initialValueAdr = 0;
+    int* piLabelsAddr = NULL;
+    char** pcLabels = 0;
 
-    char **labelsAdr = 0;
+    int* piInitialValueAddr = NULL;
+    char** pcInitialValue = 0;
 
-    int userValueSize = 0;
-    char **userValue = NULL;
+    int* piTitleAddr = NULL;
+    char** pcTitle = 0;
 
-    CheckInputArgument(pvApiCtx, 1, 2);
+    int* piPasswordAddr = NULL;
+    int iPassword = 0;
+
+    int iUserValueSize = 0;
+    char **pcUserValue = NULL;
+
+    CheckInputArgument(pvApiCtx, 1, 3);
     CheckOutputArgument(pvApiCtx, 0, 1);
 
     if ((checkInputArgumentType(pvApiCtx, 1, sci_strings)))
     {
-        sciErr = getVarAddressFromPosition(pvApiCtx, 1, &piAddrlabelsAdr);
+        sciErr = getVarAddressFromPosition(pvApiCtx, 1, &piLabelsAddr);
         if (sciErr.iErr)
         {
             printError(&sciErr, 0);
@@ -57,7 +61,7 @@ int sci_x_dialog(char *fname, void* pvApiCtx)
         }
 
         // Retrieve a matrix of string at position 1.
-        if (getAllocatedMatrixOfString(pvApiCtx, piAddrlabelsAdr, &nbRow, &nbCol, &labelsAdr))
+        if (getAllocatedMatrixOfString(pvApiCtx, piLabelsAddr, &nbRow, &nbCol, &pcLabels))
         {
             Scierror(202, _("%s: Wrong type for argument #%d: string expected.\n"), fname, 1);
             return 1;
@@ -74,15 +78,16 @@ int sci_x_dialog(char *fname, void* pvApiCtx)
 
     /* Title is a default title */
     setMessageBoxTitle(messageBoxID, _("Scilab Input Value Request"));
-    /* Message */
-    setMessageBoxMultiLineMessage(messageBoxID, labelsAdr, nbCol * nbRow);
-    freeAllocatedMatrixOfString(nbRow, nbCol, labelsAdr);
 
-    if (nbInputArgument(pvApiCtx) == 2)
+    /* Message */
+    setMessageBoxMultiLineMessage(messageBoxID, pcLabels, nbCol * nbRow);
+    freeAllocatedMatrixOfString(nbRow, nbCol, pcLabels);
+
+    if (nbInputArgument(pvApiCtx) >= 2)
     {
         if (checkInputArgumentType(pvApiCtx, 2, sci_strings))
         {
-            sciErr = getVarAddressFromPosition(pvApiCtx, 2, &piAddrinitialValueAdr);
+            sciErr = getVarAddressFromPosition(pvApiCtx, 2, &piInitialValueAddr);
             if (sciErr.iErr)
             {
                 printError(&sciErr, 0);
@@ -90,7 +95,7 @@ int sci_x_dialog(char *fname, void* pvApiCtx)
             }
 
             // Retrieve a matrix of string at position 2.
-            if (getAllocatedMatrixOfString(pvApiCtx, piAddrinitialValueAdr, &nbRow, &nbCol, &initialValueAdr))
+            if (getAllocatedMatrixOfString(pvApiCtx, piInitialValueAddr, &nbRow, &nbCol, &pcInitialValue))
             {
                 Scierror(202, _("%s: Wrong type for argument #%d: string expected.\n"), fname, 2);
                 return 1;
@@ -102,21 +107,49 @@ int sci_x_dialog(char *fname, void* pvApiCtx)
             return FALSE;
         }
 
-        setMessageBoxInitialValue(messageBoxID, initialValueAdr, nbCol * nbRow);
-        freeAllocatedMatrixOfString(nbRow, nbCol, initialValueAdr);
+        setMessageBoxInitialValue(messageBoxID, pcInitialValue, nbCol * nbRow);
+        freeAllocatedMatrixOfString(nbRow, nbCol, pcInitialValue);
     }
+
+    if (nbInputArgument(pvApiCtx) == 3)
+    {
+        if (checkInputArgumentType(pvApiCtx, 3, sci_boolean))
+        {
+            sciErr = getVarAddressFromPosition(pvApiCtx, 3, &piPasswordAddr);
+            if (sciErr.iErr)
+            {
+                printError(&sciErr, 0);
+                return FALSE;
+            }
+
+            if (getScalarBoolean(pvApiCtx, piPasswordAddr, &iPassword))
+            {
+                Scierror(999, _("%s: Wrong size for argument #%d: Scalar boolean expected.\n"), fname, 3);
+                freeAllocatedMatrixOfString(nbRow, nbCol, pcTitle);
+                return FALSE;
+            }
+        }
+        else
+        {
+            Scierror(999, _("%s: Wrong type for input argument #%d: Scalar boolean expected.\n"), fname, 3);
+            return FALSE;
+        }
+    }
+
+    /* Set password mode */
+    setMessageBoxPasswordMode(messageBoxID, &iPassword, 1);
 
     /* Display it and wait for a user input */
     messageBoxDisplayAndWait(messageBoxID);
 
     /* Read the user answer */
-    userValueSize = getMessageBoxValueSize(messageBoxID);
-    if (userValueSize == 0)
+    iUserValueSize = getMessageBoxValueSize(messageBoxID);
+    if (iUserValueSize == 0)
     {
         nbRow = 0;
         nbCol = 0;
 
-        sciErr = allocMatrixOfDouble(pvApiCtx, nbInputArgument(pvApiCtx) + 1, nbRow, nbCol, &emptyMatrixAdr);
+        sciErr = allocMatrixOfDouble(pvApiCtx, nbInputArgument(pvApiCtx) + 1, nbRow, nbCol, &pdblEmptyMatrixAdr);
         if (sciErr.iErr)
         {
             printError(&sciErr, 0);
@@ -126,11 +159,11 @@ int sci_x_dialog(char *fname, void* pvApiCtx)
     }
     else
     {
-        userValue = getMessageBoxValue(messageBoxID);
+        pcUserValue = getMessageBoxValue(messageBoxID);
 
         nbCol = 1;
-        createMatrixOfString(pvApiCtx, nbInputArgument(pvApiCtx) + 1, userValueSize, nbCol, userValue);
-        delete[] userValue;
+        createMatrixOfString(pvApiCtx, nbInputArgument(pvApiCtx) + 1, iUserValueSize, nbCol, pcUserValue);
+        delete[] pcUserValue;
     }
 
     AssignOutputVariable(pvApiCtx, 1) = nbInputArgument(pvApiCtx) + 1;

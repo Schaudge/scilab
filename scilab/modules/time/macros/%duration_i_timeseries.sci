@@ -18,6 +18,10 @@ function out = %duration_i_timeseries(i, val, ts)
     case "SampleRate"
     else
         idx = find(ts.props.variableNames == i);
+        if and(size(val) > [1 1]) then
+            error(msprintf(_("%s: Wrong size for input argument #%d: Must be a vector.\n"), "%datetime_i_timeseries", 2));
+        end
+        val = val(:);
         if idx == [] then
             varnames = [out.props.variableNames(1) i];
             out = [out timeseries(out.vars(1).data, val, "VariableNames", varnames)]

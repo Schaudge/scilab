@@ -37,7 +37,7 @@
                 <term>tol</term>
                 <listitem>
                     <para>
-                        可制御の閾値 (<literal>contr</literal>参照).  デフォルト値は <literal>sqrt(%eps)</literal>.
+                        可制御の閾値 (<link linkend="contr">contr</link>参照).  デフォルト値は <literal>sqrt(%eps)</literal>.
                     </para>
                 </listitem>
             </varlistentry>

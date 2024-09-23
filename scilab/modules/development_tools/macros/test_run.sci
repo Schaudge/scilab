@@ -134,7 +134,7 @@ function test_run_result = test_run(varargin)
             params.show_error = %t;
 
             // set test_run results file in the xml dir
-            params.output_dir = fileparts(params.exportFile);
+            params.output_dir = fullpath(fileparts(params.exportFile));
         end
     end
 
@@ -441,6 +441,22 @@ function status = test_module(_params)
     testsuite.errors=0 // unexpected errors / exception on execution
     testsuite.failures=0 // when a test failed
 
+    // For the XML export, temporary files will be preserved on specific directory
+    if ~isfield(_params, "output_dir") then
+        // on TMPDIR when unspecified
+        result_path = TMPDIR + filesep();
+    elseif _params.output_dir == "" then
+        // on current directory
+        result_path = pwd() + filesep();
+    else
+        // named after the module
+        [_, d] = fileparts(fullpath(_params.moduleName));
+        result_path = params.output_dir + filesep() + d + filesep();
+    end
+    _params.output_dir = result_path;
+    remove_output_dir_if_empty = ~isdir(_params.output_dir);
+    mkdir(_params.output_dir)
+
     //don't test only return list of tests.
     if _params.reference == "list" then
         for i = 1:test_count
@@ -555,6 +571,10 @@ function status = test_module(_params)
     status.test_count     = test_count;
     status.detailled_failures   = detailled_failures;
     status.testsuite   = testsuite;
+
+    if remove_output_dir_if_empty then
+        rmdir(_params.output_dir);
+    end
 endfunction
 
 function status = test_single(_module, _testPath, _testName)
@@ -579,9 +599,10 @@ function status = test_single(_module, _testPath, _testName)
     xcosNeeded    = %F;
 
     //some paths
-    result_path = TMPDIR + filesep();
-    if isfield(params, "output_dir") then
-        result_path = params.output_dir;
+    if isfield(_module, "output_dir") then
+        result_path = _module.output_dir;
+    else
+        result_path = TMPDIR + filesep();
     end
 
     tmp_tst     = pathconvert( result_path + _testName + ".tst", %F);

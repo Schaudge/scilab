@@ -18,9 +18,14 @@ function [X,dim,Y]=im_inv(A,B,tol)
     // tol is a threshold to test if a  subspace is included in another
     // default value tol = 100*%eps;
 
-    [lhs,rhs]=argn(0);
+    arguments
+        A {mustBeA(A, "double")}
+        B {mustBeA(B, "double")}
+        tol (1,1) {mustBeA(tol, "double")} = 100 * %eps * size(A,"*") * size(B,"*")
+    end
+
     [nA,mA]=size(A);[nB,mB]=size(B);
-    if rhs==2 then tol=100*%eps*mA*nA*nB*mB,end;
+
     if nA<>nB then
         error(msprintf(gettext("%s: Incompatible input arguments #%d and #%d: Same sizes expected.\n"),"im_inv",1,2))
         return

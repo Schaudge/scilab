@@ -44,7 +44,7 @@
             <literal>[itask, tcrit, h0, hmax, hmin, jactyp, mxstep, maxordn, maxords, ixpr, ml, mu]</literal>.
         </para>
         <para>
-            The default value is: <literal>[1,0,0,%inf,0,2,500,12,5,0,-1,-1].</literal>
+            The default value is: <literal>[1, 0, 0, %inf, 0, 2, 500, 12, 5, 0, -1, -1].</literal>
         </para>
         <para>The meaning of the elements is described below.</para>
         <para>
@@ -95,6 +95,10 @@
                             below)
                         </listitem>
                     </itemizedlist>
+                </listitem>
+                <listitem>
+                    <literal>mxstep</literal> maximum number of steps allowed (<literal>"adams"</literal> or <literal>"stiff"</literal>
+                    only)
                 </listitem>
                 <listitem>
                     <literal>maxordn</literal> maximum non-stiff order

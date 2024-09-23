@@ -334,13 +334,30 @@ bool SciCurl::setCookies()
     return true;
 }
 
-void SciCurl::addFileToForm(const char* name, const char* file)
+int SciCurl::setTimeOut(double second)
 {
-    curl_formadd(&_formpost,
-                &_lastptr,
-                CURLFORM_COPYNAME, name,
-                CURLFORM_FILE, file,
-                CURLFORM_END);
+    return curl_easy_setopt(_curl, CURLOPT_TIMEOUT_MS, (long)(second * 1000));
+}
+
+void SciCurl::addFileToForm(const std::string& name, const std::string& file, const std::string& filename)
+{
+    if (filename.empty())
+    {
+        curl_formadd(&_formpost,
+                     &_lastptr,
+                     CURLFORM_COPYNAME, name.c_str(),
+                     CURLFORM_FILE, file.c_str(),
+                     CURLFORM_END);
+    }
+    else
+    {
+        curl_formadd(&_formpost,
+                     &_lastptr,
+                     CURLFORM_COPYNAME, name.c_str(),
+                     CURLFORM_FILE, file.c_str(),
+                     CURLFORM_FILENAME, filename.c_str(),
+                     CURLFORM_END);
+    }
 }
 
 void SciCurl::addContentToForm(const char* name, const char* data)

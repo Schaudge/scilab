@@ -685,6 +685,155 @@ function [varargout] = dae(varargin)
         else
             error(sprintf(gettext("%s: Wrong number of output argument(s): %d or %d expected.\n"), "dae", 2, 3));
         end
+    elseif or(varargin(1) == ["adams", "stiff"]) then // Case adams or stiff
+        [lhs, rhs] = argn();
+
+        if lhs > 2 then
+            error(sprintf(gettext("%s: Wrong number of output argument(s): %d or %d expected.\n"), "dae", 1, 2));
+        end
+
+        flag = %t; // must be removed when impl will be removed in 2026.0.0
+
+        if rhs == 6 then // Call without optional arguments
+            [typ, x0, t0, t, %res, surface] = varargin(:)
+            y0 = x0(:, 1);
+            ydot0 = x0(:, 2);
+            if lhs == 1 then
+                y = %_impl(flag, typ, y0, ydot0, t0, t, %res, surface);
+            else
+                [y, hd] = %_impl(flag, typ, y0, ydot0, t0, t, %res, surface);
+            end
+        elseif rhs == 10 then // Call with all the optional arguments
+            [typ, x0, t0, t, rtol, atol, %res, jac, surface, hd] = varargin(:)
+            y0 = x0(:, 1);
+            ydot0 = x0(:, 2);
+            if lhs == 1 then
+                y = %_impl(flag, typ, y0, ydot0, t0, t, atol, rtol, %res, surface, jac, hd);
+            else
+                [y, hd] = %_impl(flag, typ, y0, ydot0, t0, t, atol, rtol, %res, surface, jac, hd);
+            end
+
+        elseif rhs == 7 then
+            if type(varargin(5)) == 1 then
+                [typ, x0, t0, t, atol, %res, surface] = varargin(:)
+                y0 = x0(:, 1);
+                ydot0 = x0(:, 2);
+                if lhs == 1 then
+                    y = %_impl(flag, typ, y0, ydot0, t0, t, atol, %res, surface);
+                else
+                    [y, hd] = %_impl(flag, typ, y0, ydot0, t0, t, atol, %res, surface);
+                end
+
+            elseif type(varargin(7)) == 1 then
+                [typ, x0, t0, t, %res, surface, hd] = varargin(:)
+                y0 = x0(:, 1);
+                ydot0 = x0(:, 2);
+
+                if lhs == 1 then
+                    y = %_impl(flag, typ, y0, ydot0, t0, t, %res, surface, hd);
+                else
+                    [y, hd] = %_impl(flag, typ, y0, ydot0, t0, t, %res, surface, hd);
+                end
+
+            else
+                [typ, x0, t0, t, %res, jac, surface] = varargin(:)
+                y0 = x0(:, 1);
+                ydot0 = x0(:, 2);
+
+                if lhs == 1 then
+                    y = %_impl(flag, typ, y0, ydot0, t0, t, %res, surface, jac);;
+                else
+                    [y, hd] = %_impl(flag, typ, y0, ydot0, t0, t, %res, surface, jac);;
+                end
+            end
+        elseif rhs == 8 then
+            if type(varargin(5)) ==  1 then
+                if type(varargin(6)) == 1 then
+                    [typ, x0, t0, t, rtol, atol, %res, surface] = varargin(:)
+                    y0 = x0(:, 1);
+                    ydot0 = x0(:, 2);
+
+                    if lhs == 1 then
+                        y = %_impl(flag, typ, y0, ydot0, t0, t, atol, rtol, %res, surface);
+                    else
+                        [y, hd] = %_impl(flag, typ, y0, ydot0, t0, t, atol, rtol, %res, surface);
+                    end
+                elseif type(varargin(8)) == 1 then
+                    [typ, x0, t0, t, atol, %res, surface, hd] = varargin(:)
+                    y0 = x0(:, 1);
+                    ydot0 = x0(:, 2);
+
+                    if lhs == 1 then
+                        y = %_impl(flag, typ, y0, ydot0, t0, t, atol, %res, surface, hd);
+                    else
+                        [y, hd] = %_impl(flag, typ, y0, ydot0, t0, t, atol, %res, surface, hd);
+                    end
+                else
+                    [typ, x0, t0, t, atol, %res, jac, surface] = varargin(:)
+                    y0 = x0(:, 1);
+                    ydot0 = x0(:, 2);
+
+                    if lhs == 1 then
+                        y = %_impl(flag, typ, y0, ydot0, t0, t, atol, %res, surface, jac);
+                    else
+                        [y, hd] = %_impl(flag, typ, y0, ydot0, t0, t, atol, %res, surface, jac);
+                    end
+                end
+            else
+                [typ, x0, t0, t, %res, jac, surface, hd] = varargin(:)
+                y0 = x0(:, 1);
+                ydot0 = x0(:, 2);
+
+                if lhs == 1 then
+                    y = %_impl(flag, typ, y0, ydot0, t0, t, %res, surface, jac, hd);
+                else
+                    [y, hd] = %_impl(flag, typ, y0, ydot0, t0, t, %res, surface, jac, hd);
+                end
+            end
+        elseif rhs == 9 then
+            if type(varargin(6)) == 1 then
+                if type(varargin(9)) == 1 then
+                    [typ, x0, t0, t, rtol, atol, %res, surface, hd] = varargin(:)
+                    y0 = x0(:, 1);
+                    ydot0 = x0(:, 2);
+
+                    if lhs == 1 then
+                        y = %_impl(flag, typ, y0, ydot0, t0, t, atol, rtol, %res, surface, hd);
+                    else
+                        [y, hd] = %_impl(flag, typ, y0, ydot0, t0, t, atol, rtol, %res, surface, hd);
+                    end
+                else
+                    [typ, x0, t0, t, rtol, atol, %res, jac, surface] = varargin(:)
+                    y0 = x0(:, 1);
+                    ydot0 = x0(:, 2);
+
+                    if lhs == 1 then
+                        y = %_impl(flag, typ, y0, ydot0, t0, t, atol, rtol, %res, surface, jac);
+                    else
+                        [y, hd] = %_impl(flag, typ, y0, ydot0, t0, t, atol, rtol, %res, surface, jac);
+                    end
+                end
+            else
+                [typ, x0, t0, t, atol, %res, jac, surface, hd] = varargin(:)
+                y0 = x0(:, 1);
+                ydot0 = x0(:, 2);
+
+                if lhs == 1 then
+                    y = %_impl(flag, typ, y0, ydot0, t0, t, atol, %res, surface, jac, hd);
+                else
+                    [y, hd] = %_impl(flag, typ, y0, ydot0, t0, t, atol, %res, surface, jac, hd);
+                end
+            end
+
+        else
+            error(sprintf(gettext("%s: Wrong number of input argument(s): %d to %d expected.\n"), "dae", 6, 10));
+        end
+
+        if lhs == 1 then
+            varargout = list(y);
+        else
+            varargout = list(y, hd);
+        end
     else
         error(sprintf(gettext("%s: Invalid option %s: real matrix expected.\n"), "dae", "root"));
     end

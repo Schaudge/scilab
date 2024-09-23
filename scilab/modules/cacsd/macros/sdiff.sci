@@ -17,8 +17,11 @@ function w=sdiff(z,d)
     // and d the difrenecing order
     // z : a matrix of size(n1,n2) z(t)=z(:,t)
 
-    [lhs,rhs]=argn(0)
-    if rhs==1;d=1;end
+    arguments
+        z
+        d (1,1) {mustBeA(d, "double")} = 1
+    end
+
     w=z;
     for i=1:d,[n1,n2]=size(w); w=w(:,2:n2)-w(:,1:(n2-1));end
 endfunction

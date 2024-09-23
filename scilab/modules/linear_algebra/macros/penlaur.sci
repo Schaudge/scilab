@@ -20,8 +20,14 @@ function [Si,Pi,Di,order]=penlaur(E,A)
     // Experimental version: troubles when bad conditioning of
     // (so*E-A)...)
     //!
-    [LHS,RHS]=argn(0);
-    if RHS==1 then [E,A]=pen2ea(E);end
+    arguments
+        E {mustBeA(E, ["double", "polynomial"])}
+        A {mustBeA(A, "double")} = []
+    end
+    if nargin == 1 then
+        [E,A]=pen2ea(E);
+    end
+    
     seed=rand("seed");typ=rand("info");
     rand("normal");rand("seed",0);
     tests=rand(1,10);

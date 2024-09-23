@@ -21,9 +21,11 @@ function [K,R]=kpure(sl,eps)
     // because N and D are polynomials with real coefficients.
 
     //Author: Serge Steer, INRIA
+    arguments
+        sl {mustBeA(sl, ["r", "lss"])}
+        eps {mustBeA(eps, "double"), mustBePositive} = 1e-6
+    end
     y=[];R=[];
-    msg=_("%s: Wrong type for input argument #%d: Linear state space or a transfer function expected.\n")
-    if argn(2)==1 then eps=1e-6,end
     if size(eps,"*")==2 then  eps=eps(2),end //compatibility
     select typeof(sl)
     case "rational" then
@@ -35,8 +37,6 @@ function [K,R]=kpure(sl,eps)
             error(msprintf(msg,"kpure",1))
         end
         sl=ss2tf(sl)
-    else
-        error(msprintf(msg,"kpure",1))
     end
 
     //(1) give K(s)=-D(s)/N(s)

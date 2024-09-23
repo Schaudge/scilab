@@ -3981,32 +3981,10 @@ msgid "%s: widths vector: %d components expected.\n"
 msgstr ""
 
 #
-# File: modules/graphics/macros/datatips/datatipCreatePopupMenu.sci, line: 43
-msgid "createPopupItems: found an empty cascading menu."
-msgstr ""
-
-#
 # File: modules/graphics/macros/datatips/datatipGetEntities.sci, line: 42
 # File: modules/graphics/macros/datatips/datatipSetOrientation.sci, line: 20
 #, c-format
 msgid "%s: Wrong type for input argument #%d: A '%s' handle expected.\n"
-msgstr ""
-
-#
-# File: modules/graphics/macros/datatips/datatipManagerMode.sci, line: 48
-#, c-format
-msgid "%s: too many input arguments"
-msgstr ""
-
-#
-# File: modules/graphics/macros/datatips/datatipManagerMode.sci, line: 71
-msgid ""
-"Datatip manager cannot be enabled, user data figure field is already used"
-msgstr ""
-
-#
-# File: modules/graphics/macros/datatips/datatipManagerMode.sci, line: 78
-msgid "Left click on a curve to create a datatip, right opens contextual menu"
 msgstr ""
 
 #

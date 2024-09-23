@@ -17,14 +17,10 @@ function [P,r]=macglov(Sl)
     // with [N,M]=LCF(Sl) (Normalized coprime factorization)
     // gama_optimal = 1/sqrt(mu_optimal)
     //!
-    if argn(2)<1 then
-        error(msprintf(gettext("%s: Wrong number of input arguments: %d expected.\n"),..
-        "macglov",1))
+    arguments
+        Sl {mustBeA(Sl, ["r", "lss"])}
     end
-
-    if and(typeof(Sl)<>["rational","state-space"]) then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space or a transfer function expected.\n"),"macglov",1))
-    end
+    
     if Sl.dt<>"c" then
         error(msprintf(gettext("%s: Wrong type for argument #%d: In continuous time expected.\n"),"macglov",1))
     end

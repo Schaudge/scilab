@@ -25,9 +25,10 @@ function [gm]=fspec(g)
     //- g(+oo) = D is positive definite.
     //!
 
-    if and(typeof(g)<>["rational","state-space"]) then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space or a transfer function expected.\n"),"fspec",1))
+    arguments
+        g {mustBeA(g, ["r", "lss"])}
     end
+
     if g.dt<>"c" then
         error(msprintf(gettext("%s: Wrong type for argument #%d: In continuous time expected.\n"),"fspec",1))
     end

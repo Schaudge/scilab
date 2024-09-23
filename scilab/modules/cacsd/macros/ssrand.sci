@@ -117,11 +117,16 @@ function [sl,U]=ssrand(nout,nin,nstate,flag)
         end
     endfunction
 
+    arguments
+        nout (1,1) {mustBeA(nout, "double")}
+        nin (1,1) {mustBeA(nin, "double")}
+        nstate (1,1) {mustBeA(nstate, "double")}
+        flag {mustBeA(flag, "list")} = list([])
+    end
+
     margin=0.5;  //M "stable"  will mean real-part(M) < -margin
-    [lhs,rhs]=argn(0)
     //rand('seed',0)
     rand("normal")
-    if rhs==3 then flag=[];end
     select flag(1)
     case []
         sl=syslin("c",rand(nstate,nstate),rand(nstate,nin),rand(nout,nstate),..

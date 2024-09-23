@@ -6,6 +6,7 @@
 // =============================================================================
 
 // <-- CLI SHELL MODE -->
+// <-- NO CHECK REF -->
 
 // <-- Non-regression test for bug 4759 -->
 //
@@ -15,9 +16,7 @@
 // <-- Short Description -->
 // We should provide a better error message in nlev when called with no input argument
 
-execstr("nlev","errcatch");
-
-if lasterror()<>msprintf(gettext("%s: Wrong number of input arguments: %d or %d expected.\n"),"nlev",2,3) then pause;end
-
-
+assert_checkfalse(execstr("nlev()"   ,"errcatch") == 0);
+refMsg = msprintf(_("%s: Wrong number of input arguments: %d to %d expected.\n"), "nlev", 2, 3);
+assert_checkerror("nlev()", refMsg);
 

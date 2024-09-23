@@ -55,7 +55,7 @@
                 <term>R</term>
                 <listitem>
                     <para>
-                        llinear system (in state space or transfer
+                        linear system (in state space or transfer
                         function representation) or a simple gain,
                         implicitly partitioned into four blocks (two
                         input ports and two output ports).
@@ -203,6 +203,17 @@ lft(W,[1,1],K)
                 <link linkend="blockdiag">blockdiag</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection>
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revremark>
+                    <literal>lft(P, p, R, r)</literal> is obsolete and will be removed in 2026.0.0.
+                </revremark>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>
 <!--http://www.cds.caltech.edu/~doyle/wiki/images/7/70/CDC1991.pdf-->

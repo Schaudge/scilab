@@ -123,4 +123,15 @@ U'*B
             </member>
         </simplelist>
     </refsection>
+    <refsection>
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revremark>
+                    <literal>st_ility(Sl [,tol])</literal> is obsolete when <literal>Sl</literal> is a matrix of doubles and and will be removed in 2026.0.0.
+                </revremark>
+            </revision>
+        </revhistory>
+    </refsection>
 </refentry>

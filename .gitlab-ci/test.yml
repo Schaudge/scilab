@@ -16,12 +16,8 @@
     when: always
     paths:
       - "${SCI_VERSION_STRING}/${ARCH}-windows/${TEST}.xml"
-      - "${SCI_VERSION_STRING}/${ARCH}-windows/log_iss_install_${CI_COMMIT_SHORT_SHA}.txt"
-      - "${SCI_VERSION_STRING}/${ARCH}-windows/*.tst"
-      - "${SCI_VERSION_STRING}/${ARCH}-windows/*.res"
-      - "${SCI_VERSION_STRING}/${ARCH}-windows/*.err"
-      - "${SCI_VERSION_STRING}/${ARCH}-windows/*.dia.tmp"
-      - "${SCI_VERSION_STRING}/${ARCH}-windows/*.dia"
+      - "${SCI_VERSION_STRING}/${ARCH}-windows/test_iss_install_${CI_COMMIT_SHORT_SHA}.log"
+      - "${SCI_VERSION_STRING}/${ARCH}-windows/${TEST}/"
     reports:
       junit: "${SCI_VERSION_STRING}/${ARCH}-windows/${TEST}.xml"
 
@@ -38,8 +34,8 @@ windows_basic:
   rules:
     - if: $CI_COMMIT_TAG
     - if: $CI_PIPELINE_SOURCE == "schedule"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /.*test::all.*/
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /.*test::all_windows.*/
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /test::all$/
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /test::all_windows/
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS !~ /.*test::.*/ || $CI_PIPELINE_SOURCE == "push"
       changes:
         - scilab/modules/$TEST/**/*
@@ -79,8 +75,8 @@ windows_intermediate:
   rules:
     - if: $CI_COMMIT_TAG
     - if: $CI_PIPELINE_SOURCE == "schedule"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /.*test::all.*/
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /.*test::all_windows.*/
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /test::all$/
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /test::all_windows/
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS !~ /.*test::.*/ || $CI_PIPELINE_SOURCE == "push"
       changes:
         - scilab/modules/$TEST/**/*
@@ -123,8 +119,8 @@ windows_advanced:
   rules:
     - if: $CI_COMMIT_TAG
     - if: $CI_PIPELINE_SOURCE == "schedule"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /.*test::all.*/
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /.*test::all_windows.*/
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /test::all$/
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /test::all_windows/
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS !~ /.*test::.*/ || $CI_PIPELINE_SOURCE == "push"
       changes:
         - scilab/modules/$TEST/**/*
@@ -151,8 +147,8 @@ windows_only:
   rules:
     - if: $CI_COMMIT_TAG
     - if: $CI_PIPELINE_SOURCE == "schedule"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /.*test::all.*/
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /.*test::all_windows.*/
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /test::all$/
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /test::all_windows/
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS !~ /.*test::.*/ || $CI_PIPELINE_SOURCE == "push"
       changes:
         - scilab/modules/$TEST/**/*
@@ -165,17 +161,13 @@ windows_only:
 .linux_test:
   stage: test
   tags: [x86_64-linux-gnu, docker, scilab]
-  image: ${CI_REGISTRY_IMAGE}/ubuntu-18.04:${DOCKER_TAG}
+  image: ${CI_REGISTRY_IMAGE}/ubuntu-20.04:${DOCKER_TAG}
   script: bash -e -x .gitlab-ci/test.sh
   artifacts:
     when: always
     paths:
       - "${SCI_VERSION_STRING}/${ARCH}/${TEST}.xml"
-      - "${SCI_VERSION_STRING}/${ARCH}/*.tst"
-      - "${SCI_VERSION_STRING}/${ARCH}/*.res"
-      - "${SCI_VERSION_STRING}/${ARCH}/*.err"
-      - "${SCI_VERSION_STRING}/${ARCH}/*.dia.tmp"
-      - "${SCI_VERSION_STRING}/${ARCH}/*.dia"
+      - "${SCI_VERSION_STRING}/${ARCH}/${TEST}/"
     reports:
       junit: "${SCI_VERSION_STRING}/${ARCH}/${TEST}.xml"
 
@@ -192,8 +184,8 @@ linux_basic:
   rules:
     - if: $CI_COMMIT_TAG
     - if: $CI_PIPELINE_SOURCE == "schedule"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /.*test::all.*/
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /.*test::all_linux.*/
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /test::all$/
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /test::all_linux/
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS !~ /.*test::.*/ || $CI_PIPELINE_SOURCE == "push"
       changes:
         - scilab/modules/$TEST/**/*
@@ -210,8 +202,8 @@ linux_intermediate:
   rules:
     - if: $CI_COMMIT_TAG
     - if: $CI_PIPELINE_SOURCE == "schedule"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /.*test::all.*/
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /.*test::all_linux.*/
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /test::all$/
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /test::all_linux/
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS !~ /.*test::.*/ || $CI_PIPELINE_SOURCE == "push"
       changes:
         - scilab/modules/$TEST/**/*
@@ -224,8 +216,8 @@ linux_advanced:
   rules:
     - if: $CI_COMMIT_TAG
     - if: $CI_PIPELINE_SOURCE == "schedule"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /.*test::all.*/
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /.*test::all_linux.*/
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /test::all$/
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /test::all_linux/
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS !~ /.*test::.*/ || $CI_PIPELINE_SOURCE == "push"
       changes:
         - scilab/modules/$TEST/**/*
@@ -238,11 +230,13 @@ linux_advanced:
 windows_atoms:
   extends: .windows_test
   stage: test_atoms
+  variables:
+    ARCH: "x64"
   rules:
     - if: $CI_COMMIT_TAG
     - if: $CI_PIPELINE_SOURCE == "schedule"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /.*test::all.*/
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /.*test::all_windows.*/
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /test::all$/
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /test::all_windows/
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS !~ /.*test::.*/ || $CI_PIPELINE_SOURCE == "push"
       changes:
         - scilab/modules/$TEST/**/*
@@ -257,8 +251,8 @@ linux_atoms:
   rules:
     - if: $CI_COMMIT_TAG
     - if: $CI_PIPELINE_SOURCE == "schedule"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /.*test::all.*/
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /.*test::all_linux.*/
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /test::all$/
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /test::all_linux/
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS !~ /.*test::.*/ || $CI_PIPELINE_SOURCE == "push"
       changes:
         - scilab/modules/$TEST/**/*

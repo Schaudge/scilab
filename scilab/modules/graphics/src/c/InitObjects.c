@@ -149,7 +149,7 @@ void InitFigureModel(int iFiguremdlUID)
     // Info Message
     setGraphicObjectProperty(iFiguremdlUID, __GO_INFO_MESSAGE__, "", jni_string, 1);
     // Event Handler
-    setGraphicObjectProperty(iFiguremdlUID, __GO_EVENTHANDLER__, "", jni_string, 1);
+    setGraphicObjectProperty(iFiguremdlUID, __GO_EVENTHANDLER_NAME__, "", jni_string, 1);
     // Event Handler Enable
     setGraphicObjectProperty(iFiguremdlUID, __GO_EVENTHANDLER_ENABLE__, &bFalse, jni_bool, 1);
     // Tag

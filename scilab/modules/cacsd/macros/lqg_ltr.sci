@@ -40,6 +40,12 @@ function [kf,kc]=lqg_ltr(sl,mu,ro)
     //-- kf , kc = controller and observer Kalman gains.
     //!
 
+    arguments
+        sl {mustBeA(sl, "lss")}
+        mu {mustBeA(mu, "double")}
+        ro {mustBeA(ro, "double")}
+    end
+
     [m,p]=size(sl);
     [a,b,c,d]=abcd(sl);
     r1=c'*c,r2=ro**2*eye(p,p),

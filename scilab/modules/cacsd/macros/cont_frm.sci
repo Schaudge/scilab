@@ -14,11 +14,12 @@
 function sl=cont_frm(num,den)
     //Controllable state-space form of the transfer num/den
     //!
-    [lhs,rhs]=argn(0)
-    if size(den,"*")<>1 then
-        msg = _("%s: Wrong type for input argument #%d: Polynomial expected.\n");
-        error(msprintf(msg, "cont_frm", 2))
+
+    arguments
+        num {mustBeA(num, ["double", "polynomial"])}
+        den (1,1) {mustBeA(den, ["double", "polynomial"])} 
     end
+
     [ns,ne]=size(num);
     if type(num)==1 then
         if type(den)==1 then

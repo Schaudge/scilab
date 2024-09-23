@@ -9,13 +9,13 @@ function subdemolist = demo_gateway()
     _("Control Systems - CACSD");  // lets gettext() harvesting it
     add_demo("Control Systems - CACSD", demopath + "cacsd.dem.gateway.sce");
 
-    subdemolist = [_("LQG")                , "lqg/lqg.dem"
-    _("Mixed-sensitivity")  , "mixed.dem"
-    _("PID")                , "pid.dem"
-    _("Inverted pendulum")  , "pendulum/pendule.dem"
+    subdemolist = [_("LQG")                , "lqg/lqg.dem.sce"
+    _("Mixed-sensitivity")  , "mixed.dem.sce"
+    _("PID")                , "pid.dem.sce"
+    _("Inverted pendulum")  , "pendulum/pendule.dem.sce"
     _("Flat systems")       , "flat/flat.dem.gateway.sce"
     _("Tracking")           , "tracking/track.dem.sce"
-    _("Robust control")     , "robust/rob.dem"]
+    _("Robust control")     , "robust/rob.dem.sce"]
 
     subdemolist(:,2) = demopath + subdemolist(:,2);
 endfunction

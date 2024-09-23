@@ -10,10 +10,11 @@
 #
 # Build compilers used to build Scilab
 #
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 LABEL description="Build needed compilers"
 
 # Install needed packages
+ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y curl autoconf make gcc g++
 
 # Set environment variables
@@ -54,16 +55,16 @@ ENV MPFR_VERSION 3.1.6
 ENV MPC_VERSION 1.0.3
 ENV ISL_VERSION 0.18
 RUN curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/gmp-$GMP_VERSION.tar.bz2 && \
-    tar -xf gmp-$GMP_VERSION.tar.bz2 && \
+    tar -xjf gmp-$GMP_VERSION.tar.bz2 && \
     ln -s gmp-$GMP_VERSION gmp
 RUN curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/mpfr-$MPFR_VERSION.tar.bz2 && \
-    tar -xf mpfr-$MPFR_VERSION.tar.bz2 && \
+    tar -xjf mpfr-$MPFR_VERSION.tar.bz2 && \
     ln -s mpfr-$MPFR_VERSION mpfr
 RUN curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/mpc-$MPC_VERSION.tar.gz && \
-    tar -xf mpc-$MPC_VERSION.tar.gz && \
+    tar -xzf mpc-$MPC_VERSION.tar.gz && \
     ln -s mpc-$MPC_VERSION mpc
 RUN curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/isl-$ISL_VERSION.tar.bz2 && \
-    tar -xf isl-$ISL_VERSION.tar.bz2 && \
+    tar -xjf isl-$ISL_VERSION.tar.bz2 && \
     ln -s isl-$ISL_VERSION isl
 
 
@@ -101,6 +102,8 @@ RUN	[ -d "$INSTALLDIR/lib64" ] && LIBDIR="lib64" || LIBDIR="lib"; \
 	patchelf --replace-needed libquadmath.so.0 libsciquadmath.so.0 $INSTALLDIR/$LIBDIR/libgfortran.so.5.0.0 && \
 	patchelf --remove-rpath $INSTALLDIR/$LIBDIR/libgfortran.so.5.0.0 && \
 	cp -a $INSTALLDIR/$LIBDIR/libgfortran.so.5.0.0 $INSTALLDIR/lib/libscigfortran.so.5 ; \
+	patchelf --set-soname libscigomp.so.1 $INSTALLDIR/$LIBDIR/libgomp.so.1.0.0 && \
+	cp -a $INSTALLDIR/$LIBDIR/libgomp.so.1.0.0 $INSTALLDIR/lib/libscigomp.so.1 ; \
 	patchelf --set-soname libscistdc++.so.6 $INSTALLDIR/$LIBDIR/libstdc++.so.6.0.29 && \
 	cp -a $INSTALLDIR/$LIBDIR/libstdc++.so.6.0.29 $INSTALLDIR/lib/libscistdc++.so.6 ; \
     patchelf --set-soname libscigcc_s.so.1 $INSTALLDIR/$LIBDIR/libgcc_s.so.1 && \
@@ -129,10 +132,11 @@ RUN rm -fr *
 #
 # Build the Scilab builder image with minimal dependencies
 #
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 LABEL description="Scilab builder image used by CI/CD runners"
 
-# Fetch system dependencies
+# Install system dependencies without asking anything
+ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y \
         locales xz-utils zip \
         curl rsync git \
@@ -149,9 +153,9 @@ RUN locale-gen  en_US en_US.UTF-8 \
                 ja_JP ja_JP.UTF-8 \
                 pt_BR pt_BR.UTF-8 \
                 ru_RU ru_RU.UTF-8 \
-                zh_TW zh_TW.UTF-8
-
-RUN update-locale
+                zh_TW zh_TW.UTF-8 \
+    && \
+    update-locale
 
 # Copy built GCC
 COPY --from=0 /usr/local /usr/local

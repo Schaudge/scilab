@@ -19,10 +19,11 @@ function [Ws,Fs1]=rowshuff(Fs,alfa)
     // The poles @ infinity of Fs are put to alfa and the zeros of Ws are @ alfa.
     // Note that (s*E-A)^-1 = (s*E1-A1)^-1 * W(s) = (W(s)*(s*E-A))^-1 *W(s)
 
-    [LHS,RHS]=argn(0);
-    if RHS==1 then
-        alfa=0;
+    arguments
+        Fs {mustBeA(Fs, ["polynomial"])}
+        alfa (1,1) {mustBeA(alfa, "double")} = 0
     end
+
     Fs1 = Fs;
     [E,A]=pen2ea(Fs);
     //     E is non singular: --> exit

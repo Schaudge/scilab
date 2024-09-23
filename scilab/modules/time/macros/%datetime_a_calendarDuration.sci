@@ -33,10 +33,10 @@ function out = %datetime_a_calendarDuration(dt, cd1)
 
     out_y = dt.Year + cd1.y;
     out_m = dt.Month + cd1.m;
-    out_d = dt.Day + cd1.d;
-    out_t = dt.time*1000 + cd1.t.duration;
+    out_d = dt.Day + cd1.d + floor((dt.time*1000 + cd1.t.duration)/86400000);
+    out_t = modulo(dt.time*1000 + cd1.t.duration, 86400000) / 1000;
 
     d = datenum(out_y, out_m, out_d);
-    out = mlist(["datetime", "date", "time", "format"], d, out_t / 1000, dt.format);
+    out = mlist(["datetime", "date", "time", "format"], d, out_t, dt.format);
 
 endfunction

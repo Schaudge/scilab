@@ -37,47 +37,30 @@ function [gopt]=gamitg(g,r,PREC,options)
     //****************************************************************************
     // Copyright INRIA
 
-    if and(typeof(g)<>["rational","state-space"]) then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space or a transfer function expected.\n"),"gamitg",1))
+    arguments
+        g {mustBeA(g, ["r", "lss"])}
+        r {mustBeA(r, "double"), mustBeReal, mustBeVector, mustBeNonnegative}
+        PREC (1,1) {mustBeA(PREC, ["double", "string"])}= 1.0e-3
+        options (1,1) {mustBeA(options, "string"), mustBeMember(options, ["t", "nul"])}= "nul"
     end
+
     if g.dt<>"c" then
         error(msprintf(gettext("%s: Wrong value for input argument #%d: Continuous time system expected.\n"),"gamitg",1))
     end
     //user interface. The default values are:
     //     PREC=1.0e-3;      options='nul';
     //************************************************
-    [lhs,rhs]=argn(0);
-    select rhs,
-    case 1 then
-        error(msprintf(gettext("%s: Wrong number of input arguments: At least %d expected.\n"),"gamitg",2))
-    case 2 then
-        PREC=1.0e-3; options="nul";
-    case 3 then
-        if type(PREC)==10 then
-            iopt=3
-            options=PREC; PREC=1.0e-3;
-        else
-            options="nul";
-        end,
-    case 4 then
-        iopt=4
-    end
-    if typeof(r)<>"constant"|~isreal(r) then
-        error(msprintf(gettext("%s: Wrong type for argument #%d: Real vector expected.\n"),"gamitg",2))
-    end
-    if size(r,"*")<>2 then
-        error(msprintf(gettext("%s: Wrong size for input argument #%d: %d expected.\n"),"gamitg",2,2))
-    end
-    r=int(r);
-    if or(r<=0) then
-        error(msprintf(gettext("%s: Wrong values for input argument #%d: Elements must be positive.\n"),"gamitg",2))
-    end
 
-    if type(options)<>10|and(options<>["t","nul"]) then
-        error(msprintf(gettext("%s: Wrong value for input argument #%d: Must be in the set {%s}.\n"),"gamitg",iopt,"""t"",""nul"""))
-    end
-    if type(PREC)<>1|size(PREC,"*")<>1|~isreal(PREC)|PREC<=0 then
-        error(msprintf(gettext("%s: Wrong value for input argument #%d: Must be a positive scalar.\n"),"gamitg",3))
+    if type(PREC)==10 then
+        if and(PREC <> ["t","nul"]) then
+            error(msprintf(gettext("%s: Wrong value for input argument #%d: Must be in the set {%s}.\n"),"gamitg",3,"""t"",""nul"""))
+        end
+        options = PREC; 
+        PREC=1.0e-3;
+    else
+        if ~isreal(PREC) | PREC<=0 then
+            error(msprintf(gettext("%s: Wrong value for input argument #%d: Must be a positive scalar.\n"),"gamitg",3))
+        end
     end
 
     //constants

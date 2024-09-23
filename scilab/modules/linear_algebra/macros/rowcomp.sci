@@ -19,30 +19,22 @@ function [w,rk]=rowcomp(A,flag,tol)
     //the rk first (top) rows of w span the row range of a
     //the rk first columns of w' span the image of a
 
+    arguments
+        A {mustBeA(A, "double")}
+        flag (1,1) {mustBeA(flag, "string"), mustBeMember(flag, ["svd", "qr"])} = "svd"
+        tol (1,1) {mustBeA(tol, "double"), mustBeReal, mustBeNonnegative} = sqrt(%eps)*norm(A,1)
+    end
+
+
     if A==[] then w=[];rk=0;return;end
 
-    [ma,na]=size(A)
-    rhs=argn(2)
+    if norm(A,1) < sqrt(%eps)/10 then [ma,na]=size(A),rk=0,w=eye(ma,ma),return;end
 
-    if norm(A,1) < sqrt(%eps)/10 then rk=0,w=eye(ma,ma),return;end
-
-    select rhs
-    case 1 then// default values for flag and tol
-        flag="svd",tol=sqrt(%eps)*norm(A,1);
-    case 2 then //default value for tol
-        tol=sqrt(%eps)*norm(A,1)
-    else
-        if size(tol,"*")>1|~isreal(tol)|tol<0 then
-            error(msprintf(gettext("%s: Wrong values for input argument #%d: Non-negative scalar expected.\n"),"rowcomp",3));
-        end
-    end
     select flag
     case "qr" then
         [q,r,rk,e]=qr(A,tol);w=q';
     case "svd" then
         [u,s,v,rk]=svd(A,tol);w=u' ;
-    else
-        error(msprintf(gettext("%s: Wrong value for input argument #%d: Must be in the set {%s}.\n"),"rowcomp",2,"''qr'',''svd''"));
     end
 endfunction
 

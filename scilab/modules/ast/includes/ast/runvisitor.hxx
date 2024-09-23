@@ -45,6 +45,7 @@ public:
         _expected_result = -1;
         _resultVect.push_back(nullptr);
         _result = nullptr;
+        _isLambda = false;
         m_bSingleResult = true;
         m_pAns = symbol::Context::getInstance()->getOrCreate(symbol::Symbol(L"ans"));
     }
@@ -212,6 +213,31 @@ public:
         return m_bSingleResult;
     }
 
+    inline void setLambda(bool lambda)
+    {
+        _isLambda = lambda;
+    }
+
+    inline bool isLambda()
+    {
+        return _isLambda;
+    }
+
+    inline void setLambdaResult(types::InternalType* result)
+    {
+        _lambaResult = result;
+    }
+
+    inline types::InternalType* getLambdaResult()
+    {
+        return _lambaResult;
+    }
+
+    inline void clearLambdaResult()
+    {
+        _lambaResult = nullptr;
+    }
+
     void cleanIn(const types::typed_list & in, const types::typed_list & out)
     {
         // Check if in contains entries which are in out too.
@@ -301,8 +327,10 @@ public:
     | Attributes.  |
     `-------------*/
 protected:
-    std::vector<types::InternalType*>    _resultVect;
-    types::InternalType*    _result;
+    std::vector<types::InternalType*> _resultVect;
+    types::InternalType* _result;
+    bool _isLambda;
+    types::InternalType* _lambaResult;
     bool m_bSingleResult;
     int _expected_result;
     symbol::Variable* m_pAns;

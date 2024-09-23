@@ -5,9 +5,10 @@
 # This Dockerfile describe the configuration of a Linux Ubuntu image base system
 #
 
-ARG DISTRO=ubuntu:18.04
+ARG DISTRO=ubuntu:20.04
 FROM $DISTRO
 
+ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y \
   xvfb \
   libxft2 \

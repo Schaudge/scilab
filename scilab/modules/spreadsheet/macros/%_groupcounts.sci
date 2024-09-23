@@ -97,9 +97,10 @@ function [val, count, vindex, uniqueVal] = %_groupcounts(t, groupvars, groupbins
                 val = uniqueVal;
             case {"datetime", "calendarDuration", "duration"}
                 [groupbins, rowtimes, dt] = groupTimeCheck(groupbins, d);
-                
                 if includedEdge == "left" then
-                    dt(2:$-1) = dt(2:$-1)-1d-5;
+                    if size(dt, "*") > 2 then
+                        dt(2:$-1) = dt(2:$-1)-1d-5;
+                    end
                     str = "[ " + string(groupbins(1:$-1))+ ", "+ string(groupbins(2:$)) + " )";
                     str($) = strsubst(str($), " )", " ]");   
                     val = str;
@@ -242,7 +243,9 @@ function [val, count, vindex, uniqueVal] = %_groupcounts(t, groupvars, groupbins
                 [u, rowtimes, dt] = groupTimeCheck(groupbins, d);
 
                 if includedEdge == "left" then
-                    dt(2:$-1) = dt(2:$-1)-1d-5;
+                    if size(dt, "*") > 2 then
+                        dt(2:$-1) = dt(2:$-1)-1d-5;
+                    end
                     str = "[ " + string(u(1:$-1))+ ", "+ string(u(2:$)) + " )";
                     str($) = strsubst(str($), " )", " ]");   
                     val = str;
@@ -397,7 +400,9 @@ function [val, count, vindex, uniqueVal] = %_groupcounts(t, groupvars, groupbins
                             // dt(2:$) = dt(2:$)-1d-10;
 
                             if includedEdge == "left" then
-                                dt(2:$-1) = dt(2:$-1)-1d-5;
+                                if size(dt, "*") > 2 then
+                                    dt(2:$-1) = dt(2:$-1)-1d-5;
+                                end
                                 str = "[ " + string(vecbins(1:$-1))+ ", "+ string(vecbins(2:$)) + " )";
                                 str($) = strsubst(str($), " )", " ]");   
                                 val = str;
@@ -605,33 +610,21 @@ function [groupbins, rowtimes, dt] = groupTimeCheck(groupbins, d)
             dStart.time = 0;
             dStart.date = datenum(dv);
         elseif step.m <> 0 then
-            dv([3 4 5 6]) = [1 0 0 0];
+            dv([2 3 4 5 6]) = [1 1 0 0 0];
             dStart.time = 0;
             dStart.date = datenum(dv);
         elseif step.d <> 0 then //into days
+            dv([3 4 5 6]) = [1 0 0 0];
             dStart.time = 0;
+            dStart.date = datenum(dv);
         elseif step.t >= hours(1) then
-            //
+            dv([4 5 6]) = [0 0 0];
+            dStart.time = 0;
+            dStart.date = datenum(dv);
         elseif step.t >= minutes(1) then
-            // substract step to first time item
-            t = dStart - step;
-
-            h = floor (t.time / 3600);
-            s = t.time - 3600 * h;
-            mi = floor (s / 60);
-            s = s - 60 * mi;
-
-            //find previous hour
-            t.time = t.time - (mi * 60 + s);
-
-            if t + hours(1) < dStart then
-                t = t + hours(1);
-            end
-
-            steps = t:step:dStart+step;
-            idx = find(steps <= dStart);
-            idx = max(idx);
-            dStart = steps(idx);
+            dv([5 6]) = [0 0];
+            dStart.time = 0;
+            dStart.date = datenum(dv);
         elseif step.t >= seconds(1) then
             dStart.time = floor(dStart.time);
         end
@@ -641,6 +634,9 @@ function [groupbins, rowtimes, dt] = groupTimeCheck(groupbins, d)
         end
 
         groupbins = (dStart:step:dEnd)';
+        if groupbins($) < dEnd then
+            groupbins($+1) = groupbins($) + step;
+        end
 
         rowtimes = d.date * 24*60*60 + d.time;
         dt = groupbins.date * 24*60*60 + groupbins.time;        
@@ -653,10 +649,10 @@ function [groupbins, rowtimes, dt] = groupTimeCheck(groupbins, d)
 
             step = groupbins;
 
-            if isdatetime(d) then
-                dv = datevec(dStart.date);
-                dv(3) = 1;
-                dStart.date = datenum(dv);
+            if isduration(d) then
+                dStart.duration = 0;
+            elseif isdatetime(d) then
+                dStart.time = 0;
             end
 
             groupbins = (dStart:step:dEnd)';

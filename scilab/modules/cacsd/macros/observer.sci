@@ -45,29 +45,34 @@ function [Obs,U,m]=observer(Sys,flag,alfa)
     // Transfer u-->[u;u]-->w=[u;y=Sys*u]-->Obs*w  i.e. u-->output of Obs
     // this transfer must equal Sys2, the u-->z transfer  (H2=eye).
 
-    [LHS,RHS]=argn(0);
-    if typeof(Sys)<>"state-space" then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space expected.\n"),"observer",1))
+    rhs = argn(2);
+    select rhs
+    case 1
+        [Obs, U, m] = %observer(Sys);
+    case 2
+        [Obs, U, m] = %observer2(Sys, flag);
+    case 3
+        [Obs, U, m] = %observer(Sys, flag, alfa);
+    else
+        error(msprintf(gettext("%s: Wrong number of input argument.\n"),"datenum"));
+    end
+
+endfunction
+
+function [Obs, U, m] = %observer(Sys, flag, alfa)
+    arguments
+        Sys {mustBeA(Sys, "lss")}
+        flag (1,1) {mustBeA(flag, "string"), mustBeMember(flag, ["st", "pp"])} = "st"
+        alfa {mustBeA(alfa, "double")} = -ones(1, size(Sys.A, "r"))
     end
 
     [nx,nx]=size(Sys.A);
-    td=Sys.dt;x0=Sys.X0;
+    td=Sys.dt;
+    x0=Sys.X0;
+    [m1,m2,U,sl2]=dt_ility(Sys);
 
-    if RHS<>2 then [m1,m2,U,sl2]=dt_ility(Sys);end
-    if RHS==1 then
-        flag="st";alfa=-ones(1,nx);
-    end
-    if RHS==2 then
-        //poles are not given-->set to -ones
-        alfa=-ones(1,nx);
-        [A,B,C,D]=abcd(Sys);  //
-        J=flag;
-        //  F=A+J*C;G=[B+J*D,-J]; //
-        Obs=syslin(td,A+J*C,[B+J*D,-J],eye(A));U=[];m=[];return;  //Ao
-    end
-    if RHS==3 then
-        if size(alfa,"*")==1 then alfa=alfa*ones(1,nx);end
-    end
+    if size(alfa,"*")==1 then alfa=alfa*ones(1,nx);end
+
     select flag
     case "pp"
         m=m2;
@@ -96,4 +101,18 @@ function [Obs,U,m]=observer(Sys,flag,alfa)
         Obs=syslin(td,F,G,eye(Ao));
         return;
     end
+
+endfunction
+
+function [Obs, U, m] = %observer2(Sys, J)
+    arguments
+        Sys {mustBeA(Sys, "lss")}
+        J {mustBeA(J, "double")}
+    end
+
+    [A,B,C,D]=abcd(Sys);
+    td=Sys.dt;
+    Obs=syslin(td,A+J*C,[B+J*D,-J],eye(A));
+    U=[];
+    m=[];
 endfunction

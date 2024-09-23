@@ -61,7 +61,7 @@
             <literal>slo=(Ao,Bo,Co)</literal> is the observable part of linear system <literal>sl=(A,B,C)</literal> (<literal>syslin</literal> list)
         </para>
         <para>
-            <literal>tol</literal>  threshold to test controllability (see <literal>contr</literal>);
+            <literal>tol</literal>  threshold to test controllability (see <link linkend="contr">contr</link>);
             default value = <literal>100*%eps</literal>
         </para>
     </refsection>

@@ -14,19 +14,24 @@ function Sm=systmat(Sl);
 //      [    C     D]
 // To get the zeros use trzeros
 //!
+  arguments
+    Sl {mustBeA(Sl, ["lss", "des"])}
+  end
   if typeof(Sl)=="state-space" then
     if Sl.dt=="d"|Sl.dt==[] then
       s=poly(0,"z");
     else
       s=poly(0,"s");
     end
+    if type(Sl.D) == 2 then
+      Sl.D = varn(Sl.D, varn(s))
+    end
+
     Sm=[-s*eye(Sl.A)+Sl.A, Sl.B;
          Sl.C,             Sl.D];
   elseif typeof(Sl)=="des" then
     s=poly(0,"s");
     Sm=[-s*Sl.E+Sl.A,   Sl.B;
          Sl.C,          Sl.D];
-  else
-    error(msprintf(_("%s: Wrong type for input argument #%d: state space or a descriptor representation expected.\n"),"systmat",1))
   end
 endfunction

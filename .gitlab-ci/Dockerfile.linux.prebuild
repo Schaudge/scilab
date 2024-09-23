@@ -16,7 +16,8 @@ RUN curl -o cmake.tar.gz https://oos.eu-west-2.outscale.com/scilab-releases-dev/
     rm -fr /cmake-${CMAKE_VERSION}
 
 # Install JoGL dependencies
-RUN apt-get install -y libgbm-dev libxrender-dev libxi-dev libxrandr-dev libxcursor-dev
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get install -y libgbm-dev libxrender-dev libxi-dev libxrandr-dev libxcursor-dev libdrm-dev libxxf86vm-dev
 
 RUN apt-get install -y autotools-dev automake libtool uuid-dev
 

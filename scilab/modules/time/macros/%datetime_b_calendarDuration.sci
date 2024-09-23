@@ -16,11 +16,13 @@ function out = %datetime_b_calendarDuration(dt1, dura, dt2)
     
     out = datetime([], "OutputFormat", dt1.format);
     if dt1 <= dt2 && dura > caldays(0) then
-        if dura.y == 0 && dura.m == 0 then
+        if dura.y == 0 && dura.m == 0 && dura.t == 0 then
             // dura == caldays
             s = dt2.date - dt1.date;
             vec = 0:dura.d:s;
             out = dt1 + caldays(vec);
+        elseif dura.y == 0 && dura.m == 0 && dura.d == 0 && dura.t <> 0 then
+            out = dt1:dura.t:dt2;
         else
             out = dt1;
             x = dt1 + dura;

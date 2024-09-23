@@ -15,6 +15,7 @@
 #include "webtools_gw.hxx"
 #include "function.hxx"
 #include "string.hxx"
+#include "double.hxx"
 
 extern "C"
 {
@@ -121,6 +122,28 @@ int checkCommonOpt(SciCurl& query, types::optional_list& opt, const char* fname)
             }
 
             query.setCustomCookies(cookies.str().data());
+        }
+        else if(o.first == L"timeout")
+        {
+            if(o.second->isDouble() == false)
+            {
+                Scierror(999, _("%s: Wrong type for input argument #%s: Constant expected.\n"), fname, "timeout");
+                return 1;
+            }
+
+            types::Double* pDbl = o.second->getAs<types::Double>();
+            if(pDbl->isScalar() == false)
+            {
+                Scierror(999, _("%s: Wrong size for input argument #%s: Scalar expected.\n"), fname, "timeout");
+                return 1;
+            }
+
+            int iErr = query.setTimeOut(pDbl->get(0));
+            if(iErr)
+            {
+                Scierror(999, _("%s: Wrong value for input argument #%s: Positive value expected.\n"), fname, "timeout");
+                return 1;
+            }
         }
     }
 

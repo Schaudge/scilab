@@ -25,6 +25,10 @@ function [gm]=cfspec(g)
     //- g(+oo) = D is positive definite.
     //!
 
+    arguments
+        g {mustBeA(g, ["double", "r", "lss"])}
+    end
+
     if type(g)==1 then gm=chol(g),return,end,
     gm=fspec(g'),
     gm=gm'

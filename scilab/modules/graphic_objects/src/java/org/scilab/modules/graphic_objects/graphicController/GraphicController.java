@@ -404,15 +404,39 @@ public class GraphicController {
 
         Integer parentUID = killMe.getParent();
 
+        // Remove datatip from its parent
+        if (killMe.getType() == GraphicObjectProperties.__GO_DATATIP__) {
+            // get parent datatips
+            Integer[] tips = (Integer[]) getProperty(parentUID, GraphicObjectProperties.__GO_DATATIPS__);
+            // find datatip in list
+            int index = -1;
+            for (int i = 0; i < tips.length; i++) {
+                if (tips[i].intValue() == id.intValue()) {
+                    index = i;
+                    break;
+                }
+            }
+            // remove datatip in list
+            if (index != -1) {
+                Integer[] var = new Integer[tips.length - 1];
+                for (int i = 0; i < tips.length; i++) {
+                    if (i < index) {
+                        var[i] = tips[i];
+                    } else if (i > index) {
+                        var[i - 1] = tips[i];
+                    }
+                }
+
+                setProperty(parentUID, GraphicObjectProperties.__GO_DATATIPS__, var);
+            }
+        }
 
         /* Remove object from Parent's Children list */
         if (parentUID != null && parentUID != 0) {
             getObjectFromId(parentUID).removeChild(id);
-            //setProperty(id, GraphicObjectProperties.__GO_PARENT__, "");
 
             objectUpdate(parentUID, GraphicObjectProperties.__GO_CHILDREN__);
             objectUpdate(parentUID, GraphicObjectProperties.__GO_DATATIPS__);
-            //objectUpdate(id, GraphicObjectProperties.__GO_PARENT__);
         }
 
         recursiveDeleteChildren(killMe);

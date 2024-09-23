@@ -39,6 +39,7 @@ public:
     bool setProxy();
     bool setCookies();
     void setCustomCookies(const char* pcCookies);
+    int  setTimeOut(double second);
 
     void ssl(bool verifyPeer);
     void follow(int follow);
@@ -50,7 +51,7 @@ public:
     const char* getError();
     long getResponseCode();
 
-    void addFileToForm(const char* name, const char* file);
+    void addFileToForm(const std::string& name, const std::string& file, const std::string& filename);
     void addContentToForm(const char* name, const char* data);
     void setForm();
 

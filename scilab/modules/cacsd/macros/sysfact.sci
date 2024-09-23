@@ -16,6 +16,12 @@ function [S,Series]=sysfact(Sys,Gain,flag)
     //                and  Series = minss(Sys*S)
     //if flag=='pre' returns  S=[A+Gain*C, Gain , C, I]
     //                and  Series = minss(S*Sys)
+    arguments
+        Sys {mustBeA(Sys, ["lss", "r"])}
+        Gain {mustBeA(Gain, "double")}
+        flag {mustBeA(flag, "string"), mustBeMember(flag, ["post", "pre"])}
+    end
+
     if flag=="post" then
         S=syslin(Sys("dt"),Sys("A")+Sys("B")*Gain, Sys("B"), Gain, eye(Gain*Sys("B")));
         //Series=minss(Sys*S);

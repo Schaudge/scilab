@@ -28,10 +28,13 @@ function F=randpencil(eps,infi,fin,eta)
     // this should be an empty matrix with coldim(eta) rows and 0 columns.
     // (bad behavior of the empty matrix!!!!!)
 
-    [LHS,RHS]=argn(0);
-    if RHS<>4 then
-        error(msprintf(gettext("%s: Wrong number of input argument(s): %d expected.\n"),"randpencil",4));
+    arguments
+        eps {mustBeA(eps, "double")}
+        infi {mustBeA(infi, "double")}
+        fin {mustBeA(fin, ["double", "polynomial"])}
+        eta {mustBeA(eta, "double")}
     end
+
     select type(fin)
     case 1
         if diag(fin)<>[] then 

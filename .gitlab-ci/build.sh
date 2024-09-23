@@ -6,7 +6,7 @@
 #
 # Builder script for building linux version.
 #
-# NOTE: log all commands to log.txt to avoid hitting Gitlab log limit
+# NOTE: log all commands to LOG_PATH to avoid hitting Gitlab log limit
 # NOTE: nproc is used to limit memory usage
 
 
@@ -45,7 +45,7 @@ fi
 # cleanup and extract
 git clean -fxd scilab/java scilab/lib scilab/thirdparty scilab/usr scilab/modules/tclsci/tcl
 rm -f scilab/svn-info.txt scilab/version.txt
-tar -xvf prereq.tar.xz -C scilab >"${LOG_PATH}/log_prereq_${CI_COMMIT_SHORT_SHA}.txt"
+tar -xvf prereq.tar.xz -C scilab >"${LOG_PATH}/build_prereq_${CI_COMMIT_SHORT_SHA}.log"
 # display svn revision
 cat scilab/svn-info.txt || cat scilab/version.txt || exit 1
 echo -e "\e[0Ksection_end:$(date +%s):prerequirements\r\e[0K"
@@ -76,19 +76,23 @@ export LD_LIBRARY_PATH
 # configure (with reconfigure for up to date info)
 echo -e "\e[0Ksection_start:$(date +%s):configure[collapsed=true]\r\e[0KConfigure"
 cd scilab ||exit 1
-./configure --prefix='' |tee -a "../${LOG_PATH}/log_configure_${CI_COMMIT_SHORT_SHA}.txt"
-cp -a config.log "../${LOG_PATH}/log_config.log_${CI_COMMIT_SHORT_SHA}.txt"
+./configure --prefix='' | tee -a "../${LOG_PATH}/build_configure_${CI_COMMIT_SHORT_SHA}.log"
+CONFIGURE_STATUS="${PIPESTATUS[0]}"
+cp -a config.log "../${LOG_PATH}/build_config.log_${CI_COMMIT_SHORT_SHA}.log"
+if [ "${CONFIGURE_STATUS}" -ne 0 ]; then
+	exit "${CONFIGURE_STATUS}"
+fi
 echo -e "\e[0Ksection_end:$(date +%s):configure\r\e[0K"
 
 # make 
 echo -e "\e[0Ksection_start:$(date +%s):make\r\e[0KMake"
-make --jobs="$(nproc)" all &>>"../${LOG_PATH}/log_build_${CI_COMMIT_SHORT_SHA}.txt" ||(tail --lines=100 "../${LOG_PATH}/log_build_${CI_COMMIT_SHORT_SHA}.txt"; exit 1)
-make doc &>"../${LOG_PATH}/log_doc_${CI_COMMIT_SHORT_SHA}.txt" ||(tail --lines=100 "../$LOG_PATH/log_doc_${CI_COMMIT_SHORT_SHA}.txt"; exit 1)
+make --jobs="$(nproc)" all &>>"../${LOG_PATH}/build_make_${CI_COMMIT_SHORT_SHA}.log" ||(tail --lines=100 "../${LOG_PATH}/build_make_${CI_COMMIT_SHORT_SHA}.log"; exit 1)
+make doc &>"../${LOG_PATH}/build_doc_${CI_COMMIT_SHORT_SHA}.log" ||(tail --lines=100 "../$LOG_PATH/build_doc_${CI_COMMIT_SHORT_SHA}.log"; exit 1)
 echo -e "\e[0Ksection_end:$(date +%s):make\r\e[0K"
 
 # install to tmpdir
 echo -e "\e[0Ksection_start:$(date +%s):install\r\e[0KInstall"
-make install DESTDIR="/tmp/${SCI_VERSION_STRING}" &>>"../${LOG_PATH}/log_install_${CI_COMMIT_SHORT_SHA}.txt" ||(tail --lines=100 "../$LOG_PATH/log_install_${CI_COMMIT_SHORT_SHA}.txt"; exit 1)
+make install DESTDIR="/tmp/${SCI_VERSION_STRING}" &>>"../${LOG_PATH}/build_install_${CI_COMMIT_SHORT_SHA}.log" ||(tail --lines=100 "../$LOG_PATH/build_install_${CI_COMMIT_SHORT_SHA}.log"; exit 1)
 echo -e "\e[0Ksection_end:$(date +%s):install\r\e[0K"
 
 echo -e "\e[0Ksection_start:$(date +%s):patch[collapsed=true]\r\e[0KPatch binary"
