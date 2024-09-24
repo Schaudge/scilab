@@ -19,13 +19,13 @@ types::Function::ReturnValue sci_getdeprecated(types::typed_list &in, int _iRetC
 {
     if (_iRetCount > 2)
     {
-        Scierror(78, _("%s: Wrong number of output argument(s): %d or %d expected.\n"), fname, 1, 2);
+        Scierror(78, _("%s: Wrong number of output argument(s): %d or %d expected.\n"), fname.c_str(), 1, 2);
         return types::Function::Error;
     }
 
     if (in.size() != 0)
     {
-        Scierror(77, _("%s: Wrong number of input argument(s): %d expected.\n"), fname, 0);
+        Scierror(77, _("%s: Wrong number of input argument(s): %d expected.\n"), fname.c_str(), 0);
         return types::Function::Error;
     }
 
