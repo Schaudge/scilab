@@ -186,16 +186,18 @@ DifferentialEquationFunctions::DifferentialEquationFunctions(const std::wstring&
         m_staticFunctionMap[L"djac2"]  = (void*) C2F(djac2);
         m_staticFunctionMap[L"djac1"]  = (void*) C2F(djac1);
 
-        //g
-        if (callerName == L"%_dasrt" || callerName == L"%_daskr")
+        // g(t,y)
+        if (callerName == L"%_dasrt")
         {
             m_staticFunctionMap[L"gr1"]  = (void*) C2F(gr1);
             m_staticFunctionMap[L"gr2"]  = (void*) C2F(gr2);
         }
 
-        // pjac, psol
+        // pjac, psol, g(t,y,yd)
         if (callerName == L"%_daskr")
         {
+            m_staticFunctionMap[L"grd1"]  = (void*) C2F(grd1);
+            m_staticFunctionMap[L"grd2"]  = (void*) C2F(grd2);
             m_staticFunctionMap[L"pjac1"]  = (void*) pjac1;
             m_staticFunctionMap[L"psol1"]  = (void*) psol1;
         }
@@ -288,6 +290,34 @@ void DifferentialEquationFunctions::execDasslJac(double* t, double* y, double* y
     else
     {
         sprintf(errorMsg, _("User function '%s' have not been set.\n"), "jacobian");
+        throw ast::InternalError(errorMsg);
+    }
+}
+
+void DifferentialEquationFunctions::execDaskrG(int* ny, double* t, double* y, double* ydot, int* ng, double* gout, double* rpar, int* ipar)
+{
+    char errorMsg[256];
+    if (m_pCallGFunction)
+    {
+        callDaskrMacroG(ny, t, y, ydot, ng, gout, rpar, ipar);
+    }
+    else if (m_pStringGFunctionDyn)
+    {
+        ConfigVariable::EntryPointStr* func = ConfigVariable::getEntryPoint(m_pStringGFunctionDyn->get(0));
+        if (func == NULL)
+        {
+            sprintf(errorMsg, _("Undefined function '%ls'.\n"), m_pStringGFunctionDyn->get(0));
+            throw ast::InternalError(errorMsg);
+        }
+        ((dasrkr_g_t)(func->functionPtr))(ny, t, y, ydot, ng, gout, rpar, ipar);
+    }
+    else if (m_pStringGFunctionStatic)
+    {
+        ((dasrkr_g_t)m_staticFunctionMap[m_pStringGFunctionStatic->get(0)])(ny, t, y, ydot, ng, gout, rpar, ipar);
+    }
+    else
+    {
+        sprintf(errorMsg, _("User function '%s' have not been set.\n"), "g");
         throw ast::InternalError(errorMsg);
     }
 }
@@ -2318,6 +2348,68 @@ void DifferentialEquationFunctions::callDasrtMacroG(int* ny, double* t, double* 
     types::Double* pDblY = new types::Double(*ny, 1);
     pDblY->set(y);
     args.add_in(pDblY);
+
+    for (int i = 0; i < (int)m_odeGArgs.size(); i++)
+    {
+        args.add_in(m_odeGArgs[i]);
+    }
+
+    try
+    {
+        // new std::wstring(L"") is delete in destructor of ast::CommentExp
+        m_pCallGFunction->invoke(args.in, args.opt, iRetCount, args.out, ast::CommentExp(Location(), new std::wstring(L"")));
+    }
+    catch (const ast::InternalError& ie)
+    {
+        throw ie;
+    }
+
+    if (args.out.size() != iRetCount)
+    {
+        char* pstrName = wide_string_to_UTF8(m_pCallGFunction->getName().c_str());
+        sprintf(errorMsg, _("%s: Wrong number of output argument(s): %d expected.\n"), pstrName, iRetCount);
+        FREE(pstrName);
+        throw ast::InternalError(errorMsg);
+    }
+
+    if (args.out[0]->isDouble() == false)
+    {
+        char* pstrName = wide_string_to_UTF8(m_pCallGFunction->getName().c_str());
+        sprintf(errorMsg, _("%s: Wrong type for output argument #%d: Real matrix expected.\n"), pstrName, 1);
+        FREE(pstrName);
+        throw ast::InternalError(errorMsg);
+    }
+
+    types::Double* pDblOutGout = args.out[0]->getAs<types::Double>();
+    if (pDblOutGout->getSize() != *ng)
+    {
+        char* pstrName = wide_string_to_UTF8(m_pCallGFunction->getName().c_str());
+        sprintf(errorMsg, _("%s: Wrong size for output argument #%d: A matrix of size %d expected.\n"), pstrName, 1, *ng);
+        FREE(pstrName);
+        throw ast::InternalError(errorMsg);
+    }
+
+    C2F(dcopy)(ng, pDblOutGout->get(), &one, gout, &one);
+}
+
+void DifferentialEquationFunctions::callDaskrMacroG(int* ny, double* t, double* y, double* ydot, int* ng, double* gout, double* rpar, int* ipar)
+{
+    char errorMsg[256];
+    int one         = 1;
+    int iRetCount   = 1;
+
+    args_t args;
+
+    types::Double* pDblT = new types::Double(*t);
+    args.add_in(pDblT);
+
+    types::Double* pDblY = new types::Double(*ny, 1);
+    pDblY->set(y);
+    args.add_in(pDblY);
+
+    types::Double* pDblYdot = new types::Double(*ny, 1);
+    pDblYdot->set(ydot);
+    args.add_in(pDblYdot);
 
     for (int i = 0; i < (int)m_odeGArgs.size(); i++)
     {

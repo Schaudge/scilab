@@ -77,6 +77,7 @@
 		<File RelativePath=".\dqpsrt.f"/>
 		<File RelativePath=".\ewset.f"/>
 		<File RelativePath="..\..\sci_gateway\fortran\Ex-bvode.f"/>
+		<File RelativePath="..\..\sci_gateway\fortran\Ex-daskr.f"/>
 		<File RelativePath="..\..\sci_gateway\fortran\Ex-dasrt.f"/>
 		<File RelativePath="..\..\sci_gateway\fortran\Ex-dassl.f"/>
 		<File RelativePath="..\..\sci_gateway\fortran\Ex-impl.f"/>

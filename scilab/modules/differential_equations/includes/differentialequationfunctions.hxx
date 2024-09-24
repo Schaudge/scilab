@@ -90,6 +90,8 @@ extern "C"
     void C2F(gr2)(int*, double*, double*, int*, double*, double*, int*);
 
     // daskr
+    void C2F(grd1)(int*, double*, double*, double*, int*, double*, double*, int*);
+    void C2F(grd2)(int*, double*, double*, double*, int*, double*, double*, int*);
     void C2F(bpjacd)(double*, int*, int*, double*, double*, double*, double*, double*,
                      double*, double*, double*, double*, int*, int*, double*, int*);
     void C2F(bpsold)(int*, double*, double*, double*, double*, double*, double*,
@@ -188,6 +190,7 @@ public :
     void execDasrtG(int*, double*, double*, int*, double*, double*, int*);
 
     // daskr
+    void execDaskrG(int*, double*, double*, double*, int*, double*, double*, int*);
     void execDaskrPsol(int* neq, double* t, double* y, double* ydot, double* savr, double* wk,
                        double* cj, double* wght, double* wp, int* iwp, double* b, double* eplin,
                        int* iter, double* rpar, int* ipar);
@@ -302,6 +305,7 @@ private :
     void callDasrtMacroG(int*, double*, double*, int*, double*, double*, int*);
 
     // daskr
+    void callDaskrMacroG(int*, double*, double*, double*, int*, double*, double*, int*);
     void callDaskrMacroPsol(int* neq, double* t, double* y, double* ydot, double* savr, double* wk,
                             double* cj, double* wght, double* wp, int* iwp, double* b, double* eplin,
                             int* iter, double* rpar, int* ipar);

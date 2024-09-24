@@ -97,13 +97,13 @@ assert_checkalmostequal(y(:,1501), expected, 5*10^-1);
 rtol = [1e-5, 1e-5, 1e-5, 1e-4, 1e-4, 1e-4];
 atol = 2*rtol;
 
-assert_checkfalse(execstr("[y, n] = %_daskr([Y0 Yd0], 0, t, atol, rtol, f, 0, ''gr1'');", "errcatch") == 0);
+assert_checkfalse(execstr("[y, n] = %_daskr([Y0 Yd0], 0, t, atol, rtol, f, 0, ''grd1'');", "errcatch") == 0);
 refMsg = msprintf(_("%s: Wrong size for input argument #%d: A scalar or a matrix of size %d expected.\n"), "%_daskr", 4, 7);
-assert_checkerror("[y, n] = %_daskr([Y0 Yd0], 0, t, atol, rtol, f, 0, ''gr1'');", refMsg);
+assert_checkerror("[y, n] = %_daskr([Y0 Yd0], 0, t, atol, rtol, f, 0, ''grd1'');", refMsg);
 
 rtol = [1e-5, 1e-5, 1e-5, 1e-4, 1e-4, 1e-4, 1e-3];
 atol = 2*rtol;
-[y, n] = %_daskr([Y0 Yd0], 0, t, atol, rtol, f, 0, 'gr1');
+[y, n] = %_daskr([Y0 Yd0], 0, t, atol, rtol, f, 0, 'grd1');
 expected = [ 15.;
               0.1092127719669352264864;
               0.5544355723986162942651;
