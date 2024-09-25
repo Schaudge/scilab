@@ -8,16 +8,10 @@
 // For more information, see the COPYING file which you should have received
 // along with this program.
 
-function s = %XMLElem_fieldnames(b)
+function s = %XMLNs_fieldnames(b)
     s = [
-    "name"
-    "namespace"
-    "type"
-    "parent"
-    "attributes"
-    "children"
-    "content"
-    "line"
+    "href"
+    "prefix"
     "_id"
     ]
 endfunction

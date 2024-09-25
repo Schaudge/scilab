@@ -8,16 +8,9 @@
 // For more information, see the COPYING file which you should have received
 // along with this program.
 
-function s = %XMLElem_fieldnames(b)
-    s = [
-    "name"
-    "namespace"
-    "type"
-    "parent"
-    "attributes"
-    "children"
-    "content"
-    "line"
-    "_id"
-    ]
+function s = %XMLNs_outline(x,verbose)    
+    s = "(XML Namespace)"
+    if verbose > 0
+        s = s + " with fields:"
+    end
 endfunction

@@ -8,16 +8,9 @@
 // For more information, see the COPYING file which you should have received
 // along with this program.
 
-function s = %XMLElem_fieldnames(b)
-    s = [
-    "name"
-    "namespace"
-    "type"
-    "parent"
-    "attributes"
-    "children"
-    "content"
-    "line"
-    "_id"
-    ]
+function s = %XMLValid_outline(x,verbose)    
+    s = "(XMLValid)"
+    if verbose > 0
+        s = s + " with fields:"
+    end
 endfunction

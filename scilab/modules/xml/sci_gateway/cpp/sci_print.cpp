@@ -68,11 +68,6 @@ int sci_print(char *fname, void *pvApiCtx)
     return 0;
 }
 
-/*--------------------------------------------------------------------------*/
-int sci_percent_XMLNs_p(char *fname, void* pvApiCtx)
-{
-    return sci_print(fname, pvApiCtx);
-}
 
 /*--------------------------------------------------------------------------*/
 int sci_percent_XMLList_p(char *fname, void* pvApiCtx)

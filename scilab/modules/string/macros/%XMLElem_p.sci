@@ -8,16 +8,14 @@
 // For more information, see the COPYING file which you should have received
 // along with this program.
 
-function s = %XMLElem_fieldnames(b)
-    s = [
-    "name"
-    "namespace"
-    "type"
-    "parent"
-    "attributes"
-    "children"
-    "content"
-    "line"
-    "_id"
-    ]
+function %XMLElem_p(x)
+    t =  %l_string_inc(x);
+    i = grep(t,"attributes");
+    mprintf("  %s\n",t(1:i));
+    for att = xmlXPath(x,"@*").name;
+        mprintf("    %s = \""%s\""\n",att,x.attributes(att));
+    end
+    mprintf("  %s\n",t(i+1:$));
 endfunction
+
+
