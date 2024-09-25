@@ -327,6 +327,10 @@ void PrettyPrintVisitor::visit(const DoubleExp & e)
     else
     {
         stream << e.getValue();
+        if (e.isComplex()) 
+        {
+            stream << L"i";
+        }
     }
 
     print(RED, stream.str(), e);

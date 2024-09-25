@@ -70,6 +70,9 @@ void scan_close(void);
 /** \brief Convert exponent numbers to C standard . */
 void scan_exponent_convert(char *in);
 
+/** \brief Convert complex floating numbers to C standard . */
+void scan_complex_convert(char *in);
+
 /** \brief Parse/Scan error message displat . */
 void PrintError(std::string msg);
 

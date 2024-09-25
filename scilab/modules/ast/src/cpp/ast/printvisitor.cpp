@@ -247,11 +247,19 @@ void PrintVisitor::visit (const DoubleExp  &e)
         if (dblValue < 0) {
             *ostr << L"(";
             *ostr << dblValue;
+            if (e.isComplex())
+            {
+                *ostr << L"i";
+            }
             *ostr << L")";
         }
         else 
         {
             *ostr << dblValue;
+            if (e.isComplex())
+            {
+                *ostr << L"i";
+            }
         }
     }
 }

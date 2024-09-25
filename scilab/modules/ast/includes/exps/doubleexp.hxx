@@ -30,13 +30,15 @@ class DoubleExp : public ConstExp
 public:
     DoubleExp (const Location& location, double value)
         : ConstExp (location),
-          _value (value)
+          _value (value),
+          _isComplex (false)
     {
     }
 
     DoubleExp (const Location& location, types::InternalType* value)
         : ConstExp (location),
-          _value (0)
+          _value (0),
+          _isComplex (false)
     {
         setConstant(value);
     }
@@ -87,6 +89,11 @@ public:
     }
     /** \} */
 
+    bool isComplex() const
+    {
+        return _isComplex;
+    }
+
     virtual ExpType getType() const
     {
         return DOUBLEEXP;
@@ -106,9 +113,16 @@ public:
         return this;
     }
 
+    inline DoubleExp* imag()
+    {
+        _isComplex = true;
+        return this;
+    }
+
 
 protected:
     double _value;
+    bool _isComplex;
 };
 
 } // namespace ast

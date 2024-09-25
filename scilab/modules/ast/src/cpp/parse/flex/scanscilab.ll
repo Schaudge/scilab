@@ -86,8 +86,10 @@ number            [0-9]+[\.][0-9]*
 little            \.[0-9]+
 bom               \xEF\xBB\xBF
 
-floating_D        ({little}|{number}|{integer})[dD][+-]?{integer}
-floating_E        ({little}|{number}|{integer})[eE][+-]?{integer}
+floating_D		    ({little}|{number}|{integer})[dD][+-]?{integer}
+floating_E	  	  ({little}|{number}|{integer})[eE][+-]?{integer}
+complexNumber     ({little}|{number}|{integer}|{floating_D}|{floating_E})[ij]
+incorrect_number  ({little}|{integer}|{number}|{floating_D}|{floating_E}){id}
 
 hex               [0]x[0-9a-fA-F]+
 oct               [0]o[0-7]+
@@ -107,8 +109,6 @@ utf4              ({utf41}|{utf42}|{utf43})
 
 utf               ({utf2}|{utf3}|{utf4})
 id                ((([a-zA-Z_%!?]|{utf})([a-zA-Z_0-9!#?$]|{utf})*)|([$#]([a-zA-Z_0-9!#?$]|{utf})+))
-
-incorrect_number  ({little}|{integer}|{number}|{floating_D}|{floating_E}){id}
 
 newline           ("\r"|"\n"|"\r\n")
 blankline         {spaces}+{newline}
@@ -543,7 +543,17 @@ sharp             "#"
   return scan_throw(VARFLOAT);
 }
 
-<INITIAL,MATRIX>[0-9]+[\.]/[\*^\\\/]        {
+<INITIAL,MATRIX>{complexNumber}		{
+  scan_complex_convert(yytext);
+  yylval.number = atof(yytext);
+#ifdef TOKENDEV
+  std::cout << "--> [DEBUG] COMPLEXNUM : " << yytext << std::endl;
+#endif
+  //scan_step();
+  return scan_throw(COMPLEXNUM);
+}
+
+<INITIAL,MATRIX>[0-9]+[\.]/[\*^\\\/]		{
   yylval.number = atof(yytext);
 #ifdef TOKENDEV
   std::cout << "--> [DEBUG] NUMBER WITH DOT AS LAST CHARACTER : " << yytext << std::endl;
@@ -1392,6 +1402,23 @@ void scan_exponent_convert(char *in)
 {
   for (; *in != 'd' && *in != 'D'; ++in);
   *in = 'e';
+}
+
+/*
+** convert complex floating numbers to C standard
+** 1.2i -> 1.2
+** 1.2D-3i -> 1.2e-3
+*/
+void scan_complex_convert(char *in)
+{
+  for (; *in != 'i' && *in != 'j'; ++in) 
+  {
+    if (*in == 'd' || *in == 'D') 
+    {
+      *in = 'e';
+    }
+  }
+  *in = ' ';
 }
 
 #ifdef _MSC_VER
