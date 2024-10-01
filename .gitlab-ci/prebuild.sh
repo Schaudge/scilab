@@ -178,6 +178,7 @@ download_dependencies() {
 
     [ ! -f libarchive-$LIBARCHIVE_VERSION.tar.xz ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/libarchive-$LIBARCHIVE_VERSION.tar.xz
 
+    # Path in source: single_include/nlohmann/json.hpp
     [ ! -f nlohmann_json-$NLOHMANN_JSON_VERSION.hpp ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/nlohmann_json-$NLOHMANN_JSON_VERSION.hpp
 
     # CppServer and its deps
@@ -241,10 +242,15 @@ make_binary_directory() {
     mkdir -p "$INSTALLROOTDIR/lib/Eigen/include/"
     cp -R "$INSTALLUSRDIR/include/Eigen/" "$INSTALLROOTDIR/lib/Eigen/include/"
 
+    #########################
+    ##### NLOHMANN_JSON #####
+    #########################
+    mkdir -p "$INSTALLROOTDIR/lib/nlohmann/include/"
+    cp -R "$INSTALLUSRDIR/include/nlohmann/" "$INSTALLROOTDIR/lib/nlohmann/include/"
+
     #####################################
     ##### lib/thirdparty/ directory #####
     #####################################
-
     LIBTHIRDPARTYDIR=$INSTALLROOTDIR/lib/thirdparty
     mkdir -p "$LIBTHIRDPARTYDIR"
 
@@ -865,7 +871,9 @@ build_libarchive() {
 }
 
 build_nlohmann_json() {
-    cp -a "$DOWNLOADDIR"/nlohmann_json-$NLOHMANN_JSON_VERSION.hpp "$INSTALLUSRDIR/include/nlohmann_json.hpp"
+    rm -rf "$INSTALLUSRDIR/include/nlohmann/"
+    mkdir -p "$INSTALLUSRDIR/include/nlohmann/"
+    cp -a "$DOWNLOADDIR"/nlohmann_json-$NLOHMANN_JSON_VERSION.hpp "$INSTALLUSRDIR/include/nlohmann/json.hpp"
 }
 
 build_suitesparse() {
