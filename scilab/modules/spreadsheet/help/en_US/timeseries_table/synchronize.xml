@@ -267,6 +267,23 @@
         ]]>
         </programlisting>
         </para>
+        <para><emphasis role="bold">use synchronize with a list of timeseries</emphasis></para>
+        <para>
+        <programlisting role="example"><![CDATA[
+            T = [datetime("2022-12-01"):hours(3):datetime("2022-12-03")]';
+            TemperatureParis = floor(rand(size(T, "*"), 1) * 5 - 1);
+            ts1 = timeseries(T, TemperatureParis, "VariableNames", ["Time", "Paris_Temp"])
+
+            T = [datetime("2022-12-01"):hours(6):datetime("2022-12-03")]';
+            TemperatureMadrid = floor(rand(size(T, "*"), 1) * 6 + 10);
+            ts2 = timeseries(T, TemperatureMadrid, "VariableNames", ["Time", "Madrid_Temp"])
+
+            list_ts = list(ts1, ts2);
+
+            ts = synchronize(list_ts(:), "daily", mean)
+        ]]>
+        </programlisting>
+        </para>
     </refsection>
     <refsection role="see also">
         <title>See also</title>
