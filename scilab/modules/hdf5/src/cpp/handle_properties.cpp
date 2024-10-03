@@ -380,29 +380,38 @@ static int import_handle_generic(hid_t dataset, int uid, int parent, const Handl
             case jni_bool:
             {
                 int val = 0;
-                getHandleBool(dataset, name, &val);
-                setGraphicObjectProperty(uid, go, &val, jni_bool, 1);
+                if (getHandleBool(dataset, name, &val) != -1)
+                {
+                    setGraphicObjectProperty(uid, go, &val, jni_bool, 1);
+                }
                 break;
             }
             case jni_int:
             {
                 int val = 0;
-                getHandleInt(dataset, name, &val);
-                setGraphicObjectProperty(uid, go, &val, jni_int, 1);
+                if (getHandleInt(dataset, name, &val) != -1)
+                {
+                    setGraphicObjectProperty(uid, go, &val, jni_int, 1);
+                }
                 break;
             }
             case jni_double:
             {
                 double val = 0;
-                getHandleDouble(dataset, name, &val);
-                setGraphicObjectProperty(uid, go, &val, jni_double, 1);
+                if (getHandleDouble(dataset, name, &val) != -1)
+                {
+                    setGraphicObjectProperty(uid, go, &val, jni_double, 1);
+                }
                 break;
             }
             case jni_string:
             {
                 char* data = nullptr;
                 hid_t node = getHandleString(dataset, name, &data);
-                setGraphicObjectProperty(uid, go, data, jni_string, 1);
+                if (node != - 1)
+                {
+                    setGraphicObjectProperty(uid, go, data, jni_string, 1);
+                }
                 freeStringMatrix(node, &data);
                 break;
             }
