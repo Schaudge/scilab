@@ -18,7 +18,7 @@
 function [Y,M,D,h,m,s] = datevec(N)
 
     arguments
-        N {mustBeA(N, "double")}
+        N {mustBeA(N, ["double", "datetime"])}
     end
 
     lhs=argn(1);
@@ -31,6 +31,10 @@ function [Y,M,D,h,m,s] = datevec(N)
     if nc == 1 then
         common_year = common_year';
         leap_year   = leap_year';
+    end
+
+    if typeof(N) == "datetime" then
+        N = datenum(N);
     end
 
     // for the moment : hour, minute, second

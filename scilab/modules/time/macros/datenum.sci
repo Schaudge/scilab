@@ -25,12 +25,17 @@ function n=datenum(varargin)
 
     case 1
         DateIn = varargin(1);
-        l = list();
-        for i = 1:size(DateIn, 2)
-            l(i) = DateIn(:, i)
-        end
+        if typeof(DateIn) == "datetime" then
+            n = DateIn.date + DateIn.time./86400;
+        else
+            l = list();
+            for i = 1:size(DateIn, 2)
+                l(i) = DateIn(:, i)
+            end
 
-        n = %datenum(l(:))
+            n = %datenum(l(:))
+        end
+        
 
     case 3
         n = %datenum(varargin(:));
