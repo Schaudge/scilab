@@ -67,7 +67,7 @@ totalsize = totalsize + size(files, "*");
 
 // demos
 files = getfiles("demos", "*.sce");
-//parser_idempotence(files);
+parser_idempotence(files);
 totalsize = totalsize + size(files, "*");
 
 // unit_tests
