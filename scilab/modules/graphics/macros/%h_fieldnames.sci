@@ -444,6 +444,8 @@ function fields = %h_fieldnames(h)
             "color_mode"
             "color_flag"
             "cdata_mapping"
+            "cdata_bounds"
+            "color_range"
             "hiddencolor"
             "clip_state"
             "clip_box"

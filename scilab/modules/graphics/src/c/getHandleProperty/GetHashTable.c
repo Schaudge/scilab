@@ -166,6 +166,7 @@ static getHashTableCouple propertyGetTable[] =
     {"color_mode", get_color_mode_property},
     {"color_flag", get_color_flag_property},
     {"cdata_mapping", get_cdata_mapping_property},
+    {"cdata_bounds", get_cdata_bounds_property},
     {"surface_color", get_surface_color_property},
     {"triangles", get_triangles_property},
     {"z_bounds", get_z_bounds_property},

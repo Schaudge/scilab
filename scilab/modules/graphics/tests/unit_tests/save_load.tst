@@ -43,6 +43,31 @@ surf2 = axes.children(2);
 if (surf2.clip_box <> []) then pause; end
 if (surf2.clip_state <> "clipgrf") then pause; end
 
+// same for fac3d (surf())
+clf();
+nc = 128;
+gcf().color_map = [coolwarm(nc); spectral(nc)];
+[X,Y]=meshgrid(-1:0.1:1,-1:0.1:1);
+surf(X, Y, X.^2-Y.^2, "facecolor", "interp");
+gce().color_range = [nc+1 2*nc];
+gce().cdata_bounds = [0 1];
+
+// save the figure
+f = gcf();
+save(plotExportFile, "f");
+
+// close window
+delete(f);
+
+// reload data
+load(plotExportFile);
+axes = gca();
+
+// check properties
+surf1 = axes.children(1);
+if (surf1.color_range <> [nc+1 2*nc]) then pause; end
+if (surf1.cdata_bounds <> [0 1]) then pause; end
+
 // same for grayplot
 clf();
 x = 0:10;

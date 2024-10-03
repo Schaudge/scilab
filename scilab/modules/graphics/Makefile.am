@@ -151,6 +151,7 @@ GRAPHICS_C_SOURCES = \
     src/c/getHandleProperty/get_cube_scaling_property.c \
     src/c/getHandleProperty/get_tics_segment_property.c \
     src/c/getHandleProperty/get_cdata_mapping_property.c \
+    src/c/getHandleProperty/get_cdata_bounds_property.c \
     src/c/getHandleProperty/get_colored_property.c \
     src/c/getHandleProperty/get_triangles_property.c \
     src/c/getHandleProperty/get_viewport_property.c \
@@ -257,6 +258,7 @@ GRAPHICS_C_SOURCES = \
     src/c/getHandleProperty/set_callback_property.c \
     src/c/getHandleProperty/set_closed_property.c \
     src/c/getHandleProperty/set_cdata_mapping_property.c \
+    src/c/getHandleProperty/set_cdata_bounds_property.c \
     src/c/getHandleProperty/set_y_ticks_property.c \
     src/c/getHandleProperty/set_z_bounds_property.c \
     src/c/getHandleProperty/set_position_property.c \

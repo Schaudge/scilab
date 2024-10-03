@@ -410,19 +410,40 @@
                                 <para>
                                     <emphasis>"direct"</emphasis>: <literal>data.color</literal>
                                     values are directly considered as color indices in the
-                                    current gcf().color_map.
+                                    current colormap given by <literal>gcf().color_map</literal>.
                                 </para>
                             </listitem>
                             <listitem>
-                                <para><emphasis>"scaled"</emphasis>: <literal>c=data.color</literal>
-                                    values are linearly mapped on the interval <literal>[1,nC]</literal>,
-                                    with <literal>nC=size(gcf().color_map,1)</literal> is the total
-                                    number of colors in the current colormap. Then,
-                                    <literal>min(c)</literal> represents the color #1, and
-                                    <literal>max(c)</literal> represents the color #nC.
+                                <para><emphasis>"scaled"</emphasis>: <literal>data.color</literal>
+                                    values are mapped to indices in the current colormap depending on the
+                                    <term>cdata_bounds</term> and <term>color_range</term> properties defined below.
                                 </para>
                             </listitem>
                         </itemizedlist>
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>cdata_bounds: </term>
+                <listitem>
+                    <para>
+                        This vector of size 2, <literal>[cmin,cmax]</literal>, gives the <literal>data.color</literal> interval of values mapped to indices 
+                        <literal>1:size(gcf().color_map,1)</literal> of the current
+                        colormap or to an eventual subset defined by the <term>color_range</term> property.
+                        Values of <literal>data.color</literal> outside <literal>[cmin,cmax]</literal> are mapped respectively to the first and the last element of the colormap.
+                        By default, the <literal>cdata_bounds</literal> property is <literal>[0,0]</literal> which means
+                        that <literal>cmin</literal> and <literal>cmax</literal> are automatically set to the minimum and maximum of <literal>data.color</literal> property.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>color_range: </term>
+                <listitem>
+                    <para>
+                        This vector of size 2, <literal>[rmin, rmax]</literal>, where <literal>rmin</literal> and <literal>rmax</literal> stand for
+                        colormap indices, defines a subset of the current colormap for displaying the surface object. If they are both greater than 1, 
+                        then the actual colormap used to display the fac3d entity is <literal>gcf().color_map(rmin:rmax,:)</literal>.
+                        By default, the <literal>color_range</literal> property value is <literal>[0,0]</literal> which means that the whole colormap is used.
                     </para>
                 </listitem>
             </varlistentry>
@@ -540,44 +561,95 @@
     <refsection>
         <title>Examples</title>
         <programlisting role="example"><![CDATA[
-//create a figure
+// create a figure and get its handle
+f = scf()
 t=[0:0.3:2*%pi]'; z=sin(t)*cos(t');
 [xx,yy,zz]=genfac3d(t,t,z);
-plot3d([xx xx],[yy yy],list([zz zz+4],[4*ones(1,400) 5*ones(1,400)]))
-h=get("hdl") //get handle on current entity (here the surface)
-a=gca(); //get current axes
+// draw and get handle on the surface entity 
+hdl = plot3d([xx xx],[yy yy],list([zz zz+4],[4*ones(1,400) 5*ones(1,400)]))
+a = gca(); //get current axes
 a.rotation_angles=[40,70];
 a.grid=[1 1 1];
 //make grids
 a.data_bounds=[-6,0,-1;6,6,5];
 a.axes_visible="off";
-//axes are hidden a.axes_bounds=[.2 0 1 1];
-f=get("current_figure");
-//get the handle of the parent figure
+// axes are hidden a.axes_bounds=[.2 0 1 1];
+
 f.color_map=hot(64);
-//change the figure colormap
+// change the figure colormap
 h.color_flag=1;
-//color according to z
+// color according to z
 h.color_mode=-2;
-//remove the facets boundary
+// remove the facets boundary
 h.color_flag=2;
-//color according to given colors
+// color according to given colors
 h.data.color=[1+modulo(1:400,64),1+modulo(1:400,64)];
-//shaded
+// shaded
 h.color_flag=3;
 
-scf(2); // creates second window and use surf command
+scf(); // create a second figure and use surf command
 subplot(211)
 surf(z,'cdata_mapping','direct','facecol','interp')
 
 subplot(212)
-surf(t,t,z,'edgeco','b','marker','d','markersiz',9,'markeredg','red','markerfac','k')
-e=gce();
+e = surf(t,t,z,'edgeco','b','marker','d','markersiz',9,'markeredg','red','markerfac','k')
 e.color_flag=1 // color index proportional to altitude (z coord.)
 e.color_flag=2; // back to default mode
 e.color_flag= 3; // interpolated shading mode (based on blue default color because field data.color is not filled)
  ]]></programlisting>
     </refsection>
+    <refsection>
+        <title>Example using cdata_bounds and color_range properties</title>
+        <para>When <literal>cdata_mapping</literal> is set to <literal>"scaled"</literal> (this is the default when using <literal>surf()</literal>), these properties allow to have a full control on the mapping between the <literal>data.color</literal> property of a <literal>Fac3d</literal> entity and its actual colors shown on screen. For example, different subsets of the color map can be used for different entities belonging to the same figure and actual interval of <literal>data.color</literal> values mapped to this subset:
+    </para>
+    <programlisting role="example"><![CDATA[
+        clf;
+        subplot(2,2,1);
+        nc = 128;
+        gcf().color_map = [coolwarm(nc); spectral(nc)];
+        [X,Y]=meshgrid(-1:0.1:1,-1:0.1:1);
+        surf(X,Y,X.^2-Y.^2,"facecolor","interp","edgecolor")
+        gce().color_range = [nc+1 2*nc];
+
+        subplot(2,2,2);
+        surf(X,Y,-X.^2-Y.^2,"facecolor","interp");
+        gce().color_range = [1 nc];
+
+        subplot(2,2,3);
+        surf(X,Y,X.^2-Y.^2,"facecolor","interp");
+        gce().color_range = [nc+1 2*nc];
+        gce().cdata_bounds = [0 1];
+
+        subplot(2,2,4);
+        surf(X,Y,-X.^2-Y.^2,"facecolor","interp");
+        gce().color_range = [1 nc];
+        gce().cdata_bounds = [-1 -0.5];
+        ]]></programlisting>
+        <scilab:image>
+            <![CDATA[
+            clf;
+            subplot(2,2,1);
+            nc = 128;
+            gcf().color_map = [coolwarm(nc); spectral(nc)];
+            [X,Y]=meshgrid(-1:0.1:1,-1:0.1:1);
+            surf(X,Y,X.^2-Y.^2,"facecolor","interp","edgecolor");
+            gce().color_range = [nc+1 2*nc];
+
+            subplot(2,2,2);
+            surf(X,Y,-X.^2-Y.^2,"facecolor","interp");
+            gce().color_range = [1 nc];
+
+            subplot(2,2,3);
+            surf(X,Y,X.^2-Y.^2,"facecolor","interp");
+            gce().color_range = [nc+1 2*nc];
+            gce().cdata_bounds = [0 1];
+
+            subplot(2,2,4);
+            surf(X,Y,-X.^2-Y.^2,"facecolor","interp");
+            gce().color_range = [1 nc];
+            gce().cdata_bounds = [-1 -0.5];
+            ]]></scilab:image>
+        </refsection>
     <refsection role="see also">
         <title>See also</title>
         <simplelist type="inline">
@@ -612,5 +684,16 @@ e.color_flag= 3; // interpolated shading mode (based on blue default color becau
                 <link linkend="graphics_entities">graphics_entities</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection>
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revremark>
+                    <literal>cdata_bounds</literal> and <literal>color_range</literal>properties added.
+                </revremark>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

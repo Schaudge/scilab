@@ -141,6 +141,7 @@ GRAPHICS_IMPEXP void* get_cdata_mapping_property(void* _pvCtx, int iObjUID);
 GRAPHICS_IMPEXP void* get_surface_color_property(void* _pvCtx, int iObjUID);
 GRAPHICS_IMPEXP void* get_triangles_property(void* _pvCtx, int iObjUID);
 GRAPHICS_IMPEXP void* get_z_bounds_property(void* _pvCtx, int iObjUID);
+GRAPHICS_IMPEXP void* get_cdata_bounds_property(void* _pvCtx, int iObjUID);
 GRAPHICS_IMPEXP void* get_user_data_property(void* _pvCtx, int iObjUID);
 GRAPHICS_IMPEXP void* get_handle_visible_property(void* _pvCtx, int iObjUID);
 GRAPHICS_IMPEXP void* get_callback_type_property(void* _pvCtx, int iObjUID);

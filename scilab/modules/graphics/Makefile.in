@@ -305,6 +305,7 @@ am__objects_1 = src/c/libscigraphics_algo_la-GetCommandArg.lo \
 	src/c/getHandleProperty/libscigraphics_algo_la-get_cube_scaling_property.lo \
 	src/c/getHandleProperty/libscigraphics_algo_la-get_tics_segment_property.lo \
 	src/c/getHandleProperty/libscigraphics_algo_la-get_cdata_mapping_property.lo \
+	src/c/getHandleProperty/libscigraphics_algo_la-get_cdata_bounds_property.lo \
 	src/c/getHandleProperty/libscigraphics_algo_la-get_colored_property.lo \
 	src/c/getHandleProperty/libscigraphics_algo_la-get_triangles_property.lo \
 	src/c/getHandleProperty/libscigraphics_algo_la-get_viewport_property.lo \
@@ -411,6 +412,7 @@ am__objects_1 = src/c/libscigraphics_algo_la-GetCommandArg.lo \
 	src/c/getHandleProperty/libscigraphics_algo_la-set_callback_property.lo \
 	src/c/getHandleProperty/libscigraphics_algo_la-set_closed_property.lo \
 	src/c/getHandleProperty/libscigraphics_algo_la-set_cdata_mapping_property.lo \
+	src/c/getHandleProperty/libscigraphics_algo_la-set_cdata_bounds_property.lo \
 	src/c/getHandleProperty/libscigraphics_algo_la-set_y_ticks_property.lo \
 	src/c/getHandleProperty/libscigraphics_algo_la-set_z_bounds_property.lo \
 	src/c/getHandleProperty/libscigraphics_algo_la-set_position_property.lo \
@@ -778,6 +780,7 @@ am__depfiles_remade =  \
 	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_box_property.Plo \
 	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_callback_property.Plo \
 	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_callback_type_property.Plo \
+	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_cdata_bounds_property.Plo \
 	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_cdata_mapping_property.Plo \
 	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_children_property.Plo \
 	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_clip_box_property.Plo \
@@ -946,6 +949,7 @@ am__depfiles_remade =  \
 	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_box_property.Plo \
 	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_callback_property.Plo \
 	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_callback_type_property.Plo \
+	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_cdata_bounds_property.Plo \
 	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_cdata_mapping_property.Plo \
 	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_children_property.Plo \
 	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_clip_box_property.Plo \
@@ -1624,6 +1628,7 @@ GRAPHICS_C_SOURCES = \
     src/c/getHandleProperty/get_cube_scaling_property.c \
     src/c/getHandleProperty/get_tics_segment_property.c \
     src/c/getHandleProperty/get_cdata_mapping_property.c \
+    src/c/getHandleProperty/get_cdata_bounds_property.c \
     src/c/getHandleProperty/get_colored_property.c \
     src/c/getHandleProperty/get_triangles_property.c \
     src/c/getHandleProperty/get_viewport_property.c \
@@ -1730,6 +1735,7 @@ GRAPHICS_C_SOURCES = \
     src/c/getHandleProperty/set_callback_property.c \
     src/c/getHandleProperty/set_closed_property.c \
     src/c/getHandleProperty/set_cdata_mapping_property.c \
+    src/c/getHandleProperty/set_cdata_bounds_property.c \
     src/c/getHandleProperty/set_y_ticks_property.c \
     src/c/getHandleProperty/set_z_bounds_property.c \
     src/c/getHandleProperty/set_position_property.c \
@@ -2580,6 +2586,9 @@ src/c/getHandleProperty/libscigraphics_algo_la-get_tics_segment_property.lo:  \
 src/c/getHandleProperty/libscigraphics_algo_la-get_cdata_mapping_property.lo:  \
 	src/c/getHandleProperty/$(am__dirstamp) \
 	src/c/getHandleProperty/$(DEPDIR)/$(am__dirstamp)
+src/c/getHandleProperty/libscigraphics_algo_la-get_cdata_bounds_property.lo:  \
+	src/c/getHandleProperty/$(am__dirstamp) \
+	src/c/getHandleProperty/$(DEPDIR)/$(am__dirstamp)
 src/c/getHandleProperty/libscigraphics_algo_la-get_colored_property.lo:  \
 	src/c/getHandleProperty/$(am__dirstamp) \
 	src/c/getHandleProperty/$(DEPDIR)/$(am__dirstamp)
@@ -2895,6 +2904,9 @@ src/c/getHandleProperty/libscigraphics_algo_la-set_closed_property.lo:  \
 	src/c/getHandleProperty/$(am__dirstamp) \
 	src/c/getHandleProperty/$(DEPDIR)/$(am__dirstamp)
 src/c/getHandleProperty/libscigraphics_algo_la-set_cdata_mapping_property.lo:  \
+	src/c/getHandleProperty/$(am__dirstamp) \
+	src/c/getHandleProperty/$(DEPDIR)/$(am__dirstamp)
+src/c/getHandleProperty/libscigraphics_algo_la-set_cdata_bounds_property.lo:  \
 	src/c/getHandleProperty/$(am__dirstamp) \
 	src/c/getHandleProperty/$(DEPDIR)/$(am__dirstamp)
 src/c/getHandleProperty/libscigraphics_algo_la-set_y_ticks_property.lo:  \
@@ -3672,6 +3684,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_box_property.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_callback_property.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_callback_type_property.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_cdata_bounds_property.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_cdata_mapping_property.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_children_property.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_clip_box_property.Plo@am__quote@ # am--include-marker
@@ -3840,6 +3853,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_box_property.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_callback_property.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_callback_type_property.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_cdata_bounds_property.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_cdata_mapping_property.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_children_property.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_clip_box_property.Plo@am__quote@ # am--include-marker
@@ -4847,6 +4861,13 @@ src/c/getHandleProperty/libscigraphics_algo_la-get_cdata_mapping_property.lo: sr
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigraphics_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/c/getHandleProperty/libscigraphics_algo_la-get_cdata_mapping_property.lo `test -f 'src/c/getHandleProperty/get_cdata_mapping_property.c' || echo '$(srcdir)/'`src/c/getHandleProperty/get_cdata_mapping_property.c
 
+src/c/getHandleProperty/libscigraphics_algo_la-get_cdata_bounds_property.lo: src/c/getHandleProperty/get_cdata_bounds_property.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigraphics_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/c/getHandleProperty/libscigraphics_algo_la-get_cdata_bounds_property.lo -MD -MP -MF src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_cdata_bounds_property.Tpo -c -o src/c/getHandleProperty/libscigraphics_algo_la-get_cdata_bounds_property.lo `test -f 'src/c/getHandleProperty/get_cdata_bounds_property.c' || echo '$(srcdir)/'`src/c/getHandleProperty/get_cdata_bounds_property.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_cdata_bounds_property.Tpo src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_cdata_bounds_property.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/c/getHandleProperty/get_cdata_bounds_property.c' object='src/c/getHandleProperty/libscigraphics_algo_la-get_cdata_bounds_property.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigraphics_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/c/getHandleProperty/libscigraphics_algo_la-get_cdata_bounds_property.lo `test -f 'src/c/getHandleProperty/get_cdata_bounds_property.c' || echo '$(srcdir)/'`src/c/getHandleProperty/get_cdata_bounds_property.c
+
 src/c/getHandleProperty/libscigraphics_algo_la-get_colored_property.lo: src/c/getHandleProperty/get_colored_property.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigraphics_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/c/getHandleProperty/libscigraphics_algo_la-get_colored_property.lo -MD -MP -MF src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_colored_property.Tpo -c -o src/c/getHandleProperty/libscigraphics_algo_la-get_colored_property.lo `test -f 'src/c/getHandleProperty/get_colored_property.c' || echo '$(srcdir)/'`src/c/getHandleProperty/get_colored_property.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_colored_property.Tpo src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_colored_property.Plo
@@ -5588,6 +5609,13 @@ src/c/getHandleProperty/libscigraphics_algo_la-set_cdata_mapping_property.lo: sr
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/c/getHandleProperty/set_cdata_mapping_property.c' object='src/c/getHandleProperty/libscigraphics_algo_la-set_cdata_mapping_property.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigraphics_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/c/getHandleProperty/libscigraphics_algo_la-set_cdata_mapping_property.lo `test -f 'src/c/getHandleProperty/set_cdata_mapping_property.c' || echo '$(srcdir)/'`src/c/getHandleProperty/set_cdata_mapping_property.c
+
+src/c/getHandleProperty/libscigraphics_algo_la-set_cdata_bounds_property.lo: src/c/getHandleProperty/set_cdata_bounds_property.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigraphics_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/c/getHandleProperty/libscigraphics_algo_la-set_cdata_bounds_property.lo -MD -MP -MF src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_cdata_bounds_property.Tpo -c -o src/c/getHandleProperty/libscigraphics_algo_la-set_cdata_bounds_property.lo `test -f 'src/c/getHandleProperty/set_cdata_bounds_property.c' || echo '$(srcdir)/'`src/c/getHandleProperty/set_cdata_bounds_property.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_cdata_bounds_property.Tpo src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_cdata_bounds_property.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/c/getHandleProperty/set_cdata_bounds_property.c' object='src/c/getHandleProperty/libscigraphics_algo_la-set_cdata_bounds_property.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigraphics_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/c/getHandleProperty/libscigraphics_algo_la-set_cdata_bounds_property.lo `test -f 'src/c/getHandleProperty/set_cdata_bounds_property.c' || echo '$(srcdir)/'`src/c/getHandleProperty/set_cdata_bounds_property.c
 
 src/c/getHandleProperty/libscigraphics_algo_la-set_y_ticks_property.lo: src/c/getHandleProperty/set_y_ticks_property.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigraphics_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/c/getHandleProperty/libscigraphics_algo_la-set_y_ticks_property.lo -MD -MP -MF src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_y_ticks_property.Tpo -c -o src/c/getHandleProperty/libscigraphics_algo_la-set_y_ticks_property.lo `test -f 'src/c/getHandleProperty/set_y_ticks_property.c' || echo '$(srcdir)/'`src/c/getHandleProperty/set_y_ticks_property.c
@@ -7454,6 +7482,7 @@ distclean: distclean-am
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_box_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_callback_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_callback_type_property.Plo
+	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_cdata_bounds_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_cdata_mapping_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_children_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_clip_box_property.Plo
@@ -7622,6 +7651,7 @@ distclean: distclean-am
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_box_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_callback_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_callback_type_property.Plo
+	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_cdata_bounds_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_cdata_mapping_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_children_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_clip_box_property.Plo
@@ -7938,6 +7968,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_box_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_callback_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_callback_type_property.Plo
+	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_cdata_bounds_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_cdata_mapping_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_children_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_clip_box_property.Plo
@@ -8106,6 +8137,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_box_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_callback_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_callback_type_property.Plo
+	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_cdata_bounds_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_cdata_mapping_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_children_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_clip_box_property.Plo

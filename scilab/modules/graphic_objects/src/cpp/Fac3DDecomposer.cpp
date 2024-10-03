@@ -112,10 +112,12 @@ void Fac3DDecomposer::fillTextureCoordinates(int id, float* buffer, int bufferLe
     int* pparentFigure = &parentFigure;
     int parent = 0;
     int* pparent = &parent;
+    int* colorRange = NULL;
 
-    double* colors = NULL;
+    double* cData = NULL;
     double* colormap = NULL;
     double* z = NULL;
+    double* cDataBounds = NULL;
 
     double color = 0.;
 
@@ -126,6 +128,7 @@ void Fac3DDecomposer::fillTextureCoordinates(int id, float* buffer, int bufferLe
     int numColors = 0;
     int* piNumColors = &numColors;
 
+    int colorsNumber = 0.;
     int colormapSize = 0;
     int* piColormapSize = &colormapSize;
 
@@ -142,7 +145,7 @@ void Fac3DDecomposer::fillTextureCoordinates(int id, float* buffer, int bufferLe
     getGraphicObjectProperty(id, __GO_DATA_MODEL_NUM_GONS__, jni_int, (void**) &piNumGons);
 
     getGraphicObjectProperty(id, __GO_DATA_MODEL_NUM_COLORS__, jni_int, (void**) &piNumColors);
-    getGraphicObjectProperty(id, __GO_DATA_MODEL_COLORS__, jni_double_vector, (void**) &colors);
+    getGraphicObjectProperty(id, __GO_DATA_MODEL_COLORS__, jni_double_vector, (void**) &cData);
 
 
     parent = getParentObject(id);
@@ -170,7 +173,19 @@ void Fac3DDecomposer::fillTextureCoordinates(int id, float* buffer, int bufferLe
     }
 
     getGraphicObjectProperty(parentFigure, __GO_COLORMAP__, jni_double_vector, (void**) &colormap);
+    getGraphicObjectProperty(id, __GO_COLOR_RANGE__, jni_int_vector, (void**) &colorRange);
     getGraphicObjectProperty(parentFigure, __GO_COLORMAP_SIZE__, jni_int, (void**) &piColormapSize);
+
+    if (colorRange[0] != 0 || colorRange[1] != 0)
+    {
+        colorsNumber = 1 + colorRange[1] - colorRange[0];
+    }
+    else
+    {
+        colorsNumber = colormapSize;
+    }
+
+    releaseGraphicObjectProperty(__GO_COLOR_RANGE__, colorRange, jni_int_vector, 0);
 
     if (numColors == numGons * numVerticesPerGon)
     {
@@ -181,12 +196,15 @@ void Fac3DDecomposer::fillTextureCoordinates(int id, float* buffer, int bufferLe
         perVertex = 0;
     }
 
-
     getGraphicObjectProperty(id, __GO_DATA_MODEL_Z__, jni_int, (void**) &z);
+    getGraphicObjectProperty(id, __GO_CDATA_BOUNDS__, jni_double_vector, (void**) &cDataBounds);
 
     if (colorFlag == 1)
     {
-        fillNormalizedZColorsTextureCoordinates(buffer, bufferLength, colormap, colormapSize, z, numGons, numVerticesPerGon);
+        /*
+         * color is proportional to data.z
+        */
+        fillNormalizedZColorsTextureCoordinates(buffer, bufferLength, colormap, colorsNumber, z, numGons, numVerticesPerGon, cDataBounds);
     }
     else if (colorFlag > 1 && numColors == 0)
     {
@@ -207,15 +225,18 @@ void Fac3DDecomposer::fillTextureCoordinates(int id, float* buffer, int bufferLe
     }
     else
     {
-        fillDataColorsTextureCoordinates(buffer, bufferLength, colormap, colormapSize,
-                                         colors, colorFlag, perVertex, dataMapping, numGons, numVerticesPerGon);
+       /*
+        * color is proportional to data.color
+       */
+        fillDataColorsTextureCoordinates(buffer, bufferLength, colormap, colorsNumber,
+                                         cData, colorFlag, perVertex, dataMapping, numGons, numVerticesPerGon, cDataBounds);
     }
 
     releaseGraphicObjectProperty(__GO_COLORMAP__, colormap, jni_double_vector, colormapSize);
 }
 
 void Fac3DDecomposer::fillNormalizedZColorsTextureCoordinates(float* buffer, int bufferLength, double* colormap, int colormapSize,
-        double* z, int numGons, int numVerticesPerGon)
+        double* z, int numGons, int numVerticesPerGon, double *cDataBounds)
 {
     double zavg = 0.;
     double zMin = 0.;
@@ -227,8 +248,17 @@ void Fac3DDecomposer::fillNormalizedZColorsTextureCoordinates(float* buffer, int
     int i = 0;
     int j = 0;
     int bufferOffset = 0;
+    
 
-    computeMinMaxValues(z, numGons * numVerticesPerGon, numGons, numVerticesPerGon, ALL_VALUES, &zMin, &zMax);
+    if ((cDataBounds[0] != 0.0 || cDataBounds[1] != 0.0) && (DecompositionUtils::isValid(cDataBounds[0]) && DecompositionUtils::isValid(cDataBounds[1])) && (cDataBounds[0] != cDataBounds[1]))
+    {
+        zMin = cDataBounds[0];
+        zMax = cDataBounds[1];
+    }
+    else
+    {
+        computeMinMaxValues(z, numGons * numVerticesPerGon, numGons, numVerticesPerGon, ALL_VALUES, &zMin, &zMax);
+    }
 
     minDoubleValue = DecompositionUtils::getMinDoubleValue();
 
@@ -277,10 +307,10 @@ void Fac3DDecomposer::fillConstantColorsTextureCoordinates(float* buffer, int bu
 }
 
 void Fac3DDecomposer::fillDataColorsTextureCoordinates(float* buffer, int bufferLength, double* colormap, int colormapSize,
-        double* colors, int colorFlag, int perVertex, int dataMapping, int numGons, int numVerticesPerGon)
+        double* cData, int colorFlag, int perVertex, int cDataMapping, int numGons, int numVerticesPerGon, double *cDataBounds)
 {
-    double colMin = 0.;
-    double colRange = 0.;
+    double cDataMin = 0.;
+    double cDataRange = 0.;
     double color = 0.;
     double colorTextureOffset = 0.;
     double index = 0.;
@@ -300,12 +330,21 @@ void Fac3DDecomposer::fillDataColorsTextureCoordinates(float* buffer, int buffer
         numColors = numGons;
     }
 
-    colorComputer = Fac3DColorComputer(colors, numColors, colorFlag, dataMapping, numGons, numVerticesPerGon);
+    colorComputer = Fac3DColorComputer(cData, numColors, colorFlag, cDataMapping, numGons, numVerticesPerGon);
 
-    /* 0: colors are scaled */
-    if (dataMapping == 0)
+
+    /* 0: color data is mapped/scaled to colormap subset (cdata_mapping == "scaled") */
+    if (cDataMapping == 0)
     {
-        colorComputer.getColorRangeValue(&colMin, &colRange);
+        if ((cDataBounds[0] != 0.0 || cDataBounds[1] != 0.0) && (DecompositionUtils::isValid(cDataBounds[0]) && DecompositionUtils::isValid(cDataBounds[1])) && (cDataBounds[0] != cDataBounds[1]))
+        {
+            cDataMin = cDataBounds[0];
+            cDataRange = cDataBounds[1]-cDataBounds[0];
+        }
+        else
+        {
+            colorComputer.getColorRangeValue(&cDataMin, &cDataRange);
+        }
     }
 
     /*
@@ -321,14 +360,14 @@ void Fac3DDecomposer::fillDataColorsTextureCoordinates(float* buffer, int buffer
         {
             color = colorComputer.getOutputFacetColor(i, j);
 
-            if (dataMapping == 1)
+            if (cDataMapping == 1)
             {
                 color = DecompositionUtils::getAbsoluteValue(color);
                 index = ColorComputer::getClampedDirectIndex(color - 1.0 , colormapSize);
             }
-            else if (dataMapping == 0)
+            else if (cDataMapping == 0)
             {
-                index = ColorComputer::getIndex(color, colMin, colRange, COLOR_OFFSET, 0, colormapSize - 1);
+                index = ColorComputer::getIndex(color, cDataMin, cDataRange, COLOR_OFFSET, 0, colormapSize - 1);
             }
 
             /* The offset corresponding to the black and white colors must added to the index and the colormap size. */
@@ -438,7 +477,7 @@ int Fac3DDecomposer::fillIndices(int id, int* buffer, int bufferLength, int logM
     double yc = 0.;
     double zc = 0.;
 
-    double* colors = NULL;
+    double* cData = NULL;
 
     int numVerticesPerGon = 0;
     int* piNumVerticesPerGon = &numVerticesPerGon;
@@ -463,7 +502,7 @@ int Fac3DDecomposer::fillIndices(int id, int* buffer, int bufferLength, int logM
     getGraphicObjectProperty(id, __GO_DATA_MODEL_NUM_GONS__, jni_int, (void**) &piNumGons);
 
     getGraphicObjectProperty(id, __GO_DATA_MODEL_NUM_COLORS__, jni_int, (void**) &piNumColors);
-    getGraphicObjectProperty(id, __GO_DATA_MODEL_COLORS__, jni_double_vector, (void**) &colors);
+    getGraphicObjectProperty(id, __GO_DATA_MODEL_COLORS__, jni_double_vector, (void**) &cData);
 
     getGraphicObjectProperty(id, __GO_COLOR_FLAG__, jni_int, (void**) &piColorFlag);
 
@@ -475,7 +514,7 @@ int Fac3DDecomposer::fillIndices(int id, int* buffer, int bufferLength, int logM
         return 0;
     }
 
-    colorComputer = Fac3DColorComputer(colors, numColors, colorFlag, dataMapping, numGons, numVerticesPerGon);
+    colorComputer = Fac3DColorComputer(cData, numColors, colorFlag, dataMapping, numGons, numVerticesPerGon);
 
     getGraphicObjectProperty(id, __GO_DATA_MODEL_X__, jni_double_vector, (void**) &x);
     getGraphicObjectProperty(id, __GO_DATA_MODEL_Y__, jni_double_vector, (void**) &y);
