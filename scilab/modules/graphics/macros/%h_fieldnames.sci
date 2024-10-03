@@ -522,6 +522,7 @@ function fields = %h_fieldnames(h)
             "Callback_Type"
             "Checked"
             "Icon"
+            "TooltipString"
             "Userdata"
             "Tag"
             ]

@@ -778,6 +778,7 @@ struct UimenuHandle
         m.emplace_back("callback_type", std::vector<int>({SAVE_LOAD, __GO_CALLBACKTYPE__, jni_int}));
         m.emplace_back("checked", std::vector<int>({SAVE_LOAD, __GO_UI_CHECKED__, jni_bool}));
         m.emplace_back("icon", std::vector<int>({SAVE_LOAD, __GO_UI_ICON__, jni_string}));
+        m.emplace_back("tooltipstring", std::vector<int>({SAVE_LOAD, __GO_UI_TOOLTIPSTRING__, jni_string_vector, -1, __GO_UI_TOOLTIPSTRING_SIZE__}));
 
         //@end
         m.emplace_back("visible", std::vector<int>({SAVE_LOAD, __GO_VISIBLE__, jni_bool}));

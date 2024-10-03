@@ -24,6 +24,7 @@ import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProp
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_ICON__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_LABEL__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_MNEMONIC__;
+import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_TOOLTIPSTRING__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_VISIBLE__;
 
 import java.awt.Color;
@@ -176,6 +177,29 @@ public final class SwingViewMenu {
                     ((SwingScilabMenuItem) uimenu).setAccelerator(ScilabKeyStroke.getKeyStroke(accelerator));
                 } else if (uimenu instanceof SwingScilabMenu) {
                     ((SwingScilabMenu) uimenu).setAccelerator(ScilabKeyStroke.getKeyStroke(accelerator));
+                }
+                break;
+            case __GO_UI_TOOLTIPSTRING__ :
+                String[] tooltipString = ((String[]) value);
+                String tooltipText = tooltipString[0];
+                if (tooltipString.length > 1) {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("<html>" + tooltipText);
+                    for (int kString = 1; kString < tooltipString.length; kString++) {
+                        sb.append("<br>").append(tooltipString[kString]);
+                    }
+                    sb.append("</html>");
+                    tooltipText = sb.toString();
+                }
+                if (tooltipText.equals("")) {
+                    tooltipText = null;
+                }
+                if (uimenu instanceof SwingScilabCheckBoxMenuItem) {
+                    ((SwingScilabCheckBoxMenuItem) uimenu).setToolTipText(tooltipText);
+                } else if (uimenu instanceof SwingScilabMenuItem) {
+                    ((SwingScilabMenuItem) uimenu).setToolTipText(tooltipText);
+                } else if (uimenu instanceof SwingScilabMenu) {
+                    ((SwingScilabMenu) uimenu).setToolTipText(tooltipText);
                 }
                 break;
         }

@@ -28,6 +28,7 @@ mymenu = uimenu(gcf(),"Label","Test") // Do not had a semi-colon here
   Callback_Type = 0
   Checked = "off"
   Icon = ""
+  TooltipString = ""
   Userdata = []
   Tag = ""
 delete(gcf());

@@ -26,6 +26,7 @@ h.visible = "off"; // Default is "on"
 h.callback = "disp(1)"; // Default is ""
 h.callback_type = 1; // Default is 0
 h.tag = "My uimenu tag"; // Default is ""
+h.tooltipstring = "My uimenu tooltipstring"; // Default is ""
 
 // Save figure contents
 save(TMPDIR + "/uimenu.scg", "h");
@@ -37,10 +38,11 @@ clear h;
 load(TMPDIR + "/uimenu.scg");
 
 // Check if properties are equal
-if h.enable<>hsaved.enable then pause; end
-if h.foregroundcolor<>hsaved.foregroundcolor then pause; end
-if h.label<>hsaved.label then pause; end
-if h.visible<>hsaved.visible then pause; end
-if h.callback<>hsaved.callback then pause; end
-if h.callback_type<>hsaved.callback_type then pause; end
-if h.tag<>hsaved.tag then pause; end
+assert_checkequal(h.enable, hsaved.enable);
+assert_checkequal(h.foregroundcolor, hsaved.foregroundcolor);
+assert_checkequal(h.label, hsaved.label);
+assert_checkequal(h.visible, hsaved.visible);
+assert_checkequal(h.callback, hsaved.callback);
+assert_checkequal(h.callback_type, hsaved.callback_type);
+assert_checkequal(h.tag, hsaved.tag);
+assert_checkequal(h.tooltipstring, hsaved.tooltipstring);

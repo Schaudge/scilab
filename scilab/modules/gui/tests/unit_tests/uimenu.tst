@@ -33,6 +33,7 @@ assert_checkequal(h.callback, "");
 assert_checkequal(h.callback_type, 0);
 assert_checkequal(h.checked, "off");
 assert_checkequal(h.tag, "");
+assert_checkequal(h.tooltipstring, "");
 
 f=scf();
 h = uimenu("Parent", f, ..
@@ -41,7 +42,8 @@ h = uimenu("Parent", f, ..
     "Visible","off",..
     "Callback","disp(1)",..
     "Checked", "on", ..
-    "Tag", "hello");
+    "Tag", "hello", ...
+    "TooltipString", ["line1", "line2"]);
 assert_checkequal(h.parent, f);
 assert_checkequal(h.enable, "off");
 assert_checkequal(h.label, "test");
@@ -50,6 +52,7 @@ assert_checkequal(h.callback, "disp(1)");
 assert_checkequal(h.callback_type, 0);
 assert_checkequal(h.checked, "on");
 assert_checkequal(h.tag, "hello");
+assert_checkequal(h.tooltipstring, ["line1", "line2"]);
 
 // Add a menu in default figure
 f=gdf();

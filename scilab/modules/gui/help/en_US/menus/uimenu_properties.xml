@@ -213,6 +213,16 @@
                 </listitem>
             </varlistentry>
             <varlistentry>
+                <term>TooltipString</term>
+                <listitem>
+                    <para>String or String vector</para>
+                    <para>
+                        This property represents the text of the uimenu tooltip appearing
+                        when the mouse is over the uimenu.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
                 <term>User_data</term>
                 <listitem>
                     <para>Any type of data</para>
@@ -273,6 +283,12 @@
                 <revnumber>5.5.0</revnumber>
                 <revremark>
                     <literal>Icon</literal> property added.
+                </revremark>
+            </revision>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revremark>
+                    <literal>TooltipString</literal> property added.
                 </revremark>
             </revision>
         </revhistory>

@@ -143,6 +143,7 @@ int sci_uimenu(char *fname, void *pvApiCtx)
         int* piAddrProperty = NULL;
 
         int isUserDataProperty = 0;
+        int isTooltipStringProperty = 0;
         int iPropertyValuePositionIndex = inputIndex + 1;
         size_t posStackOrAdr = 0;
 
@@ -173,6 +174,7 @@ int sci_uimenu(char *fname, void *pvApiCtx)
             }
 
             isUserDataProperty = (stricmp(propertyName, "user_data") == 0) || (stricmp(propertyName, "userdata") == 0);
+            isTooltipStringProperty = stricmp(propertyName, "tooltipstring") == 0;
         }
 
         sciErr = getVarAddressFromPosition(pvApiCtx, iPropertyValuePositionIndex, &piAddrValue);
@@ -210,21 +212,37 @@ int sci_uimenu(char *fname, void *pvApiCtx)
                     break;
                 }
                 case sci_strings:
-                {
-                    char* pstValue = NULL;
-                    if (getAllocatedSingleString(pvApiCtx, piAddrValue, &pstValue))
                     {
-                        Scierror(202, _("%s: Wrong type for argument #%d: string expected.\n"), fname, iPropertyValuePositionIndex);
-                        freeAllocatedSingleString(propertyName);
-                        return 1;
-                    }
+                        /* Index for String & TooltipString properties: Can be more than one character string */
+                        if (isTooltipStringProperty)
+                        {
+                            char** pstValue = NULL;
+                            if (getAllocatedMatrixOfString(pvApiCtx, piAddrValue, &nbRow, &nbCol, &pstValue))
+                            {
+                                Scierror(202, _("%s: Wrong type for argument #%d: string expected.\n"), fname, iPropertyValuePositionIndex);
+                                return 1;
+                            }
 
-                    nbRow = (int)strlen(pstValue);
-                    nbCol = 1;
-                    setStatus = callSetProperty(pvApiCtx, getObjectFromHandle(GraphicHandle), pstValue, sci_strings, nbRow, nbCol, propertyName);
-                    freeAllocatedSingleString(pstValue);
+                            setStatus = callSetProperty(pvApiCtx, getObjectFromHandle(GraphicHandle), pstValue, sci_strings, nbRow, nbCol, propertyName);
+                            freeAllocatedMatrixOfString(nbRow, nbCol, pstValue);
+                        }
+                        else
+                        {
+                            char* pstValue = NULL;
+                            if (getAllocatedSingleString(pvApiCtx, piAddrValue, &pstValue))
+                            {
+                                Scierror(202, _("%s: Wrong type for argument #%d: string expected.\n"), fname, iPropertyValuePositionIndex);
+                                freeAllocatedSingleString(propertyName);
+                                return 1;
+                            }
+
+                            nbRow = (int)strlen(pstValue);
+                            nbCol = 1;
+                            setStatus = callSetProperty(pvApiCtx, getObjectFromHandle(GraphicHandle), pstValue, sci_strings, nbRow, nbCol, propertyName);
+                            freeAllocatedSingleString(pstValue);
+                        }
+                    }
                     break;
-                }
                 case sci_handles:
                 {
                     long long* phValues = NULL;
