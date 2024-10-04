@@ -1203,7 +1203,7 @@ static types::InternalType* import_usertype(hid_t dataset)
         return nullptr;
     }
 
-    types::String* s = it->getAs<types::String>();
+    types::String* s = itType->getAs<types::String>();
     wchar_t* type = s->get()[0];
 
     types::InternalType* data = ss->get(L"data");
