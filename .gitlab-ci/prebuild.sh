@@ -78,6 +78,7 @@ XZ_VERSION=5.4.4
 JOGL_VERSION=2.5.0
 OPENXLSX_VERSION=0.3.2
 LIBARCHIVE_VERSION=3.7.1
+NLOHMANN_JSON_VERSION=3.11.3
 
 # CppServer and its deps
 CPPSERVER_VERSION=1.0.4.1
@@ -117,6 +118,7 @@ make_versions() {
     echo "JOGL_VERSION          = $JOGL_VERSION"
     echo "OPENXLSX_VERSION      = $OPENXLSX_VERSION"
     echo "LIBARCHIVE_VERSION    = $LIBARCHIVE_VERSION"
+    echo "NLOHMANN_JSON_VERSION = $NLOHMANN_JSON_VERSION"
     echo "CPPSERVER_VERSION     = $CPPSERVER_VERSION"
     echo "ASIO_VERSION          = $ASIO_VERSION"
     echo "CPPCOMMON_VERSION     = $CPPCOMMON_VERSION"
@@ -176,6 +178,9 @@ download_dependencies() {
 
     [ ! -f libarchive-$LIBARCHIVE_VERSION.tar.xz ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/libarchive-$LIBARCHIVE_VERSION.tar.xz
 
+    # Path in source: single_include/nlohmann/json.hpp
+    [ ! -f nlohmann_json-$NLOHMANN_JSON_VERSION.hpp ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/nlohmann_json-$NLOHMANN_JSON_VERSION.hpp
+
     # CppServer and its deps
     [ ! -f cppserver-$CPPSERVER_VERSION.zip ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/cppserver-$CPPSERVER_VERSION.zip
     [ ! -f asio-$ASIO_VERSION.zip ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/asio-$ASIO_VERSION.zip
@@ -209,6 +214,7 @@ make_all() {
     build_ncurses
     build_openxlsx
     build_libarchive
+    build_nlohmann_json
     build_cppserver
 }
 
@@ -236,10 +242,15 @@ make_binary_directory() {
     mkdir -p "$INSTALLROOTDIR/lib/Eigen/include/"
     cp -R "$INSTALLUSRDIR/include/Eigen/" "$INSTALLROOTDIR/lib/Eigen/include/"
 
+    #########################
+    ##### NLOHMANN_JSON #####
+    #########################
+    mkdir -p "$INSTALLROOTDIR/lib/nlohmann/include/"
+    cp -R "$INSTALLUSRDIR/include/nlohmann/" "$INSTALLROOTDIR/lib/nlohmann/include/"
+
     #####################################
     ##### lib/thirdparty/ directory #####
     #####################################
-
     LIBTHIRDPARTYDIR=$INSTALLROOTDIR/lib/thirdparty
     mkdir -p "$LIBTHIRDPARTYDIR"
 
@@ -857,6 +868,12 @@ build_libarchive() {
 
     cp -a "$INSTALL_DIR"/lib/*.so* "$INSTALLUSRDIR/lib/"
     cp -a "$INSTALL_DIR"/include/* "$INSTALLUSRDIR/include/"
+}
+
+build_nlohmann_json() {
+    rm -rf "$INSTALLUSRDIR/include/nlohmann/"
+    mkdir -p "$INSTALLUSRDIR/include/nlohmann/"
+    cp -a "$DOWNLOADDIR"/nlohmann_json-$NLOHMANN_JSON_VERSION.hpp "$INSTALLUSRDIR/include/nlohmann/json.hpp"
 }
 
 build_suitesparse() {

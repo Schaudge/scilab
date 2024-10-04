@@ -155,10 +155,10 @@ const std::string XMLValidationDTD::toString() const
     std::ostringstream oss;
     xmlDtd *dtd = getValidationFile < xmlDtd > ();
 
-    oss << "XML DTD" << std::endl;
-    oss << "name: " << (dtd->name ? (const char *)dtd->name : "") << std::endl;
-    oss << "external ID: " << (dtd->ExternalID ? (const char *)dtd->ExternalID : "") << std::endl;
-    oss << "system ID: " << (dtd->SystemID ? (const char *)dtd->SystemID : "");
+    oss << "  type = \"XML DTD\"" << std::endl;
+    oss << "  name = \"" << (dtd->name ? (const char *)dtd->name : "") << "\"" << std::endl;
+    oss << "  external ID =  \"" << (dtd->ExternalID ? (const char *)dtd->ExternalID : "")  << "\""  << std::endl;
+    oss << "  system ID =  \"" << (dtd->SystemID ? (const char *)dtd->SystemID : "") << "\"";
 
     return oss.str();
 }

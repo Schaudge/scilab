@@ -243,6 +243,19 @@ void dasrt_g(int* ny, double* t, double* y, int* ng, double* gout, double* rpar,
 }
 
 //daskr
+void daskr_g(int* ny, double* t, double* y, double* ydot, int* ng, double* gout, double* rpar, int* ipar)
+{
+    DifferentialEquationFunctions* deFunction = NULL;
+    deFunction = DifferentialEquation::getDifferentialEquationFunctions();
+
+    if (deFunction == NULL)
+    {
+        throw ast::InternalError(_("An error occurred while getting DifferentialEquationFunctions object.\n"));
+    }
+
+    deFunction->execDaskrG(ny, t, y, ydot, ng, gout, rpar, ipar);
+}
+
 void daskr_psol(int* neq, double* t, double* y, double* ydot, double* savr, double* wk,
                 double* cj, double* wght, double* wp, int* iwp, double* b, double* eplin,
                 int* ier, double* rpar, int* ipar)

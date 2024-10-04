@@ -42,7 +42,17 @@ data.ml0 = mlist(["e"]);
 data.ml = mlist(["e","x"],1);
 jimport java.lang.String;
 data.j = String.new("Hello world");
-data.x = xmlReadStr("<root><a att=""foo"" rib=""bar""><b>Hello</b></a></root>");
+doc = xmlReadStr("<root><a xmlns:scilab=""http://www.scilab.org"">" + ..
+            "<b>Hello </b><scilab:c>World</scilab:c></a></root>");
+data.xmlDoc = doc; // xmlDoc
+data.xmlNs = xmlGetNsByHref(doc.root.children(1).children(2), "http://www.scilab.org"); // xmlNs
+e = xmlElement(doc, "c"); // xmlElem
+e.attributes.attr = "value";
+e.content = "!";
+data.xmlElem = e;
+data.xmlValid = xmlDTD("SCI/modules/xml/tests/unit_tests/library.dtd"); // xmlValid
+data.xmlList = doc.root.children;
+data.xmlSet = xmlXPath(doc, "//a"); // xmlSet
 data.dt = datetime(2024, 7, 4);
 data.DT = [datetime(2024, 7, 4) datetime(2024, 7, 4) datetime(2024, 7, 4)];
 data.dura = duration(1);

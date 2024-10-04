@@ -173,6 +173,7 @@ static setHashTableCouple propertySetTable[] =
     {"color_mode", set_color_mode_property},
     {"color_flag", set_color_flag_property},
     {"cdata_mapping", set_cdata_mapping_property},
+    {"cdata_bounds", set_cdata_bounds_property},
     {"surface_color", set_surface_color_property},
     {"triangles", set_triangles_property},
     {"z_bounds", set_z_bounds_property},

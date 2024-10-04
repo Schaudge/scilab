@@ -33,9 +33,7 @@
     <gateway name="sci_percent_XMLAttr_e"           function="%XMLAttr_e"           type="0" />
     <gateway name="sci_percent_XMLList_e"           function="%XMLList_e"           type="0" />
     <gateway name="sci_percent_XMLList_e"           function="%XMLSet_e"            type="0" />
-    <gateway name="sci_percent_XMLNs_p"             function="%XMLNs_p"             type="0" />
     <gateway name="sci_percent_XMLAttr_p"           function="%XMLAttr_p"           type="0" />
-    <gateway name="sci_percent_XMLSet_p"            function="%XMLSet_p"            type="0" />
     <gateway name="sci_percent_XMLList_size"        function="%XMLList_size"        type="0" />
     <gateway name="sci_percent_XMLList_size"        function="%XMLSet_size"         type="0" />
     <gateway name="sci_percent_XMLAttr_size"        function="%XMLAttr_size"        type="0" />

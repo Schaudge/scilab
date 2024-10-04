@@ -47,7 +47,9 @@ public class DataManager {
                 GraphicObjectProperties.__GO_DATA_MODEL__,
                 GraphicObjectProperties.__GO_COLOR_FLAG__,
                 GraphicObjectProperties.__GO_COLOR_MODE__,
-                GraphicObjectProperties.__GO_DATA_MAPPING__
+                GraphicObjectProperties.__GO_DATA_MAPPING__,
+                GraphicObjectProperties.__GO_CDATA_BOUNDS__,
+                GraphicObjectProperties.__GO_COLOR_RANGE__
             ));
 
     /**

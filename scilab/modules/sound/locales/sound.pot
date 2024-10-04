@@ -317,17 +317,6 @@ msgid "Unknown data format."
 msgstr ""
 
 #
-# File: modules/sound/macros/sound.sci, line: 30
-#, c-format
-msgid "%s: Wrong number of input argument(s): At least %d expected.\n"
-msgstr ""
-
-#
-# File: modules/sound/macros/sound.sci, line: 50
-msgid "Requires 2-D values only."
-msgstr ""
-
-#
 # File: modules/sound/macros/soundsec.sci, line: 32
 # File: modules/sound/macros/soundsec.sci, line: 46
 #, c-format

@@ -384,29 +384,38 @@ static int import_handle_generic(hid_t dataset, int uid, int parent, const Handl
             case jni_bool:
             {
                 int val = 0;
-                getHandleBool(dataset, name, &val);
-                setGraphicObjectProperty(uid, go, &val, jni_bool, 1);
+                if (getHandleBool(dataset, name, &val) != -1)
+                {
+                    setGraphicObjectProperty(uid, go, &val, jni_bool, 1);
+                }
                 break;
             }
             case jni_int:
             {
                 int val = 0;
-                getHandleInt(dataset, name, &val);
-                setGraphicObjectProperty(uid, go, &val, jni_int, 1);
+                if (getHandleInt(dataset, name, &val) != -1)
+                {
+                    setGraphicObjectProperty(uid, go, &val, jni_int, 1);
+                }
                 break;
             }
             case jni_double:
             {
                 double val = 0;
-                getHandleDouble(dataset, name, &val);
-                setGraphicObjectProperty(uid, go, &val, jni_double, 1);
+                if (getHandleDouble(dataset, name, &val) != -1)
+                {
+                    setGraphicObjectProperty(uid, go, &val, jni_double, 1);
+                }
                 break;
             }
             case jni_string:
             {
                 char* data = nullptr;
                 hid_t node = getHandleString(dataset, name, &data);
-                setGraphicObjectProperty(uid, go, data, jni_string, 1);
+                if (node != - 1)
+                {
+                    setGraphicObjectProperty(uid, go, data, jni_string, 1);
+                }
                 freeStringMatrix(node, &data);
                 break;
             }
@@ -1518,12 +1527,29 @@ static int import_handle_fac3d(hid_t dataset, int parent, int version)
     delete[] dataZ;
     delete[] colors;
 
-
     //cdata_mapping
     int cdata = 0;
     getHandleInt(dataset, "cdata_mapping", &cdata);
-    setGraphicObjectProperty(fac, __GO_DATA_MAPPING__, &cdata, jni_int, 1);
+    setGraphicObjectProperty(fac, __GO_DATA_MAPPING__, &cdata, jni_int, 1); // Redraw in case properties below are not found
 
+    int row = 0, col = 0;
+    // cdata_bounds (2025.0.0)
+    double* pdblVals = nullptr;
+    getHandleDoubleVector(dataset, "cdata_bounds", &row, &col, &pdblVals);
+    if (pdblVals)
+    {
+        setGraphicObjectPropertyAndNoWarn(fac, __GO_CDATA_BOUNDS__, pdblVals, jni_double_vector, row * col); // Redraw will be done when updating "color_range"
+    }
+    delete[] pdblVals;
+
+    // color_range (2025.0.0)
+    int* piVals = nullptr;
+    getHandleIntVector(dataset, "color_range", &row, &col, &piVals);
+    if (piVals)
+    {
+        setGraphicObjectProperty(fac, __GO_COLOR_RANGE__, piVals, jni_int_vector, row * col);
+    }
+    delete[] piVals;
 
     closeList6(dataset);
     return fac;
@@ -3153,6 +3179,19 @@ static bool export_handle_fac3d(hid_t parent, int uid, hid_t xfer_plist_id)
         dims[1] = 1;
         writeIntegerMatrix6(parent, "cdata_mapping", H5T_NATIVE_INT32, "32", 2, dims, &cdata, xfer_plist_id);
 
+        dims[0] = 1;
+        dims[1] = 2;
+        // cdata_bounds (2025.0.0)
+        double* pdblVals;
+        getHandleDoubleVectorProperty(uid, __GO_CDATA_BOUNDS__, &pdblVals);
+        writeDoubleMatrix6(parent, "cdata_bounds", 2, dims, pdblVals, xfer_plist_id);
+        releaseGraphicObjectProperty(__GO_CDATA_BOUNDS__, pdblVals, jni_double_vector, 2);
+
+        // color_range (2025.0.0)
+        int* piVals;
+        getHandleIntVectorProperty(uid, __GO_COLOR_RANGE__, &piVals);
+        writeIntegerMatrix6(parent, "color_range", H5T_NATIVE_INT32, "32", 2, dims, piVals, xfer_plist_id);
+        releaseGraphicObjectProperty(__GO_COLOR_RANGE__, piVals, jni_int_vector, 2);
     }
 
     closeList6(parent);

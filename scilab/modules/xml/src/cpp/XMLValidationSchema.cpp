@@ -165,10 +165,10 @@ const std::string XMLValidationSchema::toString() const
     std::ostringstream oss;
     xmlSchema *schema = getValidationFile < xmlSchema > ();
 
-    oss << "XML Schema" << std::endl;
-    oss << "name: " << (schema->name ? (const char *)schema->name : "") << std::endl;
-    oss << "target namespace: " << (schema->targetNamespace ? (const char *)schema->targetNamespace : "") << std::endl;
-    oss << "version: " << (schema->version ? (const char *)schema->version : "");
+    oss << "  type = \"XML Schema\"" << std::endl;
+    oss << "  name = \"" << (schema->name ? (const char *)schema->name : "") << "\"" << std::endl;
+    oss << "  target namespace =  \"" << (schema->targetNamespace ? (const char *)schema->targetNamespace : "") << "\"" << std::endl;
+    oss << "  version =  \"" << (schema->version ? (const char *)schema->version : "") << "\"";
 
     return oss.str();
 }

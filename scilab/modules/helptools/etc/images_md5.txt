@@ -1086,6 +1086,7 @@ surf_6.png=103f1fd4cfc2217fe197abd0d14febf0
 surf_7.png=d49cf32bd70642bdc7d5b50b675775fc
 surf_8.png=f14a7126b2af207ede224056e90e25ab
 surf_9.png=92cc5270fc0bd51ef3553b21774634f4
+surface_properties_1.png=357d621e37ea3dbf1545d4ca4b1cda23
 svplot_1.png=7b4e6b3820708a019268aaadf2f04340
 tabul_1.png=4a0bd7b7b0d1abe065a31a235940e2a2
 tan_1.png=7ed3a609064320b0ee99e0cfe612d8cf

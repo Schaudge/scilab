@@ -22,28 +22,24 @@ extern "C"
 int SetUicontrolTooltipString(void* _pvCtx, int iObjUID, void* _pvData, int valueType, int nbRow, int nbCol)
 {
     BOOL status = FALSE;
-    int objectStyle = -1;
-    int* piObjectStyle = &objectStyle;
     int type = -1;
     int* piType = &type;
 
     // Check type
     getGraphicObjectProperty(iObjUID, __GO_TYPE__, jni_int, (void**) &piType);
-    if (type != __GO_UICONTROL__)
+    if ((type != __GO_UICONTROL__) && (type != __GO_UIMENU__))
     {
         Scierror(999, const_cast<char*>(_("'%s' property does not exist for this handle.\n")), "TooltipString");
         return SET_PROPERTY_ERROR;
     }
 
-    // Label must be a character string
+    // ToolTipString must be a character string
     if (valueType != sci_strings)
     {
         Scierror(999, const_cast<char*>(_("Wrong type for '%s' property: string or vector of strings expected.\n")), "TooltipString");
         return SET_PROPERTY_ERROR;
     }
 
-    // Check size according to uicontrol style
-    getGraphicObjectProperty(iObjUID, __GO_STYLE__, jni_int, (void**) &piObjectStyle);
     // Value can be string or a string vector
     if (nbCol > 1 && nbRow > 1)
     {

@@ -276,7 +276,7 @@ static int grblk(realtype t, N_Vector yy, realtype *gout, void *g_data);
 static void simblklsodar(int * nequations, realtype * tOld, realtype * actual, realtype * res);
 static void grblklsodar(int * nequations, realtype * tOld, realtype * actual, int * ngc, realtype * res);
 static void simblkddaskr(realtype *tOld, realtype *actual, realtype *actualP, realtype *res, int *flag, double *dummy1, int *dummy2);
-static void grblkddaskr(int *nequations, realtype *tOld, realtype *actual, int *ngc, realtype *res, double *dummy1, int *dummy2);
+static void grblkddaskr(int *nequations, realtype *tOld, realtype *actual, realtype *actualP, int *ngc, realtype *res, double *dummy1, int *dummy2);
 static void jacpsol(realtype *res, int *ires, int *nequations, realtype *tOld, realtype *actual, realtype *actualP,
                     realtype *rewt, realtype *savr, realtype *wk, realtype *h, realtype *cj, realtype *wp,
                     int *iwp, int *ier, double *dummy1, int *dummy2);
@@ -4389,7 +4389,7 @@ static void simblkddaskr(realtype *tOld, realtype *actual, realtype *actualP, re
 }/* simblkddaskr */
 /*--------------------------------------------------------------------------*/
 /* grblkddaskr */
-static void grblkddaskr(int *nequations, realtype *tOld, realtype *actual, int *ngc, realtype *res, double *dummy1, int *dummy2)
+static void grblkddaskr(int *nequations, realtype *tOld, realtype *actual, realtype *actualP, int *ngc, realtype *res, double *dummy1, int *dummy2)
 {
     double tx = 0.;
     int jj = 0;
@@ -4398,7 +4398,7 @@ static void grblkddaskr(int *nequations, realtype *tOld, realtype *actual, int *
 
     *ierr = 0;
     C2F(ierode).iero = 0;
-    zdoit(&tx, actual, actual, res);
+    zdoit(&tx, actual, actualP, res);
     C2F(ierode).iero = *ierr;
 
     if (*ierr == 0)

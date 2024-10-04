@@ -320,14 +320,14 @@ if (a > %eps * 1e5) then pause,end
 y0=1;t=2:6;t0=1;y0d=3;
 %DAEOPTIONS=list([],0,[],[],[],0,[],1,[],0,1,[],[],1);
 atol=1.d-6;rtol=0;ng=2;
-[yy,nn]=dae("root2",[y0,y0d],t0,t,rtol,atol,"res1",ng,"gr1","psol1","pjac1");
+[yy,nn]=dae("root2",[y0,y0d],t0,t,rtol,atol,"res1",ng,"grd1","psol1","pjac1");
 assert_checkalmostequal(nn(1),2.47,0.001);
 y0=yy(1,2);y0d=yy(2,2);t0=nn(1);t=[3,4,5,6];
-[yy,nn]=dae("root2",[y0,y0d],t0,t,rtol,atol,"res1",ng,"gr1","psol1","pjac1");
+[yy,nn]=dae("root2",[y0,y0d],t0,t,rtol,atol,"res1",ng,"grd1","psol1","pjac1");
 assert_checkalmostequal(nn(1),2.5,0.001);
 y0=yy(1,1);y0d=yy(2,1);t0=nn(1);t=[3,4,5,6];
 %DAEOPTIONS=list([],0,[],[],[],0,[],0,[],0,0,[],[],1);
-[yy,nn]=dae("root2",[y0,y0d],t0,t,rtol,atol,"res1",ng,"gr1");
+[yy,nn]=dae("root2",[y0,y0d],t0,t,rtol,atol,"res1",ng,"grd1");
 assert_checkalmostequal(nn(1),2.500009,0.001);
 
 // Same problem, but using macro for the derivative evaluation function 'res1'
@@ -393,13 +393,13 @@ endfunction
 y0=1;t=2:6;t0=1;y0d=3;
 %DAEOPTIONS=list([],0,[],[],[],0,[],1,[],0,1,[],[],1);
 atol=1.d-6;rtol=0;ng=2;
-[yy,nn]=dae("root2",[y0,y0d],t0,t,rtol,atol,res1,ng,"gr1",psol,pjac);
+[yy,nn]=dae("root2",[y0,y0d],t0,t,rtol,atol,res1,ng,"grd1",psol,pjac);
 assert_checkalmostequal(nn(1),2.47,0.001);
 y0=yy(1,2);y0d=yy(2,2);t0=nn(1);t=[3,4,5,6];
-[yy,nn]=dae("root2",[y0,y0d],t0,t,rtol,atol,res1,ng,"gr1",psol,pjac);
+[yy,nn]=dae("root2",[y0,y0d],t0,t,rtol,atol,res1,ng,"grd1",psol,pjac);
 assert_checkalmostequal(nn(1),2.5,0.001);
 y0=yy(1,1);y0d=yy(2,1);t0=nn(1);t=[3,4,5,6];
-[yy,nn]=dae("root2",[y0,y0d],t0,t,rtol,atol,res1,ng,"gr1",psol,pjac);
+[yy,nn]=dae("root2",[y0,y0d],t0,t,rtol,atol,res1,ng,"grd1",psol,pjac);
 assert_checkalmostequal(nn(1),2.53,0.001);
 //C
 //C-----------------------------------------------------------------------
@@ -415,20 +415,20 @@ assert_checkalmostequal(nn(1),2.53,0.001);
 %DAEOPTIONS=list([],0,[],[],[],0,[],0,[],0,0,[],[],1);
 rtol=[1.d-6;1.d-6];atol=[1.d-6;1.d-4];
 t0=0;y0=[2;0];y0d=[0;-2];t=[20:20:200];ng=1;
-[yy,nn]=dae("root2",[y0,y0d],t0,t,rtol,atol,"res2","jac2",ng,"gr2");
+[yy,nn]=dae("root2",[y0,y0d],t0,t,rtol,atol,"res2","jac2",ng,"grd2");
 assert_checkalmostequal(nn(1),81.163512,0.001);
 
 deff("[delta,ires]=res2(t,y,ydot)",...
 "ires=0;y1=y(1),y2=y(2),delta=[ydot-[y2;100*(1-y1*y1)*y2-y1]]")
-[yy,nn]=dae("root2",[y0,y0d],t0,t,rtol,atol,res2,"jac2",ng,"gr2");
+[yy,nn]=dae("root2",[y0,y0d],t0,t,rtol,atol,res2,"jac2",ng,"grd2");
 deff("J=jac2(t,y,ydot,c)","y1=y(1);y2=y(2);J=[c,-1;200*y1*y2+1,c-100*(1-y1*y1)]")
-[yy,nn]=dae("root2",[y0,y0d],t0,t,rtol,atol,res2,jac2,ng,"gr2");
+[yy,nn]=dae("root2",[y0,y0d],t0,t,rtol,atol,res2,jac2,ng,"grd2");
 deff("s=gr2(t,y,yd)","s=y(1)")
 [yy,nn]=dae("root2",[y0,y0d],t0,t,rtol,atol,res2,jac2,ng,gr2);
 
 // Same problem, with psol and pjac example routines
 %DAEOPTIONS=list([],0,[],[],[],0,[],1,[],0,1,[],[],1);
-[yy,nn]=dae("root2",[y0,y0d],t0,t,rtol,atol,res2,jac2,ng,"gr2","psol1","pjac1");
+[yy,nn]=dae("root2",[y0,y0d],t0,t,rtol,atol,res2,jac2,ng,"grd2","psol1","pjac1");
 assert_checkalmostequal(nn(1),81.163512,0.009);
 deff("s=gr2(t,y,yd)","s=y(1)")
 [yy,nn]=dae("root2",[y0,y0d],t0,t,rtol,atol,res2,jac2,ng,gr2,"psol1","pjac1");
@@ -464,7 +464,7 @@ function [wp, iwp, ires] = pjac(neq, t, y, ydot, h, cj, rewt, savr)
         ydot(i) = ypsave;
     end
 endfunction
-[yy,nn]=dae("root2",[y0,y0d],t0,t,rtol,atol,res2,jac2,ng,"gr2",psol,pjac);
+[yy,nn]=dae("root2",[y0,y0d],t0,t,rtol,atol,res2,jac2,ng,"grd2",psol,pjac);
 assert_checkalmostequal(nn(1),81.163512,0.003);
 deff("s=gr2(t,y,yd)","s=y(1)")
 [yy,nn]=dae("root2",[y0,y0d],t0,t,rtol,atol,res2,jac2,ng,gr2,psol,pjac);
@@ -472,9 +472,9 @@ assert_checkalmostequal(nn(1),81.163512,0.003);
 %DAEOPTIONS=list([],0,[],[],[],0,[],0,[],0,0,[],[],1);
 
 //           Hot Restart
-[yy,nn,hotd]=dae("root2",[y0,y0d],t0,t,rtol,atol,"res2","jac2",ng,"gr2");
+[yy,nn,hotd]=dae("root2",[y0,y0d],t0,t,rtol,atol,"res2","jac2",ng,"grd2");
 t01=nn(1);t=100:20:200;[pp,qq]=size(yy);y01=yy(2:3,qq);y0d1=yy(3:4,qq);
-[yy,nn,hotd]=dae("root2",[y01,y0d1],t01,t,rtol,atol,"res2","jac2",ng,"gr2",hotd);
+[yy,nn,hotd]=dae("root2",[y01,y0d1],t01,t,rtol,atol,"res2","jac2",ng,"grd2",hotd);
 assert_checkalmostequal(nn(1),162.57763,0.004);
 
 // cleanup memory

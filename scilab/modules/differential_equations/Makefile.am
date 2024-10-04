@@ -99,6 +99,7 @@ GATEWAY_FORTRAN_SOURCES = \
     sci_gateway/fortran/Ex-int3d.f \
     sci_gateway/fortran/Ex-intg.f \
     sci_gateway/fortran/Ex-dasrt.f \
+    sci_gateway/fortran/Ex-daskr.f \
     sci_gateway/fortran/Ex-dassl.f \
     sci_gateway/fortran/Ex-bvode.f
 

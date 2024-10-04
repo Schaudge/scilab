@@ -249,6 +249,7 @@ cd ..
   <ItemGroup>
     <ClCompile Include="..\cpp\banner.cpp" />
     <ClCompile Include="..\cpp\getfunctionsname.cpp" />
+    <ClCompile Include="..\cpp\getdeprecated.cpp" />
     <ClCompile Include="..\cpp\getmacrosname.cpp" />
     <ClCompile Include="..\cpp\getvariablesname.cpp" />
     <ClCompile Include="..\cpp\hash\crc32.cpp" />
@@ -323,6 +324,7 @@ cd ..
     <ClInclude Include="..\..\includes\exit_status.hxx" />
     <ClInclude Include="..\..\includes\freeArrayOfString.h" />
     <ClInclude Include="..\..\includes\getcommandlineargs.h" />
+    <ClInclude Include="..\..\includes\getdeprecated.hxx" />
     <ClInclude Include="..\..\includes\getfunctionsname.h" />
     <ClInclude Include="..\..\includes\getmacrosname.h" />
     <ClInclude Include="..\..\includes\getmaxMALLOC.h" />

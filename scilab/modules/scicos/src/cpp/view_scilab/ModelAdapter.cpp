@@ -684,29 +684,63 @@ struct ipar
             return true;
         }
 
-        // FIXME: ScilabInts should be managed there
-        if (v->getType() != types::InternalType::ScilabDouble)
+        if (v->getType() == types::InternalType::ScilabDouble)
+        {
+            return set(adaptor, v->getAs<types::Double>(), controller);
+        }
+        else if (v->getType() == types::InternalType::ScilabInt32)
+        {
+            return set(adaptor, v->getAs<types::Int32>(), controller);
+        }
+        else
         {
             get_or_allocate_logger()->log(LOG_ERROR, _("Wrong type for field %s.%s : Real matrix expected.\n"), "model", "ipar");
             return false;
         }
-        types::Double* current = v->getAs<types::Double>();
+    }
+
+    static bool set(ModelAdapter& adaptor, types::Int32* v, Controller& controller)
+    {
+        model::Block* adaptee = adaptor.getAdaptee();
+
         // Only allow vectors and empty matrices
-        if (!current->isVector() && current->getSize() != 0)
+        if (!v->isVector() && v->getSize() != 0)
         {
             get_or_allocate_logger()->log(LOG_ERROR, _("Wrong dimension for field %s.%s : m-by-1 matrix expected.\n"), "model", "ipar");
             return false;
         }
 
-        std::vector<int> ipar (current->getSize());
-        for (int i = 0; i < current->getSize(); ++i)
+        std::vector<int> ipar (v->getSize());
+        for (int i = 0; i < v->getSize(); ++i)
         {
-            if (floor(current->get(i)) != current->get(i))
+            ipar[i] = v->get(i);
+        }
+
+        controller.setObjectProperty(adaptee, IPAR, ipar);
+        return true;
+    }
+
+    static bool set(ModelAdapter& adaptor, types::Double* v, Controller& controller)
+    {
+        model::Block* adaptee = adaptor.getAdaptee();
+
+        // Only allow vectors and empty matrices
+        if (!v->isVector() && v->getSize() != 0)
+        {
+            get_or_allocate_logger()->log(LOG_ERROR, _("Wrong dimension for field %s.%s : m-by-1 matrix expected.\n"), "model", "ipar");
+            return false;
+        }
+
+        std::vector<int> ipar (v->getSize());
+        for (int i = 0; i < v->getSize(); ++i)
+        {
+            double value = v->get(i);
+            if (floor(value) != value)
             {
                 get_or_allocate_logger()->log(LOG_ERROR, _("Wrong value for field %s.%s : Integer values expected.\n"), "model", "ipar");
                 return false;
             }
-            ipar[i] = static_cast<int>(current->get(i));
+            ipar[i] = static_cast<int>(value);
         }
 
         controller.setObjectProperty(adaptee, IPAR, ipar);

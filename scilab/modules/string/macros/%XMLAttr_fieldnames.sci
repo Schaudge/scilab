@@ -9,5 +9,5 @@
 // along with this program.
 
 function s = %XMLAttr_fieldnames(a)
-    s = "";
+    s = "_id";
 endfunction

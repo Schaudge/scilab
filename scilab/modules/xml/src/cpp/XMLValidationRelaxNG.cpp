@@ -144,7 +144,11 @@ bool XMLValidationRelaxNG::validate(xmlTextReader * reader, std::string * error)
 
 const std::string XMLValidationRelaxNG::toString() const
 {
-    return std::string("XML Relax NG\nNo public information");
+    std::ostringstream oss;
+
+    oss << "  type = \"XML Relax NG\"" << std::endl;
+    oss << "  No public information";
+    return oss.str();
 }
 }
 

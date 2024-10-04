@@ -69,6 +69,7 @@ import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProp
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_TABLE__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_TAB__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_TEXT__;
+import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_TOOLTIPSTRING__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_VERTICALALIGNMENT__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_VALID__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_VISIBLE__;
@@ -636,6 +637,7 @@ public final class SwingView implements GraphicView {
         SwingViewMenu.update(uiMenuObject, __GO_UI_FOREGROUNDCOLOR__, GraphicController.getController().getProperty(id, __GO_UI_FOREGROUNDCOLOR__));
         SwingViewMenu.update(uiMenuObject, __GO_UI_LABEL__, GraphicController.getController().getProperty(id, __GO_UI_LABEL__));
         SwingViewMenu.update(uiMenuObject, __GO_UI_ICON__, GraphicController.getController().getProperty(id, __GO_UI_ICON__));
+        SwingViewMenu.update(uiMenuObject, __GO_UI_TOOLTIPSTRING__, GraphicController.getController().getProperty(id, __GO_UI_TOOLTIPSTRING__));
     }
 
     /**

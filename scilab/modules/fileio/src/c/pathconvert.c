@@ -70,26 +70,32 @@ wchar_t *pathconvertW(const wchar_t* wcpath, BOOL flagtrail, BOOL flagexpand, Pa
         {
             if (flagtrail)
             {
-                int currentLen = (int) wcslen(convertedPath);
-                if ( (convertedPath[currentLen - 1] != L'/') && (convertedPath[currentLen - 1] != L'\\') )
+                int currentLen = (int)wcslen(convertedPath);
+                if (currentLen > 0)
                 {
-                    convertedPath = (wchar_t*)REALLOC(convertedPath, (currentLen + 2) * sizeof(wchar_t));
-                    if (PTypelocal == WINDOWS_STYLE)
+                    if ((convertedPath[currentLen - 1] != L'/') && (convertedPath[currentLen - 1] != L'\\'))
                     {
-                        wcscat(convertedPath, L"\\");
-                    }
-                    else
-                    {
-                        wcscat(convertedPath, L"/");
+                        convertedPath = (wchar_t*)REALLOC(convertedPath, (currentLen + 2) * sizeof(wchar_t));
+                        if (PTypelocal == WINDOWS_STYLE)
+                        {
+                            wcscat(convertedPath, L"\\");
+                        }
+                        else
+                        {
+                            wcscat(convertedPath, L"/");
+                        }
                     }
                 }
             }
             else
             {
                 int currentLen = (int) wcslen(convertedPath);
-                if ( (convertedPath[currentLen - 1] == L'/') || (convertedPath[currentLen - 1] == L'\\') )
+                if (currentLen > 0)
                 {
-                    convertedPath[currentLen - 1] = L'\0';
+                    if ((convertedPath[currentLen - 1] == L'/') || (convertedPath[currentLen - 1] == L'\\'))
+                    {
+                        convertedPath[currentLen - 1] = L'\0';
+                    }
                 }
             }
 

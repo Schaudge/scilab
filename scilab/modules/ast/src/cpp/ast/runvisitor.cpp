@@ -80,7 +80,15 @@ void RunVisitorT<T>::visitprivate(const DoubleExp & e)
     CoverageInstance::invokeAndStartChrono((void*)&e);
     if (e.getConstant() == nullptr)
     {
-        types::Double *pdbl = new types::Double(e.getValue());
+        types::Double *pdbl;
+        if (e.isComplex())
+        {
+            pdbl = new types::Double(0.0, e.getValue());
+        }
+        else
+        {
+            pdbl = new types::Double(e.getValue());
+        }
         (const_cast<DoubleExp *>(&e))->setConstant(pdbl);
     }
     setResult(e.getConstant());

@@ -54,7 +54,7 @@ struct DDrWork_t
 
 // Derivative computation, root functions, preconditioner calculation and application
 typedef void (*DDASResFn) (realtype *tOld, realtype *y, realtype *yp, realtype *res, int *flag, realtype *dummy1, int *dummy2);
-typedef void (*DDASRootFn) (int *neq, realtype *tOld, realtype *y, int *ng, realtype *groot, realtype *dummy1, int *dummy2);
+typedef void (*DDASRootFn) (int *neq, realtype *tOld, realtype *y, realtype *yp, int *ng, realtype *groot, realtype *dummy1, int *dummy2);
 typedef void (*DDASJacPsolFn) (realtype *res, int *ires, int *neq, realtype *tOld, realtype *actual, realtype *actualP,
                                realtype *rewt, realtype *savr, realtype *wk, realtype *h, realtype *cj, realtype *wp,
                                int *iwp, int *ier, realtype *dummy1, int *dummy2);

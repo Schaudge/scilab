@@ -50,8 +50,9 @@ function fields=ghdl_fields(h)
     case "Fac3d";
         fields=["visible";"surface_mode";"foreground";"thickness";
         "mark_mode";"mark_style";"mark_size_unit";"mark_size";
-        "mark_foreground";"mark_background";"data";
-        "color_mode";"color_flag";"hiddencolor";"user_data"]';
+        "mark_foreground";"mark_background";"data";"color_mode";
+        "color_flag";"color_range";"cdata_mapping";"cdata_bounds";
+        "hiddencolor";"user_data"]';
     case "Compound"
         fields=["children";"user_data"]';
     case "Rectangle"

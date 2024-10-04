@@ -12,5 +12,6 @@ function s = %XMLDoc_fieldnames(b)
     s = [
     "url"
     "root"
+    "_id"
     ]
 endfunction

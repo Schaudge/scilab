@@ -91,6 +91,8 @@ assert_checkerror("[y, r] = dae(""root"", [y0; 0], t0, t, f2, 1, g);", refMsg);
 // ==================================================================
 // DASKR
 
+deff("r = g(t, y, yd)", "r = ones(y)");
+
 // -------------------------------
 // With initial yprime computation
 

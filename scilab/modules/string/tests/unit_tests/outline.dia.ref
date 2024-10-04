@@ -40,7 +40,17 @@ data.ml0 = mlist(["e"]);
 data.ml = mlist(["e","x"],1);
 jimport java.lang.String;
 data.j = String.new("Hello world");
-data.x = xmlReadStr("<root><a att=""foo"" rib=""bar""><b>Hello</b></a></root>");
+doc = xmlReadStr("<root><a xmlns:scilab=""http://www.scilab.org"">" + ..
+            "<b>Hello </b><scilab:c>World</scilab:c></a></root>");
+data.xmlDoc = doc; // xmlDoc
+data.xmlNs = xmlGetNsByHref(doc.root.children(1).children(2), "http://www.scilab.org"); // xmlNs
+e = xmlElement(doc, "c"); // xmlElem
+e.attributes.attr = "value";
+e.content = "!";
+data.xmlElem = e;
+data.xmlValid = xmlDTD("SCI/modules/xml/tests/unit_tests/library.dtd"); // xmlValid
+data.xmlList = doc.root.children;
+data.xmlSet = xmlXPath(doc, "//a"); // xmlSet
 data.dt = datetime(2024, 7, 4);
 data.DT = [datetime(2024, 7, 4) datetime(2024, 7, 4) datetime(2024, 7, 4)];
 data.dura = duration(1);
@@ -292,9 +302,54 @@ Hello world
  ans = (XMLDoc) with fields:
   url = "Undefined"
   root: (XMLElem)
+  _id = int32(0)
   (XMLDoc) with fields:
   url = "Undefined"
   root: (XMLElem)
+  _id = int32(0)
+ ans = (XML Namespace) with fields:
+  href = "http://www.scilab.org"
+  prefix = "scilab"
+  _id = int32(6)
+  href = "http://www.scilab.org"
+  prefix = "scilab"
+  _id = int32(6)
+ ans = (XMLElem) with fields:
+  name = "c"
+  namespace = []
+  type = "XML_ELEMENT_NODE"
+  parent = []
+  attributes: (XMLAttr)
+    attr = "value"
+  children: (XMLList)
+  content = "!"
+  line = 0
+  _id = int32(7)
+  name = "c"
+  namespace = []
+  type = "XML_ELEMENT_NODE"
+  parent = []
+  attributes: (XMLAttr)
+    attr = "value"
+  children: (XMLList)
+  content = "!"
+  line = 0
+  _id = int32(7)
+ ans = (XMLValid) with fields:
+XML DTD
+name: none
+external ID: 
+system ID: SCI/modules/xml/tests/unit_tests/library.dtd
+XML DTD
+name: none
+external ID: 
+system ID: SCI/modules/xml/tests/unit_tests/library.dtd
+ ans = (XMLList)
+  (1): (XMLElem)
+  (1): (XMLElem)
+ ans = (XMLSet)
+  (1): (XMLElem)
+  (1): (XMLElem)
  ans = [datetime]
    2024-07-04
    2024-07-04
@@ -591,7 +646,12 @@ data
   ml: (e mlist) with fields:
       x = 1
   j: (Java Object)
-  x: (XMLDoc) with fields:
+  xmlDoc: (XMLDoc) with fields:
+  xmlNs: (XML Namespace)
+  xmlElem: (XMLElem)
+  xmlValid: (XMLValid)
+  xmlList: (XMLList)
+  xmlSet: (XMLSet)
   dt: [datetime]
   DT: [1x3 datetime]
   dura: [duration]

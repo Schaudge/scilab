@@ -288,6 +288,7 @@ static void print_rules(const std::string& _parent, const double _value)
 %token <str>        ID              "identifier"
 %token <number>     VARINT          "integer"
 %token <number>     VARFLOAT        "float"
+%token <number>     COMPLEXNUM      "complex number"
 %token <number>     NUM             "number"
 
 %token <path>       PATH            "path"
@@ -1072,6 +1073,7 @@ NOT variable                %prec NOT       { $$ = new ast::NotExp(@$, *$2); pri
 | VARINT                %prec LISTABLE      { $$ = new ast::DoubleExp(@$, $1); print_rules("variable", $1);}
 | NUM                   %prec LISTABLE      { $$ = new ast::DoubleExp(@$, $1); print_rules("variable", $1);}
 | VARFLOAT                                  { $$ = new ast::DoubleExp(@$, $1); print_rules("variable", $1);}
+| COMPLEXNUM                                { $$ = (new ast::DoubleExp(@$, $1))->imag(); print_rules("variable", $1);}
 | STR                                       { $$ = new ast::StringExp(@$, *$1); delete $1;print_rules("variable", "STR");}
 | DOLLAR                                    { $$ = new ast::DollarVar(@$); print_rules("variable", "DOLLAR");}
 | BOOLTRUE              %prec BOOLTRUE      { $$ = new ast::BoolExp(@$, true); print_rules("variable", "BOOLTRUE");}
@@ -1225,8 +1227,10 @@ matrixOrCellColumns matrixOrCellColumnsBreak variable       %prec HIGHLEVEL {$1-
 */
 /* How to tell the column is now ended. */
 matrixOrCellColumnsBreak :
-matrixOrCellColumnsBreak COMMA  { /* !! Do Nothing !! */ print_rules("matrixOrCellColumnsBreak", "matrixOrCellColumnsBreak COMMA");}
-| COMMA                         { /* !! Do Nothing !! */ print_rules("matrixOrCellColumnsBreak", "COMMA");}
+matrixOrCellColumnsBreak COMMA      { /* !! Do Nothing !! */ print_rules("matrixOrCellColumnsBreak", "matrixOrCellColumnsBreak COMMA");}
+| matrixOrCellColumnsBreak SPACES   { /* !! Do Nothing !! */ print_rules("matrixOrCellColumnsBreak", "matrixOrCellColumnsBreak SPACES");}
+| COMMA                             { /* !! Do Nothing !! */ print_rules("matrixOrCellColumnsBreak", "COMMA");}
+| SPACES                            { /* !! Do Nothing !! */ print_rules("matrixOrCellColumnsBreak", "SPACES");}
 ;
 
 /*

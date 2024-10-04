@@ -1050,7 +1050,7 @@ types::Function::ReturnValue sci_daskr(types::typed_list &in, int _iRetCount, ty
                         info, rtol, atol, &idid, rwork, &rworksize,
                         iwork, &iworksize, rpar, ipar,
                         info[14] == 1 ? (void*)daskr_pjac : (void*)dassl_jac,
-                        daskr_psol, dasrt_g, &ng, root);
+                        daskr_psol, daskr_g, &ng, root);
 
             // values of idid says the same things that in ddasrt function,
             // except these two values.

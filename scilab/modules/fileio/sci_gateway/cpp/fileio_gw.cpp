@@ -74,7 +74,6 @@ int FileioModule::Load()
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"getdrives", &sci_getdrives, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"fprintfMat", &sci_fprintfMat, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"fscanfMat", &sci_fscanfMat, MODULE_NAME));
-    symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"getURL", &sci_getURL, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"movefile", &sci_movefile, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"tempname", &sci_tempname, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"decompress", &sci_decompress, MODULE_NAME));

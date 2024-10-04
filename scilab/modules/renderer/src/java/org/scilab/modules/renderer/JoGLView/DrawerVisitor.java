@@ -147,6 +147,7 @@ public class DrawerVisitor implements Visitor, Drawer, GraphicView {
     private final AxisDrawer axisDrawer;
     private final ArrowDrawer arrowDrawer;
     private final FecDrawer fecDrawer;
+    private final Fac3dDrawer fac3dDrawer;
     private final DatatipTextDrawer datatipTextDrawer;
     private DatatipDisplayModeManager datatipDisplayModeManager;
 
@@ -189,6 +190,7 @@ public class DrawerVisitor implements Visitor, Drawer, GraphicView {
         this.contouredObjectDrawer = new ContouredObjectDrawer(this, this.dataManager, this.markManager);
         this.legendDrawer = new LegendDrawer(this);
         this.fecDrawer = new FecDrawer(this);
+        this.fac3dDrawer = new Fac3dDrawer(this);
         this.colorMapTextureDataProvider = new ColorMapTextureDataProvider();
         this.datatipTextDrawer = new DatatipTextDrawer(canvas);
         this.datatipDisplayModeManager = new DatatipDisplayModeManager(component);
@@ -757,79 +759,15 @@ public class DrawerVisitor implements Visitor, Drawer, GraphicView {
      * -use common code for both the Fac3d and Plot3d visit methods
      *  as they are mostly similar.
      */
+        
+        
     @Override
-    public void visit(final Fac3d fac3d) {
+    public void visit(Fac3d fac3d) throws ObjectRemovedException {
         if (fac3d.isValid() && fac3d.getVisible()) {
             axesDrawer.enableClipping(currentAxes, fac3d.getClipProperty());
             try {
-                if (fac3d.getSurfaceMode()) {
-                    DefaultGeometry geometry = new DefaultGeometry();
-                    geometry.setVertices(dataManager.getVertexBuffer(fac3d.getIdentifier()));
-                    geometry.setNormals(dataManager.getNormalBuffer(fac3d.getIdentifier()));
-                    geometry.setIndices(dataManager.getIndexBuffer(fac3d.getIdentifier()));
-
-                    geometry.setPolygonOffsetMode(true);
-
-                    /* Front-facing triangles */
-                    Appearance appearance = new Appearance();
-                    appearance.setMaterial(LightingUtils.getMaterial(fac3d.getMaterial()));
-                    LightingUtils.setupLights(drawingTools.getLightManager(), currentAxes);
-
-                    if (fac3d.getColorMode() != 0) {
-                        geometry.setFillDrawingMode(Geometry.FillDrawingMode.TRIANGLES);
-                        /* Back-facing triangles */
-                        if (fac3d.getHiddenColor() > 0) {
-                            geometry.setFaceCullingMode(axesDrawer.getBackFaceCullingMode());
-                            Appearance backTrianglesAppearance = new Appearance();
-                            backTrianglesAppearance.setFillColor(ColorFactory.createColor(colorMap, fac3d.getHiddenColor()));
-                            drawingTools.draw(geometry, backTrianglesAppearance);
-
-                            // Now we will draw front face.
-                            geometry.setFaceCullingMode(axesDrawer.getFrontFaceCullingMode());
-                        } else {
-                            geometry.setFaceCullingMode(Geometry.FaceCullingMode.BOTH);
-                        }
-
-                        if (fac3d.getColorFlag() == 0) {
-                            appearance.setFillColor(ColorFactory.createColor(colorMap, Math.abs(fac3d.getColorMode())));
-                        } else if (fac3d.getColorFlag() > 0) {
-                            geometry.setTextureCoordinates(dataManager.getTextureCoordinatesBuffer(fac3d.getIdentifier()));
-                            appearance.setTexture(getColorMapTexture());
-                        } else {
-                            geometry.setColors(null);
-                        }
-                    } else {
-                        geometry.setFillDrawingMode(Geometry.FillDrawingMode.NONE);
-                    }
-
-                    if ((fac3d.getColorMode() >= 0) && (fac3d.getLineThickness() > 0.0)) {
-                        geometry.setLineDrawingMode(Geometry.LineDrawingMode.SEGMENTS);
-                        geometry.setWireIndices(dataManager.getWireIndexBuffer(fac3d.getIdentifier()));
-                        Integer lineColor = fac3d.getSelected() ? fac3d.getSelectedColor() : fac3d.getLineColor();
-                        appearance.setLineColor(ColorFactory.createColor(colorMap, lineColor));
-                        appearance.setLineWidth(fac3d.getLineThickness().floatValue());
-                    }
-
-                    drawingTools.draw(geometry, appearance);
-                    LightingUtils.setLightingEnable(drawingTools.getLightManager(), false);
-                }
-
-                if (fac3d.getMarkMode()) {
-                    Appearance appearance = null;
-                    if (fac3d.getLineThickness() > 0.0) {
-                        appearance = new Appearance();
-                        appearance.setLineWidth(fac3d.getLineThickness().floatValue());
-                    }
-
-                    Texture texture = markManager.getMarkSprite(fac3d, colorMap, appearance);
-                    ElementsBuffer positions = dataManager.getVertexBuffer(fac3d.getIdentifier());
-                    drawingTools.draw(texture, AnchorPosition.CENTER, positions);
-                }
-            } catch (ObjectRemovedException e) {
-                invalidate(fac3d, e);
+                fac3dDrawer.draw(fac3d);
             } catch (OutOfMemoryException e) {
-                invalidate(fac3d, e);
-            } catch (SciRendererException e) {
                 invalidate(fac3d, e);
             }
             axesDrawer.disableClipping(fac3d.getClipProperty());
@@ -1141,6 +1079,7 @@ public class DrawerVisitor implements Visitor, Drawer, GraphicView {
                     textManager.disposeAll();
                     axesDrawer.disposeAll();
                     fecDrawer.updateAll();
+                    fac3dDrawer.updateAll();
                     colorMapTextureDataProvider.update();
                     datatipTextDrawer.disposeAll();
                     textureManager.disposeAll();
@@ -1152,6 +1091,7 @@ public class DrawerVisitor implements Visitor, Drawer, GraphicView {
                     axesDrawer.update(id, property);
                     legendDrawer.update(id, property);
                     fecDrawer.update(id, property);
+                    fac3dDrawer.update(id, property);
                     datatipTextDrawer.update(id, property);
                 }
 
@@ -1323,6 +1263,7 @@ public class DrawerVisitor implements Visitor, Drawer, GraphicView {
         axesDrawer.dispose(id);
         legendDrawer.dispose(id);
         fecDrawer.dispose(id);
+        fac3dDrawer.dispose(id);
         textureManager.dispose(id);
         /*
          * Check we are deleting Figure managed by DrawerVisitor(this)

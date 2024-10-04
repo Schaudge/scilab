@@ -142,6 +142,7 @@ int set_cdata_mapping_property(void* _pvCtx, int iObj, void* _pvData, int valueT
 int set_surface_color_property(void* _pvCtx, int iObj, void* _pvData, int valueType, int nbRow, int nbCol);
 int set_triangles_property(void* _pvCtx, int iObj, void* _pvData, int valueType, int nbRow, int nbCol);
 int set_z_bounds_property(void* _pvCtx, int iObj, void* _pvData, int valueType, int nbRow, int nbCol);
+int set_cdata_bounds_property(void* _pvCtx, int iObj, void* _pvData, int valueType, int nbRow, int nbCol);
 int set_handle_visible_property(void* _pvCtx, int iObj, void* _pvData, int valueType, int nbRow, int nbCol);
 int set_callback_type_property(void* _pvCtx, int iObj, void* _pvData, int valueType, int nbRow, int nbCol);
 int set_hidden_axis_color_property(void* _pvCtx, int iObj, void* _pvData, int valueType, int nbRow, int nbCol);

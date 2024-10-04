@@ -18,5 +18,6 @@ function s = %XMLElem_fieldnames(b)
     "children"
     "content"
     "line"
+    "_id"
     ]
 endfunction

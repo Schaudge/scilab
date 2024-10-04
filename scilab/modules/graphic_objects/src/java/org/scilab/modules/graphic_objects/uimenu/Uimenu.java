@@ -24,9 +24,14 @@ import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProp
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_LABEL__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_MNEMONIC__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_SEPARATOR__;
+import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_TOOLTIPSTRING__;
+import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_TOOLTIPSTRING_SIZE__;
+
+import java.util.Arrays;
 
 import org.scilab.modules.graphic_objects.graphicObject.GraphicObject;
 import org.scilab.modules.graphic_objects.graphicObject.Visitor;
+import org.scilab.modules.graphic_objects.graphicObject.GraphicObject.UpdateStatus;
 
 /**
  * @author Vincent COUVERT
@@ -41,6 +46,7 @@ public class Uimenu extends GraphicObject {
     private String mnemonic = "";
     private String accelerator = "";
     private boolean separator;
+    private String[] tooltipString = {""};
 
     /**
      * All uimenu properties
@@ -53,7 +59,9 @@ public class Uimenu extends GraphicObject {
         ICON,
         LABEL,
         MNEMONIC,
-        SEPARATOR
+        SEPARATOR,
+        TOOLTIPSTRING,
+        TOOLTIPSTRING_SIZE
     };
 
     /**
@@ -97,6 +105,10 @@ public class Uimenu extends GraphicObject {
                 return UimenuProperty.MNEMONIC;
             case __GO_UI_SEPARATOR__ :
                 return UimenuProperty.SEPARATOR;
+            case __GO_UI_TOOLTIPSTRING__ :
+                return UimenuProperty.TOOLTIPSTRING;
+            case __GO_UI_TOOLTIPSTRING_SIZE__ :
+                return UimenuProperty.TOOLTIPSTRING_SIZE;
             default :
                 return super.getPropertyFromName(propertyName);
         }
@@ -125,6 +137,10 @@ public class Uimenu extends GraphicObject {
             propertyValue = getMnemonic();
         } else if (property == UimenuProperty.SEPARATOR) {
             propertyValue = getSeparator();
+        } else if (property == UimenuProperty.TOOLTIPSTRING) {
+            propertyValue = getTooltipString();
+        } else if (property == UimenuProperty.TOOLTIPSTRING_SIZE) {
+            return getTooltipString().length;
         } else {
             propertyValue = super.getProperty(property);
         }
@@ -154,6 +170,8 @@ public class Uimenu extends GraphicObject {
             setMnemonic((String) value);
         } else if (property == UimenuProperty.SEPARATOR) {
             setSeparator((Boolean) value);
+        } else if (property == UimenuProperty.TOOLTIPSTRING) {
+            setTooltipString((String[]) value);
         } else {
             return super.setProperty(property, value);
         }
@@ -294,6 +312,26 @@ public class Uimenu extends GraphicObject {
      */
     public UpdateStatus setSeparator(Boolean separator) {
         this.separator = separator;
+        return UpdateStatus.Success;
+    }
+
+    /**
+     * Get the tooltip string
+     * @return the tooltip string
+     */
+    public String[] getTooltipString() {
+        return this.tooltipString;
+    }
+
+    /**
+     * Set the tooltip string
+     * @param tooltipString the tooltip string
+     */
+    public UpdateStatus setTooltipString(String[] tooltipString) {
+        if (Arrays.equals(this.tooltipString, tooltipString)) {
+            return UpdateStatus.NoChange;
+        }
+        this.tooltipString = tooltipString;
         return UpdateStatus.Success;
     }
 
