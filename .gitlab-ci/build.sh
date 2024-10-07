@@ -104,6 +104,7 @@ cp -a README.md "/tmp/${SCI_VERSION_STRING}/"
 
 # copy thirdparties
 cp -a lib/thirdparty "/tmp/${SCI_VERSION_STRING}/lib/"
+cp -r include/* "/tmp/${SCI_VERSION_STRING}/include/"
 cp -a thirdparty "/tmp/${SCI_VERSION_STRING}/"
 cp -r java/jre/ "/tmp/${SCI_VERSION_STRING}/thirdparty/java"
 cp -a modules/tclsci/tcl "/tmp/${SCI_VERSION_STRING}/share/scilab/modules/tclsci/"

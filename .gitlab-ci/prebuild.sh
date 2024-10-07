@@ -39,6 +39,7 @@ create_folders() {
     mkdir -p "$INSTALLROOTDIR/thirdparty"
     mkdir -p "$INSTALLROOTDIR/lib"
     mkdir -p "$INSTALLROOTDIR/lib/thirdparty"
+    mkdir -p "$INSTALLROOTDIR/include"
     mkdir -p "$INSTALLROOTDIR/modules"
     mkdir -p "$INSTALLUSRDIR"
     mkdir -p "$INSTALLUSRDIR/lib"
@@ -236,17 +237,13 @@ make_binary_directory() {
     chmod 644 "$(find "$TCL_DIR/BWidget" -type f)"
     chmod 755 "$(find "$TCL_DIR/BWidget" -type d)"
 
-    #################
-    ##### EIGEN #####
-    #################
-    mkdir -p "$INSTALLROOTDIR/lib/Eigen/include/"
-    cp -R "$INSTALLUSRDIR/include/Eigen/" "$INSTALLROOTDIR/lib/Eigen/include/"
-
-    #########################
-    ##### NLOHMANN_JSON #####
-    #########################
-    mkdir -p "$INSTALLROOTDIR/lib/nlohmann/include/"
-    cp -R "$INSTALLUSRDIR/include/nlohmann/" "$INSTALLROOTDIR/lib/nlohmann/include/"
+    ####################
+    ##### INCLUDES #####
+    ####################
+    cp -R "$INSTALLUSRDIR/include/Eigen/" "$INSTALLROOTDIR/include/"
+    cp -R "$INSTALLUSRDIR/include/nlohmann/" "$INSTALLROOTDIR/include/"
+    cp -R "$INSTALLUSRDIR/include/libxml2/" "$INSTALLROOTDIR/include/"
+    cp -R "$INSTALLUSRDIR/include/pcre.h" "$INSTALLROOTDIR/include/"
 
     #####################################
     ##### lib/thirdparty/ directory #####
@@ -361,6 +358,8 @@ make_binary_directory() {
     cp -d "$INSTALLUSRDIR"/lib/libcppserver.so "$LIBTHIRDPARTYDIR/"
     rm -f "$LIBTHIRDPARTYDIR"/libcppcommon.so*
     cp -d "$INSTALLUSRDIR"/lib/libcppcommon.so "$LIBTHIRDPARTYDIR/"
+    # cppserver include
+    cp -R "$INSTALLUSRDIR/include/cppserver/" "$INSTALLROOTDIR/include/"
 
     # GCC libs could be there but are prefixed with "sci" to avoid clashing
     # system libraries static linked into scilab libraries instead.  This
@@ -492,7 +491,7 @@ make_archive() {
 
     export XZ_OPT="-9T0"
     tar -cJf "prerequirements-${SCI_VERSION_STRING}.bin.${ARCH}.tar.xz" -C "$INSTALLROOTDIR" \
-        -- java lib modules thirdparty usr version.txt
+        -- java lib include modules thirdparty usr version.txt
 }
 
 ####################
