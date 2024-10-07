@@ -336,14 +336,14 @@ Hello world
   line = 0
   _id = int32(7)
  ans = (XMLValid) with fields:
-XML DTD
-name: none
-external ID: 
-system ID: SCI/modules/xml/tests/unit_tests/library.dtd
-XML DTD
-name: none
-external ID: 
-system ID: SCI/modules/xml/tests/unit_tests/library.dtd
+  type = "XML DTD"
+  name = "none"
+  external ID =  ""
+  system ID =  "SCI\modules\xml\tests\unit_tests\library.dtd"
+  type = "XML DTD"
+  name = "none"
+  external ID =  ""
+  system ID =  "SCI\modules\xml\tests\unit_tests\library.dtd"
  ans = (XMLList)
   (1): (XMLElem)
   (1): (XMLElem)
