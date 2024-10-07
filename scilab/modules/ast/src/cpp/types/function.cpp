@@ -328,7 +328,7 @@ Function::ReturnValue WrapFunction::call(typed_list &in, optional_list &opt, int
     GatewayStruct gStr;
     gStr.m_iIn = inSize + optSize;
     gStr.m_iOut = std::max(0, _iRetCount);
-    _iRetCount = std::max(1, _iRetCount);
+    _iRetCount = std::max(0, _iRetCount);
 
     //copy input parameter to prevent calling gateway modifies input data
     typed_list inCopy;
