@@ -82,7 +82,9 @@ public class SwingScilabCanvas extends JPanel implements SimpleCanvas {
         super(new PanelLayout());
         this.figure = figure;
 
-        drawableComponent = SwingScilabCanvasImpl.getInstance().createOpenGLComponent();
+        int[] antiAliasingNumSamples = {0, 2, 4, 8, 16};
+        int numSamples = antiAliasingNumSamples[figure.getAntialiasing().intValue()];
+        drawableComponent = SwingScilabCanvasImpl.getInstance().createOpenGLComponent(numSamples);
 
         drawableComponent.setEnabled(true);
         drawableComponent.setVisible(true);

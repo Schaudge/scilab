@@ -20,8 +20,8 @@ import org.scilab.forge.scirenderer.buffers.ElementsBuffer;
 import org.scilab.forge.scirenderer.clipping.ClippingManager;
 import org.scilab.forge.scirenderer.implementation.jogl.clipping.JoGLClippingManager;
 import org.scilab.forge.scirenderer.implementation.jogl.drawer.JoGLShapeDrawer;
+import org.scilab.forge.scirenderer.implementation.jogl.drawer.JoGLShapeDrawer.AntiAliasing;
 import org.scilab.forge.scirenderer.implementation.jogl.lightning.JoGLLightManager;
-import org.scilab.forge.scirenderer.implementation.jogl.JoGLPixelDrawingMode;
 import org.scilab.forge.scirenderer.lightning.LightManager;
 import org.scilab.forge.scirenderer.renderer.Renderer;
 import org.scilab.forge.scirenderer.shapes.appearance.Appearance;
@@ -211,12 +211,22 @@ public class JoGLDrawingTools implements DrawingTools {
 
     @Override
     public void draw(Geometry geometry) throws SciRendererException {
-        JoGLShapeDrawer.getDrawer().draw(this, geometry, Appearance.getDefault());
+        JoGLShapeDrawer.getDrawer().draw(this, geometry, Appearance.getDefault(), AntiAliasing.ON);
+    }
+
+    @Override
+    public void draw(Geometry geometry, AntiAliasing eAntiAliasing) throws SciRendererException {
+        JoGLShapeDrawer.getDrawer().draw(this, geometry, Appearance.getDefault(), eAntiAliasing);
     }
 
     @Override
     public void draw(Geometry geometry, Appearance appearance) throws SciRendererException {
         JoGLShapeDrawer.getDrawer().draw(this, geometry, appearance);
+    }
+
+    @Override
+    public void draw(Geometry geometry, Appearance appearance, AntiAliasing eAntiAliasing) throws SciRendererException {
+        JoGLShapeDrawer.getDrawer().draw(this, geometry, appearance, eAntiAliasing);
     }
 
     @Override

@@ -97,7 +97,7 @@ long getHandle(int UID)
     return 0;
 }
 /*--------------------------------------------------------------------------*/
-int createFigure(int iDockable, int iMenubarType, int iToolbarType, int iDefaultAxes, int iVisible)
+int createFigure(int iDockable, int iMenubarType, int iToolbarType, int iDefaultAxes, int iVisible, int iAntialiasing)
 {
     return 0;
 }

@@ -15,7 +15,6 @@
 package org.scilab.forge.scirenderer.implementation.g2d.texture;
 
 import org.scilab.forge.scirenderer.implementation.g2d.motor.G2DStroke;
-import org.scilab.forge.scirenderer.implementation.g2d.texture.G2DTextureManager;
 import org.scilab.forge.scirenderer.shapes.appearance.Appearance;
 import org.scilab.forge.scirenderer.shapes.appearance.Color;
 import org.scilab.forge.scirenderer.texture.Texture;
@@ -28,9 +27,11 @@ import javax.swing.JLabel;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.font.TextLayout;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Map;
 
 /**
  *
@@ -214,6 +215,13 @@ public class G2DTextureDrawingTools implements TextureDrawingTools {
         if (textEntity != null && textEntity.isValid()) {
             if (textEntity.isTextAntiAliased()) {
                 g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+                Map<?, ?> desktopHints = (Map<?, ?>) Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");
+                if (desktopHints != null) {
+                    Object textAntialiasing = desktopHints.get(RenderingHints.KEY_TEXT_ANTIALIASING);
+                    if (textAntialiasing != null) {
+                        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, textAntialiasing);
+                    }
+                }
             } else {
                 g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
             }

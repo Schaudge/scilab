@@ -58,14 +58,11 @@ th = 0:2:360;
 xe = 4*cosd(th); xe = (0.1:0.05:1)' * xe;
 ye = sind(th);   ye = (0.1:0.05:1)' * ye;
 
-usecanvas(%t);
-
 i = 0;
 for aa = ['off' '4x' '16x']
-    f = scf(i);
+    f = figure("anti_aliasing", aa);
     f.axes_size = [300 600];
     f.figure_position(1) = 100+300*i;
-    f.anti_aliasing = aa;  // <<<<<<<<
     clf
     subplot(2,1,1)
     plot2d(x,y)

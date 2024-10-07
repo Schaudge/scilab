@@ -94,7 +94,7 @@ import org.xml.sax.Attributes;
 
 public class GOBuilder {
     public static Integer figureBuilder(GraphicController controller, Attributes attributes) {
-        Integer fig = Builder.createFigure(false, 0, 0, false, false);
+        Integer fig = Builder.createFigure(false, 0, 0, false, false, 3 /* 8x by default */);
         String item = null;
 
         // id

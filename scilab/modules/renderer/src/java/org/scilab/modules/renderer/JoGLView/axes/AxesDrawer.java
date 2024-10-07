@@ -18,6 +18,7 @@ package org.scilab.modules.renderer.JoGLView.axes;
 import org.scilab.forge.scirenderer.DrawingTools;
 import org.scilab.forge.scirenderer.SciRendererException;
 import org.scilab.forge.scirenderer.clipping.ClippingPlane;
+import org.scilab.forge.scirenderer.implementation.jogl.drawer.JoGLShapeDrawer.AntiAliasing;
 import org.scilab.forge.scirenderer.shapes.appearance.Appearance;
 import org.scilab.forge.scirenderer.shapes.geometry.Geometry.FaceCullingMode;
 import org.scilab.forge.scirenderer.tranformations.DegenerateMatrixException;
@@ -415,7 +416,7 @@ public class AxesDrawer {
         if (axes.getFilled()) {
             Appearance appearance = new Appearance();
             appearance.setFillColor(ColorFactory.createColor(colorMap, axes.getBackground()));
-            drawingTools.draw(geometries.getCubeGeometry(), appearance);
+            drawingTools.draw(geometries.getCubeGeometry(), appearance, AntiAliasing.ON);
             drawingTools.clearDepthBuffer();
         }
     }
@@ -439,7 +440,7 @@ public class AxesDrawer {
                 appearance.setLineColor(ColorFactory.createColor(colorMap, axes.getHiddenAxisColor()));
                 appearance.setLineWidth(axes.getLineThickness().floatValue());
                 appearance.setLinePattern(HIDDEN_BORDER_PATTERN.asPattern());
-                drawingTools.draw(geometries.getHiddenBoxBorderGeometry(), appearance);
+                drawingTools.draw(geometries.getHiddenBoxBorderGeometry(), appearance, AntiAliasing.ON);
             }
 
             if (boxed != Box.BoxType.HIDDEN_AXES) {
@@ -450,14 +451,14 @@ public class AxesDrawer {
                 appearance.setLineColor(ColorFactory.createColor(colorMap, axes.getLineColor()));
                 appearance.setLineWidth(axes.getLineThickness().floatValue());
                 appearance.setLinePattern(axes.getLine().getLineStyle().asPattern());
-                drawingTools.draw(geometries.getBoxBorderGeometry(), appearance);
+                drawingTools.draw(geometries.getBoxBorderGeometry(), appearance, AntiAliasing.ON);
 
 
                 if (boxed != Box.BoxType.BACK_HALF) {
                     /**
                      * Draw front part of box.
                      */
-                    drawingTools.draw(geometries.getFrontBoxBorderGeometry(), appearance);
+                    drawingTools.draw(geometries.getFrontBoxBorderGeometry(), appearance, AntiAliasing.ON);
                 }
             }
         }

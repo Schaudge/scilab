@@ -66,7 +66,7 @@ jmethodID jintcreateHiddenLabeljintintID; // cache method id
 jmethodID jbooleanisAxesRedrawingjintintID; // cache method id
 jmethodID jintcreateLabeljintintjintintID; // cache method id
 jmethodID jintcreateNewFigureWithAxesID; // cache method id
-jmethodID jintcreateFigurejbooleanbooleanjintintjintintjbooleanbooleanjbooleanbooleanID; // cache method id
+jmethodID jintcreateFigurejbooleanbooleanjintintjintintjbooleanbooleanjbooleanbooleanjintintID; // cache method id
 jmethodID voidcloneMenusjintintjintintID; // cache method id
 jmethodID jintcloneAxesModeljintintID; // cache method id
 jmethodID jintcreateSubWinjintintID; // cache method id
@@ -158,7 +158,7 @@ static int createLabel(JavaVM * jvm_, int parent, int type);
 
 static int createNewFigureWithAxes(JavaVM * jvm_);
 
-static int createFigure(JavaVM * jvm_, bool dockable, int menubarType, int toolbarType, bool defaultAxes, bool visible);
+static int createFigure(JavaVM * jvm_, bool dockable, int menubarType, int toolbarType, bool defaultAxes, bool visible, int antiAliasing);
 
 static void cloneMenus(JavaVM * jvm_, int model, int newParent);
 

@@ -317,7 +317,7 @@ public final class Builder {
         }
     }
 
-    public final static int createFigure(boolean dockable, int menubarType, int toolbarType, boolean defaultAxes, boolean visible) {
+    public final static int createFigure(boolean dockable, int menubarType, int toolbarType, boolean defaultAxes, boolean visible, int antialiasing) {
         GraphicController controller = GraphicController.getController();
         Integer figModel = GraphicModel.getFigureModel().getIdentifier();
         Integer figId = controller.cloneObject(figModel, false);
@@ -327,6 +327,7 @@ public final class Builder {
         figure.setToolbar(toolbarType);
         figure.setVisible(visible);
         figure.setDefaultAxes(defaultAxes);
+        figure.setAntialiasing(antialiasing);
 
         controller.objectCreated(figId);
 

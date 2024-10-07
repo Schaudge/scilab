@@ -1733,12 +1733,17 @@ static int import_handle_figure(hid_t dataset, int parent, int version)
     getHandleBool(dataset, "dockable", &dockable);
     int default_axes = 0;
     getHandleBool(dataset, "default_axes", &default_axes);
+    int antiAliasing = 0;
+    if (getHandleInt(dataset, "anti_aliasing", &antiAliasing) != 0)
+    {
+        antiAliasing = 0; // No anti-aliasing by default
+    }
 
     //force visible true FOR DEBUG ONLY
     int visible = 0;
 
     //create a new hidden figure without default_axes.
-    int fig = createFigure(dockable, menubar, toolbar, 0, visible);
+    int fig = createFigure(dockable, menubar, toolbar, 0, visible, antiAliasing);
     //set default axes properties after creation to avoid useless axes creation
     setGraphicObjectProperty(fig, __GO_DEFAULT_AXES__, &default_axes, jni_bool, 1);
 

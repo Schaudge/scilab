@@ -20,6 +20,7 @@ import org.scilab.forge.scirenderer.Canvas;
 import org.scilab.forge.scirenderer.DrawingTools;
 import org.scilab.forge.scirenderer.SciRendererException;
 import org.scilab.forge.scirenderer.buffers.ElementsBuffer;
+import org.scilab.forge.scirenderer.implementation.jogl.drawer.JoGLShapeDrawer.AntiAliasing;
 import org.scilab.forge.scirenderer.ruler.DefaultRulerModel;
 import org.scilab.forge.scirenderer.ruler.RulerDrawer;
 import org.scilab.forge.scirenderer.ruler.RulerDrawingResult;
@@ -386,7 +387,7 @@ public class AxesRulerDrawer {
                 gridGeometry.setFillDrawingMode(Geometry.FillDrawingMode.NONE);
                 gridGeometry.setLineDrawingMode(Geometry.LineDrawingMode.SEGMENTS);
                 gridGeometry.setVertices(vertexBuffer);
-                drawingTools.draw(gridGeometry, gridAppearance);
+                drawingTools.draw(gridGeometry, gridAppearance, AntiAliasing.OFF);
                 drawingTools.getTransformationManager().getModelViewStack().pop();
             }
         }
@@ -429,7 +430,7 @@ public class AxesRulerDrawer {
                 gridGeometry.setFillDrawingMode(Geometry.FillDrawingMode.NONE);
                 gridGeometry.setLineDrawingMode(Geometry.LineDrawingMode.SEGMENTS);
                 gridGeometry.setVertices(vertexBuffer);
-                drawingTools.draw(gridGeometry, gridAppearance);
+                drawingTools.draw(gridGeometry, gridAppearance, AntiAliasing.OFF);
                 drawingTools.getTransformationManager().getModelViewStack().pop();
             }
         }
@@ -473,7 +474,7 @@ public class AxesRulerDrawer {
                     gridGeometry.setFillDrawingMode(Geometry.FillDrawingMode.NONE);
                     gridGeometry.setLineDrawingMode(Geometry.LineDrawingMode.SEGMENTS);
                     gridGeometry.setVertices(vertexBuffer);
-                    drawingTools.draw(gridGeometry, gridAppearance);
+                    drawingTools.draw(gridGeometry, gridAppearance, AntiAliasing.OFF);
                     drawingTools.getTransformationManager().getModelViewStack().pop();
                 }
             }

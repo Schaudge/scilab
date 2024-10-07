@@ -16,6 +16,7 @@ package org.scilab.forge.scirenderer;
 
 import org.scilab.forge.scirenderer.buffers.ElementsBuffer;
 import org.scilab.forge.scirenderer.clipping.ClippingManager;
+import org.scilab.forge.scirenderer.implementation.jogl.drawer.JoGLShapeDrawer.AntiAliasing;
 import org.scilab.forge.scirenderer.lightning.LightManager;
 import org.scilab.forge.scirenderer.renderer.Renderer;
 import org.scilab.forge.scirenderer.shapes.appearance.Appearance;
@@ -86,12 +87,29 @@ public interface DrawingTools {
     void draw(Geometry geometry) throws SciRendererException;
 
     /**
+     * Draw the given geometry with default appearance.
+     * @param geometry the geometry to draw.
+     * @param eAntiAliasing anti-aliasing mode
+     * @throws SciRendererException if the draw is not possible.
+     */
+    void draw(Geometry geometry, AntiAliasing eAntiAliasing) throws SciRendererException;
+
+    /**
      * Draw the given geometry.
      * @param geometry the geometry to draw.
      * @param appearance the appearance to use.
      * @throws SciRendererException if the draw is not possible.
      */
     void draw(Geometry geometry, Appearance appearance) throws SciRendererException;
+
+    /**
+     * Draw the given geometry.
+     * @param geometry the geometry to draw.
+     * @param appearance the appearance to use.
+     * @param eAntiAliasing anti-aliasing mode
+     * @throws SciRendererException if the draw is not possible.
+     */
+    void draw(Geometry geometry, Appearance appearance, AntiAliasing eAntiAliasing) throws SciRendererException;
 
     /**
      * Draw the texture on XY plane in current coordinate.

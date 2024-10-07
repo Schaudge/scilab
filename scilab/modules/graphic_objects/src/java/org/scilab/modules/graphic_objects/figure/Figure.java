@@ -345,7 +345,7 @@ public class Figure extends GraphicObject implements AxesContainer {
          */
         public RenderingMode() {
             pixelDrawingMode = PixelDrawingMode.COPY;
-            antialiasing = 0;
+            antialiasing = 3; // 8x by default
             immediateDrawing = true;
         }
 

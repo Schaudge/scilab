@@ -30,6 +30,7 @@ import org.scilab.forge.scirenderer.DrawingTools;
 import org.scilab.forge.scirenderer.SciRendererException;
 import org.scilab.forge.scirenderer.buffers.BuffersManager;
 import org.scilab.forge.scirenderer.buffers.ElementsBuffer;
+import org.scilab.forge.scirenderer.implementation.jogl.drawer.JoGLShapeDrawer.AntiAliasing;
 import org.scilab.forge.scirenderer.ruler.graduations.Graduations;
 import org.scilab.forge.scirenderer.ruler.graduations.UserDefinedFormat;
 import org.scilab.forge.scirenderer.shapes.appearance.Appearance;
@@ -318,7 +319,7 @@ public class RulerDrawer {
                 for (PositionedSprite positionedSprite : spritesList) {
                     drawingTools.draw(positionedSprite.getSprite(), AnchorPosition.CENTER, positionedSprite.getWindowPosition());
                 }
-                drawingTools.draw(geometry, appearance);
+                drawingTools.draw(geometry, appearance, AntiAliasing.OFF);
             } catch (SciRendererException ignored) {
             }
             drawingTools.getTransformationManager().useSceneCoordinate();

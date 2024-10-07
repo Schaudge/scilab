@@ -577,6 +577,7 @@ public class XMLDomLoader {
         boolean menubarVisisble = true;
         boolean toolbarVisisble = true;
         boolean infobarVisisble = true;
+        Integer antiAliasing = 3; // 8x by default
 
         NamedNodeMap attr = node.getAttributes();
         //dockable
@@ -642,8 +643,14 @@ public class XMLDomLoader {
             infobarVisisble = getAttributeAsBoolean(tempnode.getNodeValue());
             attr.removeNamedItem("infobar_visible");
         }
+        //anti_aliasing
+        tempnode = attr.getNamedItem("anti_aliasing");
+        if (tempnode != null) {
+            antiAliasing = getAttributeAsInteger(tempnode.getNodeValue());
+            attr.removeNamedItem("anti_aliasing");
+        }
 
-        Integer fig = Builder.createFigure(dockable, menubar, toolbar, default_axes, false);
+        Integer fig = Builder.createFigure(dockable, menubar, toolbar, default_axes, false, antiAliasing);
         //set new id
         int newId = ScilabNativeView.ScilabNativeView__getValidDefaultFigureId();
 

@@ -24,8 +24,8 @@ import org.scilab.forge.scirenderer.shapes.appearance.Appearance;
 import org.scilab.forge.scirenderer.shapes.geometry.Geometry;
 import org.scilab.forge.scirenderer.texture.Texture;
 import org.scilab.forge.scirenderer.lightning.LightManager;
-import org.scilab.forge.scirenderer.shapes.appearance.Material;
 
+import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -35,6 +35,11 @@ import java.nio.IntBuffer;
  * @author Pierre Lando
  */
 public final class JoGLShapeDrawer {
+    
+    public enum AntiAliasing {
+        OFF,
+        ON
+    }
 
     private static JoGLShapeDrawer drawer;
 
@@ -56,13 +61,24 @@ public final class JoGLShapeDrawer {
     }
 
     /**
-     * Draw a given geometry with given appearance.
+     * Draw a given geometry with given appearance and anti-aliasing activated.
      * @param drawingTools the drawing tools.
      * @param geometry the geometry.
      * @param appearance the appearance.
      * @throws org.scilab.forge.scirenderer.SciRendererException if the draw is not possible.
      */
     public void draw(JoGLDrawingTools drawingTools, Geometry geometry, Appearance appearance) throws SciRendererException {
+        draw(drawingTools, geometry, appearance, AntiAliasing.ON);
+    }
+    
+    /**
+     * Draw a given geometry with given appearance.
+     * @param drawingTools the drawing tools.
+     * @param geometry the geometry.
+     * @param appearance the appearance.
+     * @throws org.scilab.forge.scirenderer.SciRendererException if the draw is not possible.
+     */
+    public void draw(JoGLDrawingTools drawingTools, Geometry geometry, Appearance appearance, AntiAliasing eAntiAliasing) throws SciRendererException {
         GL2 gl = drawingTools.getGl().getGL2();
         gl.glFrontFace(GL2.GL_CCW);
         switch (geometry.getFaceCullingMode()) {
@@ -84,7 +100,7 @@ public final class JoGLShapeDrawer {
         gl.glEnable(GL2.GL_COLOR_LOGIC_OP);
         gl.glLogicOp(drawingTools.getGLPixelDrawingMode());
         if (drawingTools.getCanvas().getJoGLParameters().useVBO()) {
-            vboDrawing(drawingTools, geometry, appearance);
+            vboDrawing(drawingTools, geometry, appearance, eAntiAliasing);
         } else {
             directDrawing(drawingTools, geometry, appearance);
         }
@@ -100,10 +116,41 @@ public final class JoGLShapeDrawer {
      * @param appearance the current appearance.
      * @throws org.scilab.forge.scirenderer.SciRendererException if the draw is not possible.
      */
-    private void vboDrawing(JoGLDrawingTools drawingTools, Geometry geometry, Appearance appearance) throws SciRendererException {
+    private void vboDrawing(JoGLDrawingTools drawingTools, Geometry geometry, Appearance appearance, AntiAliasing eAntiAliasing) throws SciRendererException {
         final GL2 gl = drawingTools.getGl().getGL2();
         final JoGLBuffersManager buffersManager = drawingTools.getCanvas().getBuffersManager();
         final Texture texture = appearance.getTexture();
+
+        gl.glEnable(GL.GL_DEPTH_TEST);
+        gl.glDepthFunc(GL.GL_LEQUAL);
+        gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+        gl.glAlphaFunc(GL.GL_GREATER, 0.0f);
+        gl.glEnable(GL2.GL_NORMALIZE);
+        gl.glEnable(GL.GL_BLEND);
+        
+        if (eAntiAliasing == AntiAliasing.ON) {
+            gl.glEnable(GL.GL_MULTISAMPLE);
+            boolean isMultiSampleAvailable = false;
+            if (gl.glGetError() == 0) {
+                int[] sampleBufferEnabled = {0};
+                gl.glGetIntegerv(GL.GL_SAMPLE_BUFFERS, sampleBufferEnabled, 0);
+                int[] numSamples = {0};
+                gl.glGetIntegerv(GL.GL_SAMPLES, numSamples, 0);
+                if (sampleBufferEnabled[0] == 1 && numSamples[0] > 0) {
+                    isMultiSampleAvailable = true;
+                }
+            }
+            if (!isMultiSampleAvailable) {
+                gl.glDisable(GL.GL_MULTISAMPLE);
+                gl.glGetError();
+                //gl.glEnable(GL.GL_LINE_SMOOTH);
+                //gl.glHint (GL.GL_LINE_SMOOTH_HINT, GL.GL_NICEST);               
+            }
+        } else {
+            gl.glDisable(GL2.GL_MULTISAMPLE);
+            gl.glGetError();
+            gl.glDisable(GL.GL_LINE_SMOOTH);
+        }
 
         int verticesNumber = buffersManager.bindVertexBuffer(gl, geometry.getVertices());
         if (verticesNumber == 0) {

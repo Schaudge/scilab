@@ -18,7 +18,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.Stroke;
 import java.awt.image.BufferedImage;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -32,6 +31,7 @@ import org.scilab.forge.scirenderer.implementation.g2d.G2DCanvas;
 import org.scilab.forge.scirenderer.implementation.g2d.buffers.G2DElementsBuffer;
 import org.scilab.forge.scirenderer.implementation.g2d.texture.G2DTextureDrawingTools;
 import org.scilab.forge.scirenderer.implementation.g2d.texture.G2DTextureManager;
+import org.scilab.forge.scirenderer.implementation.jogl.drawer.JoGLShapeDrawer.AntiAliasing;
 import org.scilab.forge.scirenderer.shapes.appearance.Appearance;
 import org.scilab.forge.scirenderer.shapes.geometry.Geometry;
 import org.scilab.forge.scirenderer.shapes.geometry.Geometry.FaceCullingMode;
@@ -41,8 +41,6 @@ import org.scilab.forge.scirenderer.tranformations.Transformation;
 import org.scilab.forge.scirenderer.tranformations.Vector3d;
 import org.scilab.forge.scirenderer.tranformations.Vector3f;
 
-import org.scilab.forge.scirenderer.lightning.Light;
-import org.scilab.forge.scirenderer.lightning.LightManager;
 import org.scilab.forge.scirenderer.implementation.g2d.lighting.G2DLight;
 import org.scilab.forge.scirenderer.implementation.g2d.lighting.G2DLightManager;
 import org.scilab.forge.scirenderer.shapes.appearance.Material;
@@ -165,6 +163,17 @@ public class Motor3D {
      * @param appearance the appearance to use
      */
     public void draw(DrawingTools drawingTools, Geometry geometry, Appearance appearance) {
+        draw(drawingTools, geometry, appearance, AntiAliasing.ON);
+    }
+    
+    /**
+     * Add the geometry to the scene
+     * @param drawingTools the DrawingTools
+     * @param geometry the geometry to draw
+     * @param appearance the appearance to use
+     */
+    public void draw(DrawingTools drawingTools, Geometry geometry, Appearance appearance, AntiAliasing eAntiAliasing) {
+        // TODO manage eAntiAliasing
         setFaceCullingMode(geometry.getFaceCullingMode());
         FloatBuffer vertexBuffer = geometry.getVertices().getData();
 
@@ -255,6 +264,11 @@ public class Motor3D {
     }
 
     public void draw(DrawingTools drawingTools, Texture texture, AnchorPosition anchor, Vector3d position, double rotationAngle) {
+        draw(drawingTools, texture, anchor, position, rotationAngle, AntiAliasing.ON);
+    }
+    
+    public void draw(DrawingTools drawingTools, Texture texture, AnchorPosition anchor, Vector3d position, double rotationAngle, AntiAliasing eAntiAliasing) {
+        // TODO manage eAntiAliasing
         try {
             add(new SpritedRectangle(transf.project(position), texture, anchor, textureDrawingTools, rotationAngle, null, null));
         } catch (InvalidPolygonException e) { }

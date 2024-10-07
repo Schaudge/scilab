@@ -17,6 +17,10 @@ package org.scilab.forge.scirenderer.implementation.g2d;
 import org.scilab.forge.scirenderer.DrawingTools;
 import org.scilab.forge.scirenderer.SciRendererException;
 import org.scilab.forge.scirenderer.buffers.ElementsBuffer;
+import org.scilab.forge.scirenderer.implementation.g2d.clipping.G2DClippingManager;
+import org.scilab.forge.scirenderer.implementation.g2d.lighting.G2DLightManager;
+import org.scilab.forge.scirenderer.implementation.g2d.motor.Motor3D;
+import org.scilab.forge.scirenderer.implementation.jogl.drawer.JoGLShapeDrawer.AntiAliasing;
 import org.scilab.forge.scirenderer.lightning.LightManager;
 import org.scilab.forge.scirenderer.renderer.Renderer;
 import org.scilab.forge.scirenderer.shapes.appearance.Appearance;
@@ -28,11 +32,6 @@ import org.scilab.forge.scirenderer.tranformations.TransformationManager;
 import org.scilab.forge.scirenderer.tranformations.TransformationManagerImpl;
 import org.scilab.forge.scirenderer.tranformations.TransformationManagerListener;
 import org.scilab.forge.scirenderer.tranformations.Vector3d;
-
-import org.scilab.forge.scirenderer.implementation.g2d.G2DCanvas;
-import org.scilab.forge.scirenderer.implementation.g2d.clipping.G2DClippingManager;
-import org.scilab.forge.scirenderer.implementation.g2d.motor.Motor3D;
-import org.scilab.forge.scirenderer.implementation.g2d.lighting.G2DLightManager;
 
 /**
  *
@@ -115,12 +114,22 @@ public class G2DDrawingTools implements DrawingTools {
 
     @Override
     public void draw(Geometry geometry) throws SciRendererException {
-        g2dCanvas.getMotor3D().draw(this, geometry, Appearance.getDefault());
+        g2dCanvas.getMotor3D().draw(this, geometry, Appearance.getDefault(), AntiAliasing.ON);
+    }
+
+    @Override
+    public void draw(Geometry geometry, AntiAliasing eAntiAliasing) throws SciRendererException {
+        g2dCanvas.getMotor3D().draw(this, geometry, Appearance.getDefault(), eAntiAliasing);
     }
 
     @Override
     public void draw(Geometry geometry, Appearance appearance) throws SciRendererException {
-        g2dCanvas.getMotor3D().draw(this, geometry, appearance);
+        g2dCanvas.getMotor3D().draw(this, geometry, appearance, AntiAliasing.ON);
+    }
+
+    @Override
+    public void draw(Geometry geometry, Appearance appearance, AntiAliasing eAntiAliasing) throws SciRendererException {
+        g2dCanvas.getMotor3D().draw(this, geometry, appearance, eAntiAliasing);
     }
 
     @Override

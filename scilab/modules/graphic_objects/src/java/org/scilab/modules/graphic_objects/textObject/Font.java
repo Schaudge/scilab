@@ -47,7 +47,7 @@ public class Font {
         this.style = 6;
         this.size = 1.0;
         this.color = -1;
-        this.fractional = false;
+        this.fractional = true;
     }
 
     /**

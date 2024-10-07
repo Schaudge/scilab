@@ -332,7 +332,6 @@ public final class JoGLCanvas implements Canvas, GLEventListener {
             drawingTools.glSynchronize(gl);
 
             if (mainDrawer != null) {
-                gl.glEnable(GL2.GL_DEPTH_TEST);
                 gl.glDepthFunc(GL2.GL_LEQUAL); // Set to less equal to allow last drawn object to be on the top.
 
                 if ((antiAliasingLevel > 0) && (antiAliasingLevel < 5) && (drawingTools.getGLCapacity().isAccumulationBufferPresent())) {

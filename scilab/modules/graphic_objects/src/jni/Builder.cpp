@@ -93,7 +93,7 @@ jintcreateHiddenLabeljintintID=NULL;
 jbooleanisAxesRedrawingjintintID=NULL;
 jintcreateLabeljintintjintintID=NULL;
 jintcreateNewFigureWithAxesID=NULL;
-jintcreateFigurejbooleanbooleanjintintjintintjbooleanbooleanjbooleanbooleanID=NULL;
+jintcreateFigurejbooleanbooleanjintintjintintjbooleanbooleanjbooleanbooleanjintintID = NULL;
 voidcloneMenusjintintjintintID=NULL;
 jintcloneAxesModeljintintID=NULL;
 jintcreateSubWinjintintID=NULL;
@@ -140,7 +140,7 @@ jintcreateHiddenLabeljintintID=NULL;
 jbooleanisAxesRedrawingjintintID=NULL;
 jintcreateLabeljintintjintintID=NULL;
 jintcreateNewFigureWithAxesID=NULL;
-jintcreateFigurejbooleanbooleanjintintjintintjbooleanbooleanjbooleanbooleanID=NULL;
+jintcreateFigurejbooleanbooleanjintintjintintjbooleanbooleanjbooleanbooleanjintintID = NULL;
 voidcloneMenusjintintjintintID=NULL;
 jintcloneAxesModeljintintID=NULL;
 jintcreateSubWinjintintID=NULL;
@@ -331,7 +331,7 @@ return res;
 
 }
 
-int Builder::createFigure (JavaVM * jvm_, bool dockable, int menubarType, int toolbarType, bool defaultAxes, bool visible){
+int Builder::createFigure (JavaVM * jvm_, bool dockable, int menubarType, int toolbarType, bool defaultAxes, bool visible, int antiAliasing){
 
 JNIEnv * curEnv = NULL;
 jvm_->AttachCurrentThread(reinterpret_cast<void **>(&curEnv), NULL);
@@ -340,8 +340,8 @@ if ( cls == NULL) {
 throw GiwsException::JniCallMethodException(curEnv);
 }
 
-static jmethodID jintcreateFigurejbooleanbooleanjintintjintintjbooleanbooleanjbooleanbooleanID = curEnv->GetStaticMethodID(cls, "createFigure", "(ZIIZZ)I" ) ;
-if (jintcreateFigurejbooleanbooleanjintintjintintjbooleanbooleanjbooleanbooleanID == NULL) {
+static jmethodID jintcreateFigurejbooleanbooleanjintintjintintjbooleanbooleanjbooleanbooleanjintintID = curEnv->GetStaticMethodID(cls, "createFigure", "(ZIIZZI)I" ) ;
+if (jintcreateFigurejbooleanbooleanjintintjintintjbooleanbooleanjbooleanbooleanjintintID == NULL) {
 throw GiwsException::JniMethodNotFoundException(curEnv, "createFigure");
 }
 
@@ -351,7 +351,7 @@ jboolean defaultAxes_ = (static_cast<bool>(defaultAxes) ? JNI_TRUE : JNI_FALSE);
 
 jboolean visible_ = (static_cast<bool>(visible) ? JNI_TRUE : JNI_FALSE);
 
-                        jint res =  static_cast<jint>( curEnv->CallStaticIntMethod(cls, jintcreateFigurejbooleanbooleanjintintjintintjbooleanbooleanjbooleanbooleanID ,dockable_, menubarType, toolbarType, defaultAxes_, visible_));
+                        jint res =  static_cast<jint>( curEnv->CallStaticIntMethod(cls, jintcreateFigurejbooleanbooleanjintintjintintjbooleanbooleanjbooleanbooleanjintintID ,dockable_, menubarType, toolbarType, defaultAxes_, visible_, antiAliasing));
                         if (curEnv->ExceptionCheck()) {
 throw GiwsException::JniCallMethodException(curEnv);
 }

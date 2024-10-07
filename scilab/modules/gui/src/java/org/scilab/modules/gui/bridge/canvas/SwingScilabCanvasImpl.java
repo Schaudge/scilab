@@ -204,6 +204,10 @@ public class SwingScilabCanvasImpl {
     private final class SafeGLJPanel extends GLJPanel {
         private static final long serialVersionUID = -6166986369022555750L;
 
+        public SafeGLJPanel(GLCapabilities glCapabilities) {
+            super(glCapabilities);
+        }
+
         public void display() {
             try {
                 super.display();
@@ -245,11 +249,19 @@ public class SwingScilabCanvasImpl {
         return me;
     }
 
-    public Component createOpenGLComponent() {
+    public Component createOpenGLComponent(int numSamples) {
         if (enableGLCanvas) {
             return new SafeGLCanvas();
         } else {
-            return new SafeGLJPanel();
+            GLProfile profile = GLProfile.getDefault();
+            GLCapabilities capabilities = new GLCapabilities(profile);
+            if (numSamples == 0) {
+                capabilities.setSampleBuffers(false);
+            } else {
+                capabilities.setSampleBuffers(true);
+                capabilities.setNumSamples(numSamples);
+            }
+            return new SafeGLJPanel(capabilities);
         }
     }
 

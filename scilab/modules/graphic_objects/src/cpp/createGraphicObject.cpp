@@ -144,13 +144,13 @@ int createNewFigureWithAxes()
     return id;
 }
 
-int createFigure(int iDockable, int iMenubarType, int iToolbarType, int iDefaultAxes, int iVisible)
+int createFigure(int iDockable, int iMenubarType, int iToolbarType, int iDefaultAxes, int iVisible, int iAntiAliasing)
 {
     int id = 0;
     int iUserDataSize = 0;
     int* piUserDataSize = &iUserDataSize;
 
-    id = Builder::createFigure(getScilabJavaVM(), iDockable != 0, iMenubarType, iToolbarType, iDefaultAxes != 0, iVisible != 0);
+    id = Builder::createFigure(getScilabJavaVM(), iDockable != 0, iMenubarType, iToolbarType, iDefaultAxes != 0, iVisible != 0, iAntiAliasing);
 
     //clone gdf user_data is needed
     getGraphicObjectProperty(getFigureModel(), __GO_USER_DATA_SIZE__, jni_int, (void**)&piUserDataSize);

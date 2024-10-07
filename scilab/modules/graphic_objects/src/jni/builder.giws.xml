@@ -37,6 +37,7 @@
           <parameter name="toolbarType" type="int" />
           <parameter name="defaultAxes" type="boolean" />
           <parameter name="visible" type="boolean" />
+          <parameter name="antiAliasing" type="int" />
         </method>
         <method name="cloneMenus" returnType="void" modifier="static">
             <parameter name="model" type="int"/>
