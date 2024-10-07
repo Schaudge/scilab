@@ -75,6 +75,10 @@ function tbx_build_gateway_clean(languages,path)
     end
 
     cleanertxt = [cleanertxt,
+    "chdir(sci_gateway_dir);",
+    "if isfile(""loader_gateway.sce"") then",
+    "    mdelete(""loader_gateway.sce"");",
+    "end",
     "chdir(current_dir);",
     "clear sci_gateway_dir current_dir;"];
 
