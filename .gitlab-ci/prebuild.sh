@@ -267,8 +267,8 @@ make_binary_directory() {
     rm -f "$LIBTHIRDPARTYDIR"/libcrypto.*
     cp -d "$INSTALLUSRDIR"/lib/libcrypto.* "$LIBTHIRDPARTYDIR/"
 
-    rm -f "$LIBTHIRDPARTYDIR"/libcurl.*
-    cp -d "$INSTALLUSRDIR"/lib/libcurl.* "$LIBTHIRDPARTYDIR/"
+    rm -f "$LIBTHIRDPARTYDIR"/libscicurl.*
+    cp -d "$INSTALLUSRDIR"/lib/libscicurl.* "$LIBTHIRDPARTYDIR/"
 
     rm -f "$LIBTHIRDPARTYDIR"/libarchive.*
     cp -d "$INSTALLUSRDIR"/lib/libarchive.* "$LIBTHIRDPARTYDIR/"
@@ -627,7 +627,7 @@ build_zlib() {
 
     cp -a "$INSTALL_DIR"/include/* "$INSTALLUSRDIR/include/"
 
-    # Rename libz to scilibz
+    # Rename libz to libsciz
     cp "$INSTALL_DIR/lib/libz.so.$ZLIB_VERSION" "$INSTALLUSRDIR/lib/libsciz.so.$ZLIB_VERSION"
     cd "$INSTALLUSRDIR/lib" || exit 1
     ln -sf libsciz.so.$ZLIB_VERSION libz.so
@@ -649,7 +649,7 @@ build_lzma() {
 
     cp -a "$INSTALL_DIR"/include/* "$INSTALLUSRDIR/include/"
 
-    # Rename liblzma to sciliblzma
+    # Rename liblzma to libscilzma
     cp "$INSTALL_DIR/lib/liblzma.so.$XZ_VERSION" "$INSTALLUSRDIR/lib/libscilzma.so.$XZ_VERSION"
     cd "$INSTALLUSRDIR/lib" || exit 1
     ln -sf "libscilzma.so.$XZ_VERSION" liblzma.so
@@ -837,10 +837,18 @@ build_curl() {
 
     # shellcheck disable=SC2016
     sed -i -e 's|^prefix=.*|prefix=$( cd -- "$(dirname "$0")" >/dev/null 2>\&1 ; pwd -P )/..|' "$INSTALL_DIR/bin/curl-config"
+    sed -i -e 's|lcurl|lscicurl|' "$INSTALL_DIR/bin/curl-config"
     cp "$INSTALL_DIR/bin/curl-config" "$INSTALLUSRDIR/bin/"
 
-    cp -a "$INSTALL_DIR"/lib/*.so* "$INSTALLUSRDIR/lib/"
     cp -a "$INSTALL_DIR"/include/* "$INSTALLUSRDIR/include/"
+
+    # Rename libcurl to libscicurl
+    cp "$INSTALL_DIR/lib/libcurl.so.4.5.0" "$INSTALLUSRDIR/lib/libscicurl.so.4.5.0"
+    cd "$INSTALLUSRDIR/lib" || exit 1
+    ln -sf "libscicurl.so.4.5.0" libcurl.so
+    ln -sf "libscicurl.so.4.5.0" libscicurl.so.4
+    ln -sf libscicurl.so.4 libscicurl.so
+    patchelf --set-soname libscicurl.so.4 "libscicurl.so.4.5.0"
 }
 
 build_libarchive() {
