@@ -86,28 +86,8 @@ function atomsDownload(url_in,file_out,md5sum)
     elseif atomsGetConfig("downloadTool") == "httpdownload" & getos() == "Windows" then
         HTTPDOWNLOAD = %T;
     else
-        // Default values according to platform
-        if LINUX | SOLARIS | BSD then
-
-            // Need to detect under Linux platforms
-            [rep, stat, err] = unix_g("curl --version");
-
-            if stat == 0 then
-                CURL = %T;
-                atomsSetConfig("downloadTool", "curl");
-            else
-                [rep, stat, err] = unix_g("wget --version");
-                if stat == 0 then
-                    WGET = %T;
-                    atomsSetConfig("downloadTool", "wget");
-                else
-                    error(msprintf(gettext("%s: Neither Wget or Curl found: Please install one of them\n"), "atomsDownload"));
-                end
-            end
-        elseif MACOSX | getos() == "Windows" then
-            CURL = %T;
-            atomsSetConfig("downloadTool", "curl");
-        end
+        // Default value if not configured
+        HTTP_GET = %T;
     end
 
     // Build the command
