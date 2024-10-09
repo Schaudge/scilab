@@ -29,6 +29,7 @@
 #include <atomic>
 
 #include "visitor.hxx"
+#include "location.hxx"
 
 extern "C"
 {
@@ -428,7 +429,7 @@ public :
     struct WhereEntry
     {
         int m_line;
-        int m_absolute_line;
+        const Location m_Location;
         int m_scope_lvl;
         types::Callable* call;
         const std::wstring* m_file_name;
@@ -438,16 +439,18 @@ public :
     struct WhereErrorEntry
     {
         int m_line;
-        int m_absolute_line;
+        Location m_Location;
         int m_first_line;
+        int m_scope_lvl;
         std::wstring m_function_name;
         std::wstring m_file_name;
     };
 
-    static void where_begin(int _iLineNum, int _iLineLocation, types::Callable* _pCall);
+    static void where_begin(int _iLineNum, types::Callable* _pCall, const Location& _Location = Location());
     static void where_end();
     static const std::vector<WhereEntry>& getWhere();
-    static void fillWhereError(int _iErrorLine);
+    static const std::vector<WhereErrorEntry>& getWhereError();
+    static void fillWhereError(const Location& _Location);
     static void resetWhereError();
 
     static void macroFirstLine_begin(int _iLine);
@@ -542,11 +545,14 @@ public :
     static bool increaseRecursion();
     static void decreaseRecursion();
 private:
-    static bool webMode;
+    static bool m_flushStream;
+    static bool m_startSwingView;
     static bool m_isatty;
 public:
-    static bool getWebMode();
-    static void setWebMode(bool);
+    static bool flushStream();
+    static void setFlushStream(bool);
+    static bool startSwingView();
+    static void setStartSwingView(bool);
     static bool isatty();
     static void setisatty(bool);
 };

@@ -21,9 +21,6 @@
     <ClInclude Include="includes\webtools_gw.hxx">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\cpp\json.hxx">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\cpp\sciCurl.hxx">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -33,6 +30,21 @@
     <ClInclude Include="includes\gw_webtools.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sci_gateway\cpp\gateway_tools.hxx">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\json.hxx">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\tcpClient.hxx">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\tcpServer.hxx">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\tcpSession.hxx">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="webtools.rc">
@@ -40,25 +52,25 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\cpp\json.cpp">
+    <Xml Include="sci_gateway\webtools_gateway.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="sci_gateway\c\sci_url_split.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\cpp\sciCurl.cpp">
+    <ClCompile Include="sci_gateway\cpp\gateway_tools.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\cpp\webtools.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\c\DllmainWebtools.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\c\jsmn.c">
+    <ClCompile Include="sci_gateway\cpp\sci_fromJSON.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sci_gateway\cpp\sci_http_delete.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sci_gateway\cpp\sci_http_get.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sci_gateway\cpp\sci_http_patch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sci_gateway\cpp\sci_http_post.cpp">
@@ -73,22 +85,7 @@
     <ClCompile Include="sci_gateway\cpp\sci_http_upload.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sci_gateway\cpp\sci_fromJSON.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sci_gateway\cpp\sci_toJSON.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sci_gateway\cpp\checkCommonOpt.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sci_gateway\cpp\setPreferences.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sci_gateway\cpp\sci_http_patch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sci_gateway\c\sci_url_split.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sci_gateway\cpp\sci_url_decode.cpp">
@@ -97,8 +94,32 @@
     <ClCompile Include="sci_gateway\cpp\sci_url_encode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Xml Include="sci_gateway\webtools_gateway.xml" />
+    <ClCompile Include="sci_gateway\cpp\webtools_gw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\c\DllmainWebtools.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\c\jsmn.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cpp\json.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cpp\sciCurl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cpp\webtools.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tcpServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tcpClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tcpSession.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

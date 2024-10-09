@@ -108,10 +108,11 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>./includes;./src/c;./src/cpp;../../libs/intl;../../libs/libxml2;../../libs/curl/include;../ast/includes/exps;../ast/includes/types;../ast/includes/ast;../ast/includes/system_env;../ast/includes/operations;../api_scilab/includes;../localization/includes;../core/includes;../string/includes;../dynamic_link/includes;../output_stream/includes;../fileio/includes;../preferences/includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./includes;./src/c;./src/cpp;./sci_gateway/cpp;../../libs/intl;../../libs/libxml2;../../libs/curl/include;../ast/includes/exps;../ast/includes/types;../ast/includes/ast;../ast/includes/system_env;../ast/includes/operations;../api_scilab/includes;../localization/includes;../core/includes;../string/includes;../dynamic_link/includes;../output_stream/includes;../fileio/includes;../preferences/includes;../console/includes;../history_manager/includes;../completion/includes;../graphics/includes;../ast/includes/symbol;../../libs/cppserver/include/cppserver;../../libs/cppserver/include/cppcommon;../../libs/cppserver/include/asio;../../libs/cppserver/include/fmt;../../libs/cppserver/include/openssl;../slint/includes;..\..\libs\pcre;../../libs/nlohmann/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>FORDLL;_DEBUG;_WINDOWS;_USRDLL;WEBTOOLS_EXPORTS;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <PreLinkEvent>
       <Message>Make dependencies</Message>
@@ -166,13 +167,14 @@
     <ClCompile>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>./includes;./src/c;./src/cpp;../../libs/intl;../../libs/libxml2;../../libs/curl/include;../ast/includes/exps;../ast/includes/types;../ast/includes/ast;../ast/includes/system_env;../ast/includes/operations;../api_scilab/includes;../localization/includes;../core/includes;../string/includes;../dynamic_link/includes;../output_stream/includes;../fileio/includes;../preferences/includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./includes;./src/c;./src/cpp;./sci_gateway/cpp;../../libs/intl;../../libs/libxml2;../../libs/curl/include;../ast/includes/exps;../ast/includes/types;../ast/includes/ast;../ast/includes/system_env;../ast/includes/operations;../api_scilab/includes;../localization/includes;../core/includes;../string/includes;../dynamic_link/includes;../output_stream/includes;../fileio/includes;../preferences/includes;../console/includes;../history_manager/includes;../completion/includes;../graphics/includes;../ast/includes/symbol;../../libs/cppserver/include/cppserver;../../libs/cppserver/include/cppcommon;../../libs/cppserver/include/asio;../../libs/cppserver/include/fmt;../../libs/cppserver/include/openssl;../slint/includes;..\..\libs\pcre;../../libs/nlohmann/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>FORDLL;NDEBUG;_WINDOWS;_USRDLL;WEBTOOLS_EXPORTS;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <WarningLevel>Level3</WarningLevel>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <PreLinkEvent>
       <Message>Make dependencies</Message>
@@ -195,35 +197,18 @@
   <ItemGroup>
     <ClInclude Include="includes\dynlib_webtools.h" />
     <ClInclude Include="includes\gw_webtools.h" />
+    <ClInclude Include="includes\json.hxx" />
+    <ClInclude Include="includes\tcpClient.hxx" />
+    <ClInclude Include="includes\tcpServer.hxx" />
+    <ClInclude Include="includes\tcpSession.hxx" />
     <ClInclude Include="includes\webtools.h" />
     <ClInclude Include="includes\webtools_gw.hxx" />
-    <ClInclude Include="src\cpp\json.hxx" />
+    <ClInclude Include="sci_gateway\cpp\gateway_tools.hxx" />
     <ClInclude Include="src\cpp\sciCurl.hxx" />
     <ClInclude Include="src\c\jsmn.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="webtools.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="sci_gateway\cpp\checkCommonOpt.cpp" />
-    <ClCompile Include="sci_gateway\cpp\setPreferences.cpp" />
-    <ClCompile Include="sci_gateway\cpp\sci_http_delete.cpp" />
-    <ClCompile Include="sci_gateway\cpp\sci_fromJSON.cpp" />
-    <ClCompile Include="sci_gateway\cpp\sci_http_get.cpp" />
-    <ClCompile Include="sci_gateway\cpp\sci_http_patch.cpp" />
-    <ClCompile Include="sci_gateway\cpp\sci_http_post.cpp" />
-    <ClCompile Include="sci_gateway\cpp\sci_http_put.cpp" />
-    <ClCompile Include="sci_gateway\cpp\sci_http_put_post.cpp" />
-    <ClCompile Include="sci_gateway\cpp\sci_toJSON.cpp" />
-    <ClCompile Include="sci_gateway\cpp\sci_http_upload.cpp" />
-    <ClCompile Include="sci_gateway\c\sci_url_split.c" />
-    <ClCompile Include="sci_gateway\cpp\sci_url_decode.cpp" />
-    <ClCompile Include="sci_gateway\cpp\sci_url_encode.cpp" />
-    <ClCompile Include="src\cpp\json.cpp" />
-    <ClCompile Include="src\cpp\sciCurl.cpp" />
-    <ClCompile Include="src\cpp\webtools.cpp" />
-    <ClCompile Include="src\c\DllmainWebtools.c" />
-    <ClCompile Include="src\c\jsmn.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\api_scilab\api_scilab.vcxproj">
@@ -253,6 +238,30 @@
   </ItemGroup>
   <ItemGroup>
     <Xml Include="sci_gateway\webtools_gateway.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="sci_gateway\cpp\gateway_tools.cpp" />
+    <ClCompile Include="sci_gateway\cpp\sci_fromJSON.cpp" />
+    <ClCompile Include="sci_gateway\cpp\sci_http_delete.cpp" />
+    <ClCompile Include="sci_gateway\cpp\sci_http_get.cpp" />
+    <ClCompile Include="sci_gateway\cpp\sci_http_patch.cpp" />
+    <ClCompile Include="sci_gateway\cpp\sci_http_post.cpp" />
+    <ClCompile Include="sci_gateway\cpp\sci_http_put.cpp" />
+    <ClCompile Include="sci_gateway\cpp\sci_http_put_post.cpp" />
+    <ClCompile Include="sci_gateway\cpp\sci_http_upload.cpp" />
+    <ClCompile Include="sci_gateway\cpp\sci_toJSON.cpp" />
+    <ClCompile Include="sci_gateway\cpp\sci_url_decode.cpp" />
+    <ClCompile Include="sci_gateway\cpp\sci_url_encode.cpp" />
+    <ClCompile Include="sci_gateway\cpp\webtools_gw.cpp" />
+    <ClCompile Include="sci_gateway\c\sci_url_split.c" />
+    <ClCompile Include="src\cpp\json.cpp" />
+    <ClCompile Include="src\cpp\sciCurl.cpp" />
+    <ClCompile Include="src\cpp\webtools.cpp" />
+    <ClCompile Include="src\c\DllmainWebtools.c" />
+    <ClCompile Include="src\c\jsmn.c" />
+    <ClCompile Include="tcpClient.cpp" />
+    <ClCompile Include="tcpServer.cpp" />
+    <ClCompile Include="tcpSession.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

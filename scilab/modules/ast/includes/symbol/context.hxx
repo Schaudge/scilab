@@ -92,6 +92,9 @@ public:
     int getLibrariesList(std::list<std::wstring>& lst);
     int getVarsToVariableBrowser(std::list<Variable*>& lst);
     int getLibsToVariableBrowser(std::list<Library*>& lst);
+    int getScopedVars(std::list<Variable*>& lst, int iLevel);
+    int getGlobalVars(std::list<Variable*>& lst);
+    int getLocalVars(std::list<Variable*>& lst, int iLevel = -1);
     /* global functions */
 
     /*return global variable visibility status*/

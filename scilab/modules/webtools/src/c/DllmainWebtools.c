@@ -22,6 +22,29 @@
 #pragma comment(lib, "../../bin/libcurl.lib")
 #pragma comment(lib, "../../bin/libxml2.lib")
 #pragma comment(lib, "../../bin/libintl.lib")
+// cppserver
+#ifdef _DEBUG
+#pragma comment(lib, "../../libs/cppserver/lib/cppserverd.lib")
+#pragma comment(lib, "../../libs/cppserver/lib/cppcommond.lib")
+#pragma comment(lib, "../../libs/cppserver/lib/asiod.lib")
+#pragma comment(lib, "../../libs/cppserver/lib/fmtd.lib")
+#else
+#pragma comment(lib, "../../libs/cppserver/lib/cppserver.lib")
+#pragma comment(lib, "../../libs/cppserver/lib/cppcommon.lib")
+#pragma comment(lib, "../../libs/cppserver/lib/asio.lib")
+#pragma comment(lib, "../../libs/cppserver/lib/fmt.lib")
+#endif
+#pragma comment(lib, "../../libs/cppserver/lib/libcrypto.lib")
+#pragma comment(lib, "../../libs/cppserver/lib/libssl.lib")
+#pragma comment(lib, "Ws2_32.lib")
+#pragma comment(lib, "Crypt32.Lib")
+#pragma comment(lib, "MsWSock.Lib")
+#pragma comment(lib, "Dbghelp.lib ")
+#pragma comment(lib, "RpcRT4.Lib")
+#pragma comment(lib, "UserEnv.Lib")
+#pragma comment(lib, "Advapi32.lib")
+#pragma comment(lib, "User32.lib")
+#pragma comment(lib, "Shlwapi.lib")
 /*--------------------------------------------------------------------------*/
 //for Visual Leak Detector in debug compilation mode
 //#define DEBUG_VLD

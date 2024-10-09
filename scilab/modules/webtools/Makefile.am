@@ -28,13 +28,14 @@ GATEWAY_CPP_SOURCES = \
     sci_gateway/cpp/sci_url_decode.cpp \
     sci_gateway/cpp/sci_toJSON.cpp \
     sci_gateway/cpp/sci_fromJSON.cpp \
-    sci_gateway/cpp/checkCommonOpt.cpp \
-    sci_gateway/cpp/setPreferences.cpp
+    sci_gateway/cpp/gateway_tools.cpp \
+    sci_gateway/cpp/webtools_gw.cpp
 
 libsciwebtools_la_CPPFLAGS= \
     -I$(srcdir)/includes/ \
     -I$(srcdir)/src/cpp/ \
     -I$(srcdir)/src/c/ \
+    -I$(srcdir)/sci_gateway/cpp/ \
     -I$(top_srcdir)/modules/ast/includes/ast/ \
     -I$(top_srcdir)/modules/ast/includes/exps/ \
     -I$(top_srcdir)/modules/ast/includes/operations/ \
@@ -49,11 +50,15 @@ libsciwebtools_la_CPPFLAGS= \
     -I$(top_srcdir)/modules/dynamic_link/includes \
     -I$(top_srcdir)/modules/api_scilab/includes \
     -I$(top_srcdir)/modules/preferences/includes \
+    -I$(top_srcdir)/usr/include/cppserver/cppserver \
+    -I$(top_srcdir)/usr/include/cppserver/cppcommon \
+    -I$(top_srcdir)/usr/include/cppserver/asio \
+    -I$(top_srcdir)/usr/include/cppserver/fmt \
     $(CURL_CFLAGS) \
     $(XML_FLAGS) \
     $(AM_CPPFLAGS)
 
-libsciwebtools_algo_la_CPPFLAGS = $(libsciwebtools_la_CPPFLAGS)
+libsciwebtools_algo_la_CPPFLAGS = $(libsciwebtools_la_CPPFLAGS) -Wno-unused-parameter
 
 pkglib_LTLIBRARIES = libsciwebtools.la
 noinst_LTLIBRARIES = libsciwebtools-algo.la
@@ -62,7 +67,7 @@ libsciwebtools_algo_la_LDFLAGS = $(CURL_LIBS)
 libsciwebtools_algo_la_SOURCES = $(WEBTOOLS_CPP_SOURCES) $(WEBTOOLS_C_SOURCES)
 
 libsciwebtools_la_SOURCES = $(GATEWAY_CPP_SOURCES) $(GATEWAY_C_SOURCES)
-libsciwebtools_la_LIBADD = libsciwebtools-algo.la
+libsciwebtools_la_LIBADD = libsciwebtools-algo.la -lasio -lfmt -lcppcommon -lcppserver
 
 # For the code check (splint)
 CHECK_SRC= $(libsciwebtools_la_SOURCES)
@@ -82,11 +87,14 @@ libsciwebtools_la_root_DATA =  license.txt
 libsciwebtools_la_etcdir = $(mydatadir)/etc
 libsciwebtools_la_etc_DATA = etc/webtools.quit etc/webtools.start
 
-#### webtools : gateway declaration ####
-libsciwebtools_la_sci_gatewaydir = $(mydatadir)/sci_gateway
-libsciwebtools_la_sci_gateway_DATA = sci_gateway/webtools_gateway.xml
 
 #### webtools : include files ####
 libsciwebtools_la_includedir=$(pkgincludedir)
+libsciwebtools_la_include_HEADERS = \
+includes/tcpServer.hxx \
+includes/tcpSession.hxx \
+includes/tcpClient.hxx \
+includes/json.hxx \
+includes/dynlib_webtools.h
 
 include $(top_srcdir)/Makefile.incl.am

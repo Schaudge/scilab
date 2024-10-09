@@ -93,6 +93,6 @@ EXTERN_AST int setRecursionLimit(int);
 EXTERN_AST void setPolynomialDisplay(int);
 EXTERN_AST int getPolynomialDisplay();
 
-EXTERN_AST int getWebMode();
+EXTERN_AST int startSwingView();
 
 #endif /* !__CONFIGVARIABLE_INTERFACE_H__ */

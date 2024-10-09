@@ -104,7 +104,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>includes;../../libs/libxml2;../../libs/intl;../core/includes;../fileio/includes;../localization/includes;../output_stream/includes;../string/includes;../api_scilab/includes;../threads/includes;../jvm/includes;../console/includes;../dynamic_link/includes;../xcos/includes;../ast/includes/types;../ast/includes/ast;../ast/includes/exps;../ast/includes/operations;../ast/includes/symbol;../ast/includes/system_env;../ast/includes/parse;../tclsci/includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>includes;../../libs/libxml2;../../libs/intl;../core/includes;../fileio/includes;../localization/includes;../output_stream/includes;../string/includes;../api_scilab/includes;../threads/includes;../jvm/includes;../console/includes;../dynamic_link/includes;../xcos/includes;../ast/includes/types;../ast/includes/ast;../ast/includes/exps;../ast/includes/operations;../ast/includes/symbol;../ast/includes/system_env;../ast/includes/parse;../tclsci/includes;../webtools/includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;FUNC_MAN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -155,7 +155,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>includes;../../libs/libxml2;../../libs/intl;../core/includes;../fileio/includes;../localization/includes;../output_stream/includes;../string/includes;../api_scilab/includes;../threads/includes;../jvm/includes;../console/includes;../dynamic_link/includes;../xcos/includes;../ast/includes/types;../ast/includes/ast;../ast/includes/exps;../ast/includes/operations;../ast/includes/symbol;../ast/includes/system_env;../ast/includes/parse;../tclsci/includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>includes;../../libs/libxml2;../../libs/intl;../core/includes;../fileio/includes;../localization/includes;../output_stream/includes;../string/includes;../api_scilab/includes;../threads/includes;../jvm/includes;../console/includes;../dynamic_link/includes;../xcos/includes;../ast/includes/types;../ast/includes/ast;../ast/includes/exps;../ast/includes/operations;../ast/includes/symbol;../ast/includes/system_env;../ast/includes/parse;../tclsci/includes;../webtools/includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;FUNC_MAN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -338,6 +338,9 @@
     </ProjectReference>
     <ProjectReference Include="..\ui_data\src\c\ui_data.vcxproj">
       <Project>{142d643b-a9ec-49db-9d48-a925a20f63b1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\webtools\webtools.vcxproj">
+      <Project>{8dbf9ba7-abb8-4c35-a82a-0adbeb7e5331}</Project>
     </ProjectReference>
     <ProjectReference Include="..\windows_tools\src\c\windows_tools.vcxproj">
       <Project>{9594ac02-20ee-4fbf-95b4-bfa5865ed7ca}</Project>

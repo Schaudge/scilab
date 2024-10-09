@@ -15,7 +15,7 @@
 ; Inno Setup Script (5.3 and more) for Scilab (UNICODE version required)
 ;
 ;--------------------------------------------------------------------------------------------------------------
-; sound module
+; webtools module
 ;--------------------------------------------------------------------------------------------------------------
 ;
 #define WEBTOOLS "webtools"
@@ -25,10 +25,11 @@ Source: bin\{#WEBTOOLS}.lib; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
 ;
 Source: modules\{#WEBTOOLS}\license.txt; DestDir: {app}\modules\{#WEBTOOLS}; Components: {#COMPN_SCILAB}
 ;
-Source: modules\{#WEBTOOLS}\sci_gateway\{#WEBTOOLS}_gateway.xml; DestDir: {app}\modules\{#WEBTOOLS}\sci_gateway; Components: {#COMPN_SCILAB}
-;
 Source: modules\{#WEBTOOLS}\etc\{#WEBTOOLS}.quit; DestDir: {app}\modules\{#WEBTOOLS}\etc; Components: {#COMPN_SCILAB}
 Source: modules\{#WEBTOOLS}\etc\{#WEBTOOLS}.start; DestDir: {app}\modules\{#WEBTOOLS}\etc; Components: {#COMPN_SCILAB}
+;
+Source: modules\{#WEBTOOLS}\includes\*.h; DestDir: {app}\modules\{#WEBTOOLS}\includes; Components: {#COMPN_SCILAB}
+Source: modules\{#WEBTOOLS}\includes\*.hxx; DestDir: {app}\modules\{#WEBTOOLS}\includes; Components: {#COMPN_SCILAB}
 ;
 ;Source: modules\{#WEBTOOLS}\macros\buildmacros.sce; DestDir: {app}\modules\{#WEBTOOLS}\macros; Components: {#COMPN_SCILAB}
 ;Source: modules\{#WEBTOOLS}\macros\buildmacros.bat; DestDir: {app}\modules\{#WEBTOOLS}\macros; Components: {#COMPN_SCILAB}

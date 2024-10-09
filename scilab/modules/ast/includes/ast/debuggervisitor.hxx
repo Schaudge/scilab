@@ -36,8 +36,9 @@ public:
     }
 
     void visit(const SeqExp  &e);
+    void visit(const CallExp &e);
 
-    void visit(const CallExp &e)
+    void visit(const FunctionDec &e)
     {
         visitprivate(e);
     }
@@ -203,11 +204,6 @@ public:
     }
 
     void visit(const ArgumentDec &e)
-    {
-        visitprivate(e);
-    }
-
-    void visit(const FunctionDec &e)
     {
         visitprivate(e);
     }

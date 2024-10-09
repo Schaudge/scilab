@@ -34,7 +34,7 @@ bool Callable::invoke(typed_list & in, optional_list & opt, int _iRetCount, type
         ConfigVariable::setVerbose(e.isVerbose());
         // add line and function name in where
         int iFirstLine = e.getLocation().first_line;
-        ConfigVariable::where_begin(iFirstLine + 1 - ConfigVariable::getMacroFirstLines(), iFirstLine, this);
+        ConfigVariable::where_begin(iFirstLine + 1 - ConfigVariable::getMacroFirstLines(), this, e.getLocation());
         Callable::ReturnValue Ret;
 
         try

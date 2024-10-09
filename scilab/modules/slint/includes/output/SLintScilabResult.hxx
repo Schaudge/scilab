@@ -22,6 +22,11 @@
 
 #include "output/SLintResult.hxx"
 
+extern "C"
+{
+#include "dynlib_slint.h"
+}
+
 namespace types
 {
 class Struct;
@@ -46,7 +51,7 @@ public:
     virtual void finalize();
 };
 
-class SLintScilabOut : public SLintResult
+class SLINT_IMPEXP SLintScilabOut : public SLintResult
 {
 
     // { Filename => { Id => { Location, Msg } }

@@ -86,11 +86,10 @@ types::Callable::ReturnValue sci_mprintf(types::typed_list &in, int _iRetCount, 
 
         scilabForcedWriteW(pwstOutput[i]);
 
-        if (ConfigVariable::getWebMode() == false)
+        if (ConfigVariable::flushStream())
         {
             fflush(NULL);
         }
-
         FREE(pwstOutput[i]);
     }
 

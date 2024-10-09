@@ -20,6 +20,11 @@
 #include "checkers/AllCheckers.hxx"
 #include "SLintXMLException.hxx"
 
+extern "C"
+{
+#include "dynlib_slint.h"
+}
+
 namespace types
 {
 class String;
@@ -30,7 +35,7 @@ namespace slint
 
 class SLintOptions;
 
-class XMLConfig
+class SLINT_IMPEXP XMLConfig
 {
 
     typedef SLintChecker * (*CBType)(xmlNode *);

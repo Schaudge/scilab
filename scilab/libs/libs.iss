@@ -13,7 +13,19 @@
 ;
 ;
 ; f2c directory
-Source: libs\f2c\f2c.h; DestDir: {app}\libs\f2c; Components: {#COMPN_SCILAB}
+Source: libs\f2c\f2c.h; DestDir: {app}\libs\f2c; Flags: recursesubdirs; Components: {#COMPN_SCILAB}
 ;
 ; intl used by localization
-Source: libs\intl\*.h; DestDir: {app}\libs\intl; Components: {#COMPN_SCILAB}
+Source: libs\intl\*.h; DestDir: {app}\libs\intl; Flags: recursesubdirs; Components: {#COMPN_SCILAB}
+;
+; nlohmann json
+Source: libs\nlohmann\include\nlohmann\*.hpp; DestDir: {app}\libs\nlohmann\include\nlohmann; Components: {#COMPN_SCILAB}
+
+; libxml2
+Source: libs\libxml2\*.h; DestDir: {app}\libs\libxml2; Flags: recursesubdirs; Components: {#COMPN_SCILAB}
+
+; CppServer
+Source: libs\CppServer\*.*; DestDir: {app}\libs\CppServer; Flags: recursesubdirs; Components: {#COMPN_SCILAB}
+
+; pcre
+Source: libs\pcre\*.*; DestDir: {app}\libs\pcre; Flags: recursesubdirs; Components: {#COMPN_SCILAB}

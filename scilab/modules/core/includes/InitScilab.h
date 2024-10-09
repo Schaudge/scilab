@@ -24,6 +24,8 @@ typedef struct
     char* pstExec;
     char* pstLang;
     char* pstSciHome;
+    int iFilePos;
+    int iExecPos;
     int iConsoleMode;
     int iNoJvm;
     int iNoStart;

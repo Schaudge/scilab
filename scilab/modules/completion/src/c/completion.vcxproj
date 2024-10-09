@@ -229,6 +229,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\includes\completeLine.h" />
     <ClInclude Include="..\..\includes\getfields.h" />
+    <ClInclude Include="..\..\includes\getfilesdictionary.h" />
     <ClInclude Include="..\..\includes\toolsdictionary.h" />
     <ClInclude Include="..\cpp\EOFieldsGetter.hxx" />
     <ClInclude Include="..\cpp\FieldsGetter.hxx" />
@@ -250,7 +251,6 @@
     <ClInclude Include="..\..\includes\dynlib_completion.h" />
     <ClInclude Include="..\..\includes\getCommonPart.h" />
     <ClInclude Include="..\..\includes\getfieldsdictionary.h" />
-    <ClInclude Include="getfilesdictionary.h" />
     <ClInclude Include="..\..\includes\getPartLine.h" />
   </ItemGroup>
   <ItemGroup>

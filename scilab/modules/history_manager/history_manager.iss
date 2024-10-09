@@ -22,6 +22,7 @@
 #define HISTORY_MANAGER "history_manager"
 ;
 Source: bin\sci{#HISTORY_MANAGER}.dll; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
+Source: bin\sci{#HISTORY_MANAGER}.lib; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
 Source: bin\{#HISTORY_MANAGER}_gw.dll; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
 ;
 Source: modules\{#HISTORY_MANAGER}\jar\org.scilab.modules.{#HISTORY_MANAGER}.jar;DestDir: {app}\modules\{#HISTORY_MANAGER}\jar; Components: {#COMPN_SCILAB}
@@ -31,7 +32,7 @@ Source: modules\{#HISTORY_MANAGER}\jar\org.scilab.modules.{#HISTORY_MANAGER}.jar
 Source: modules\{#HISTORY_MANAGER}\license.txt; DestDir: {app}\modules\{#HISTORY_MANAGER}; Components: {#COMPN_SCILAB}
 
 ;
-;Source: modules\{#HISTORY_MANAGER}\includes\*.h; DestDir: {app}\modules\{#HISTORY_MANAGER}\includes; Components: {#COMPN_SCILAB}
+Source: modules\{#HISTORY_MANAGER}\includes\*.h; DestDir: {app}\modules\{#HISTORY_MANAGER}\includes; Components: {#COMPN_SCILAB}
 ;
 Source: modules\{#HISTORY_MANAGER}\etc\{#HISTORY_MANAGER}.quit; DestDir: {app}\modules\{#HISTORY_MANAGER}\etc; Components: {#COMPN_SCILAB}
 Source: modules\{#HISTORY_MANAGER}\etc\{#HISTORY_MANAGER}.start; DestDir: {app}\modules\{#HISTORY_MANAGER}\etc; Components: {#COMPN_SCILAB}

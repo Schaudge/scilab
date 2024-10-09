@@ -174,7 +174,14 @@ libscifileio_la_etc_DATA = etc/fileio.quit etc/fileio.start
 
 #### fileio : include files ####
 libscifileio_la_includedir=$(pkgincludedir)
-libscifileio_la_include_HEADERS = includes/getFullFilename.h \
-includes/dynlib_fileio.h
+libscifileio_la_include_HEADERS = \
+includes/getFullFilename.h \
+includes/dynlib_fileio.h \
+includes/FileExist.h \
+includes/expandPathVariable.h \
+includes/scicurdir.h \
+includes/isdir.h \
+includes/fullpath.h
+
 
 include $(top_srcdir)/Makefile.incl.am

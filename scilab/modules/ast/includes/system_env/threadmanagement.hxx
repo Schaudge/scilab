@@ -74,7 +74,7 @@ public :
     static void SendConsoleExecDoneSignal(void);
     static void WaitForConsoleExecDoneSignal(void);
     static void SendDebuggerExecDoneSignal(void);
-    static void WaitForDebuggerExecDoneSignal(bool bResume);
+    static void WaitForDebuggerExecDoneSignal(void);
     static void SendStartPendingSignal(void);
     static void WaitForStartPendingSignal(void);
     static void SendCommandStoredSignal(void);

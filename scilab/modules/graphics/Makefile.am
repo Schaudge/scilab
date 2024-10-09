@@ -597,7 +597,11 @@ pkglib_LTLIBRARIES += libscigraphics.la
 noinst_LTLIBRARIES = libscigraphics-algo.la
 endif
 
-
-
 include $(top_srcdir)/Makefile.incl.am
 
+#### ast : include files ####
+libscigraphics_scilab_la_includedir=$(pkgincludedir)
+libscigraphics_scilab_la_include_HEADERS = \
+includes/getDictionarySetProperties.h \
+includes/getDictionaryGetProperties.h \
+includes/dynlib_graphics.h

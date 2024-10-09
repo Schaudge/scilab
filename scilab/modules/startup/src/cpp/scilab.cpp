@@ -81,9 +81,9 @@ static void usage(void)
     std::cerr << "      -args arg1 arg2..: Send directly some arg1 arg2 .. data to the session." << std::endl;
     std::cerr << "                         arg1 arg2 .. values can then be read through sciargs()." << std::endl;
     std::cerr << "      -e Instruction   : Execute the scilab instruction given in Instruction argument." << std::endl;
-    std::cerr << "                         -e and -f arguments are mutually exclusive." << std::endl;
+    std::cerr << "                         -e and -f are executed in argument order." << std::endl;
     std::cerr << "      -f File          : Execute the scilab script given in File argument." << std::endl;
-    std::cerr << "                         -e and -f arguments are mutually exclusive." << std::endl;
+    std::cerr << "                         -e and -f are executed in argument order." << std::endl;
     std::cerr << "      -quit            : Force scilab exit after execution of script from -e or -f argument." << std::endl;
     std::cerr << "                         Flag ignored if it is not used with -e or -f argument and when Scilab is in a pipe." << std::endl;
     std::cerr << "      -l lang          : Change the language of scilab (default : en_US)." << std::endl;
@@ -194,6 +194,7 @@ static int get_option(const int argc, char *argv[], ScilabEngineInfo* _pSEI)
             if (argc > i)
             {
                 _pSEI->pstFile = argv[i];
+                _pSEI->iFilePos = i;
             }
         }
         else if (!strcmp("-e", argv[i]))
@@ -202,6 +203,7 @@ static int get_option(const int argc, char *argv[], ScilabEngineInfo* _pSEI)
             if (argc > i)
             {
                 _pSEI->pstExec = argv[i];
+                _pSEI->iExecPos = i;
             }
         }
         else if (!strcmp("-l", argv[i]))

@@ -45,9 +45,9 @@ Usage: Scilab <options>
       -args arg1 arg2..: Send directly some arg1 arg2 .. data to the session.
                          arg1 arg2 .. values can then be read through sciargs().
       -e Instruction   : Execute the scilab instruction given in Instruction argument.
-                         -e and -f arguments are mutually exclusive.
+                         -e and -f are executed in argument order.
       -f File          : Execute the scilab script given in File argument.
-                         -e and -f arguments are mutually exclusive.
+                         -e and -f are executed in argument order.
       -quit            : force scilab exit after execution of script from -e or -f argument.
                          Flag ignored if it is not used with -e or -f argument and when Scilab is in a pipe.
       -l lang          : Change the language of scilab (default : en_US).

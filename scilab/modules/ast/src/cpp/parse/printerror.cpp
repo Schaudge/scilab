@@ -37,7 +37,7 @@ void ParserSingleInstance::PrintError(const std::wstring& msg)
     }
 
     // fill call stack
-    ConfigVariable::fillWhereError(yylloc.first_line);
+    ConfigVariable::fillWhereError(yylloc);
 
     /** Print where in the script the error is located */
     wchar_t* str = to_wide_string(ParserSingleInstance::getCodeLine(yylloc.first_line, &codeLine));

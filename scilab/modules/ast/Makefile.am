@@ -200,6 +200,8 @@ includes/exps/alldec.hxx \
 includes/exps/allexp.hxx \
 includes/exps/all.hxx \
 includes/exps/allvar.hxx \
+includes/exps/argumentsexp.hxx \
+includes/exps/argumentdec.hxx \
 includes/exps/arraylistexp.hxx \
 includes/exps/arraylistvar.hxx \
 includes/exps/assignexp.hxx \

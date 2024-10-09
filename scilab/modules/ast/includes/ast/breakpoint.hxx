@@ -34,6 +34,8 @@ struct Breakpoint
                     _pFileName(""),
                     _iFileLine(0),
                     _iFirstColumn(0),
+                    _iHitCondition(0),
+                    _iHitCount(0),
                     _condition(""),
                     _conditionError(""),
                     _conditionExp(NULL),
@@ -91,6 +93,19 @@ struct Breakpoint
         return _iFileLine;
     }
 
+    void setHitCondition(int hit)
+    {
+        _iHitCondition = hit;
+    }
+    bool hit()
+    {
+        return ++_iHitCount >= _iHitCondition;
+    }
+    void resetHitCount()
+    {
+        _iHitCount = 0;
+    }
+
     bool hasMacro() const
     {
         return _pFunctionName.empty() == false && _iMacroLine >= 0;
@@ -98,7 +113,7 @@ struct Breakpoint
 
     bool hasFile() const
     {
-        return _pFileName.empty() == false && _iFileLine >= 0;
+        return _pFileName.empty() == false;
     }
 
     bool hasCondition() const
@@ -163,6 +178,8 @@ private:
     int _iFirstColumn;
     std::string _pFileName;
     int _iFileLine;
+    int _iHitCondition;
+    int _iHitCount;
     std::string _condition;
     std::string _conditionError;
     ast::Exp* _conditionExp;

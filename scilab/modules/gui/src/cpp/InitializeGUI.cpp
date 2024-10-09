@@ -36,7 +36,7 @@ BOOL InitializeGUI()
     }
     else
     {
-        if (getWebMode() == 0)
+        if (startSwingView())
         {
             org_scilab_modules_gui_bridge::CallScilabBridge::registerSwingView(getScilabJavaVM());
         }

@@ -28,10 +28,16 @@
 #include "SciFile.hxx"
 #include "string.hxx"
 
+extern "C"
+{
+    #include "dynlib_slint.h"
+}
+
+
 namespace slint
 {
 
-class SLint
+class SLINT_IMPEXP SLint
 {
     SLintContext context;
     SLintVisitor visitor;

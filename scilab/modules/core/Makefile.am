@@ -263,7 +263,13 @@ includes/scisparse.h \
 includes/sci_types.h \
 includes/storeCommand.h \
 includes/timer.hxx \
-includes/version.h
+includes/version.h \
+includes/dynlib_core.h \
+includes/parsecommand.h \
+includes/getfunctionsname.h \
+includes/getmacrosname.h \
+includes/getvariablesname.h \
+includes/commandwords.h
 
 
 if GUI

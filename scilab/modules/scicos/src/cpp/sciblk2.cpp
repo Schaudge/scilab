@@ -140,7 +140,7 @@ void sciblk2(int* flag, int* nevprt, double* t, double xd[], double x[], int* nx
         throw ast::RecursionException();
 
     // add line and function name in where
-    ConfigVariable::where_begin(1, 1, pCall);
+    ConfigVariable::where_begin(1, pCall);
 
     types::optional_list opt;
     types::Callable::ReturnValue Ret;

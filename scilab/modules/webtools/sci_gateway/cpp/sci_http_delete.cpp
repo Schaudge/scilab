@@ -13,6 +13,7 @@
 */
 /*--------------------------------------------------------------------------*/
 
+#include "gateway_tools.hxx"
 #include "webtools_gw.hxx"
 #include "function.hxx"
 #include "string.hxx"

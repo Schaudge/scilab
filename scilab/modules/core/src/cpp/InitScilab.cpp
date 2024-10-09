@@ -141,6 +141,12 @@ ScilabEngineInfo* InitScilabEngineInfo()
 #ifdef _MSC_VER
     pSEI->iCodeAction = -1; //default value, no code action ( used on windows by file associations -O -X -P arguments)
 #endif
+
+    pSEI->iWebMode = 0;
+
+    pSEI->iFilePos = -1;
+    pSEI->iExecPos = -1;
+
     return pSEI;
 }
 
@@ -242,7 +248,11 @@ int StartScilabEngine(ScilabEngineInfo* _pSEI)
     createInnosetupMutex();
 #endif
 
-    ConfigVariable::setWebMode(_pSEI->iWebMode != 0);
+    if(_pSEI->iWebMode)
+    {
+        ConfigVariable::setStartSwingView(false);
+        ConfigVariable::setFlushStream(false);
+    }
 
     //open scope lvl 0 for gateway from modules and first variables ( SCI, HOME, TMPDIR, ...)
     symbol::Context::getInstance()->scope_begin();
@@ -407,12 +417,26 @@ int StartScilabEngine(ScilabEngineInfo* _pSEI)
     ConfigVariable::setStartProcessing(false);
     ConfigVariable::setPromptMode(0);
 
-    int iUseCurrentWD = 0;
+    std::string commands = "";
+    if (_pSEI->pstFile)
+    {
+        //-f option execute exec('%s',-1)
+        std::string stCMD = "exec(\""+std::string(_pSEI->pstFile)+"\", -1);";
+        commands += stCMD;
+    }
+
     if (_pSEI->pstExec)
     {
         //-e option
-        iUseCurrentWD = 1;
-        StoreConsoleCommand(_pSEI->pstExec, 0);
+        // execute
+        if(_pSEI->iFilePos < _pSEI->iExecPos)
+        {
+            commands = commands + "\n" + _pSEI->pstExec;
+        }
+        else
+        {
+            commands = _pSEI->pstExec + std::string("\n") + commands;
+        }
 
 #ifdef _MSC_VER
         if (_pSEI->iCodeAction != -1)
@@ -423,15 +447,15 @@ int StartScilabEngine(ScilabEngineInfo* _pSEI)
         }
 #endif
     }
-    else if (_pSEI->pstFile)
+
+    int iUseCurrentWD = commands.empty() ? 0 : 1;
+    if(commands.empty() == false)
     {
-        //-f option execute exec('%s',-1)
-        std::string stCMD = "exec(\""+std::string(_pSEI->pstFile)+"\", -1);";
-        StoreConsoleCommand(stCMD.data(), 0);
-        _pSEI->pstExec = NULL;
-        _pSEI->pstFile = NULL;
-        iUseCurrentWD = 1;
+        StoreConsoleCommand(commands.data(), 0);
     }
+
+    _pSEI->pstExec = NULL;
+    _pSEI->pstFile = NULL;
 
     // If -quit argument is passed to Scilab, add a "exit" command to command queue.
     // Setting ConfigVariable::setForceQuit() here avoids Scilab to quit before executing callbacks.
@@ -1121,7 +1145,7 @@ static void executeDebuggerCommand(std::string _command)
         }
 
         // execute a command
-        char* error = manager->execute(_command.erase(0, _command.find(" ")).data());
+        char* error = manager->executeNow(_command.erase(0, _command.find(" ")).data());
         if(error)
         {
             sciprint("Debugger execution failed\n\n%s\n", error);

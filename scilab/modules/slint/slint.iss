@@ -25,6 +25,9 @@ Source: bin\{#SLINT}.lib; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
 ;
 Source: modules\{#SLINT}\sci_gateway\{#SLINT}_gateway.xml; DestDir: {app}\modules\{#SLINT}\sci_gateway; Components: {#COMPN_SCILAB}
 ;
+Source: modules\{#SLINT}\includes\*.h; DestDir: {app}\modules\{#SLINT}\includes; Flags: recursesubdirs;  Components: {#COMPN_SCILAB}
+Source: modules\{#SLINT}\includes\*.hxx; DestDir: {app}\modules\{#SLINT}\includes; Flags: recursesubdirs;  Components: {#COMPN_SCILAB}
+
 Source: modules\{#SLINT}\etc\{#SLINT}.quit; DestDir: {app}\modules\{#SLINT}\etc; Components: {#COMPN_SCILAB}
 Source: modules\{#SLINT}\etc\{#SLINT}.start; DestDir: {app}\modules\{#SLINT}\etc; Components: {#COMPN_SCILAB}
 Source: modules\{#SLINT}\etc\{#SLINT}.xml; DestDir: {app}\modules\{#SLINT}\etc; Components: {#COMPN_SCILAB}

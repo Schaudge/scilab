@@ -22,16 +22,43 @@
 #include "commentexp.hxx"
 #include "UTF8.hxx"
 #include "runner.hxx"
+#include "parser_private.hxx"
+#include "visitor_common.hxx"
 
 extern "C"
 {
 #include "FileExist.h"
 }
 
-static bool getMacroSourceFile(std::string* filename = nullptr);
-
 namespace ast
 {
+
+void DebuggerVisitor::visit(const CallExp &e)
+{
+    debugger::DebuggerManager* manager = debugger::DebuggerManager::getInstance();
+    if(manager->isAborted())
+    {
+        // abort a running execution
+        throw ast::InternalAbort();
+    }
+
+    visitprivate(e);
+
+    if(ConfigVariable::getEnableDebug() && manager->isStepOut())
+    {
+        if(manager->getSourceFile())
+        {
+            manager->resetStepOut();
+            manager->stop(&e, -1);
+        }
+
+        if (manager->isAborted())
+        {
+            throw ast::InternalAbort();
+        }
+    }
+}
+
 void DebuggerVisitor::visit(const SeqExp  &e)
 {
     std::list<Exp *>::const_iterator itExp;
@@ -46,6 +73,11 @@ void DebuggerVisitor::visit(const SeqExp  &e)
     for (const auto & exp : e.getExps())
     {
         if (exp->isCommentExp())
+        {
+            continue;
+        }
+
+        if (exp->isArgumentsExp())
         {
             continue;
         }
@@ -73,25 +105,16 @@ void DebuggerVisitor::visit(const SeqExp  &e)
             manager->isInterrupted() == false) // avoid stopping execution if an execution is already paused
         {
             bool stopExecution = false;
-            if (manager->isStepIn())
+            bool hasSourceFile = manager->getSourceFile();
+            if (hasSourceFile && manager->isStepIn())
             {
                 manager->resetStepIn();
                 stopExecution = true;
-                if(getMacroSourceFile() == false)
-                {
-                    stopExecution = false;
-                    manager->setStepIn();
-                }
             }
-            else if (manager->isStepNext())
+            else if (hasSourceFile && manager->isStepNext())
             {
                 manager->resetStepNext();
                 stopExecution = true;
-                if(getMacroSourceFile() == false)
-                {
-                    stopExecution = false;
-                    manager->setStepOut();
-                }
             }
             else
             {
@@ -99,6 +122,7 @@ void DebuggerVisitor::visit(const SeqExp  &e)
                 //set information from debugger commands
                 if (lWhereAmI.size() != 0 && manager->getBreakPointCount() != 0)
                 {
+                    manager->lockBreakpoints();
                     debugger::Breakpoints& bps = manager->getAllBreakPoint();
 
                     int i = -1;
@@ -131,16 +155,24 @@ void DebuggerVisitor::visit(const SeqExp  &e)
                         }
                         else if (bp->hasFile())
                         {
-                            if (bp->getFileLine() == exp->getLocation().first_line)
+                            int iBPLine = bp->getFileLine();
+                            if (iBPLine == exp->getLocation().first_line || iBPLine == -1)
                             {
                                 std::string pFileName;
-                                bool hasSource = getMacroSourceFile(&pFileName);
+                                bool hasSource = manager->getSourceFile(&pFileName);
                                 if (hasSource && bp->getFileName() == pFileName)
                                 {
                                     stopExecution = true;
-                                    // set function information
-                                    if (lWhereAmI.back().call->getFirstLine())
+                                    
+                                    if(iBPLine == -1)
                                     {
+                                        // one shot breakpoint, remove it
+                                        // used for stop on entry
+                                        manager->removeBreakPoint(i);
+                                    }
+                                    else if (lWhereAmI.back().call->getFirstLine())
+                                    {
+                                        // set function information
                                         bp->setFunctionName(scilab::UTF8::toUTF8(lWhereAmI.back().call->getName()));
                                         bp->setMacroLine(iLine);
                                     }
@@ -215,6 +247,17 @@ void DebuggerVisitor::visit(const SeqExp  &e)
                             pCtx->scope_end();
                         }
 
+                        // check hit condition
+                        if(bp->hit() == false)
+                        {
+                            // hit condition not yet filled
+                            stopExecution = false;
+                            continue;
+                        }
+
+                        // reset hit counter
+                        bp->resetHitCount();
+
                         //we have a breakpoint !
                         //stop execution and wait signal from debugger to restart
                         iBreakPoint = i;
@@ -222,6 +265,7 @@ void DebuggerVisitor::visit(const SeqExp  &e)
                         //only one breakpoint can be "call" on same exp
                         break;
                     }
+                    manager->unlockBreakpoints();
                 }
             }
 
@@ -253,30 +297,11 @@ void DebuggerVisitor::visit(const SeqExp  &e)
             setExpectedSize(iExpectedSize);
             types::InternalType * pIT = getResult();
 
-            if(exp->isFunctionDec())
-            {
-                // In case of exec file, set the file name in the Macro to store where it is defined.
-                std::wstring strFile = ConfigVariable::getExecutedFile();
-                const std::vector<ConfigVariable::WhereEntry>& lWhereAmI = ConfigVariable::getWhere();
-
-                if (strFile != L"" &&  // check if we are executing a script or a macro
-                    lWhereAmI.empty() == false &&
-                    lWhereAmI.back().m_file_name != nullptr && // check the last function execution is a macro
-                    *(lWhereAmI.back().m_file_name) == strFile) // check the last execution is the same macro as the executed one
-                {
-                    types::InternalType* pITMacro = symbol::Context::getInstance()->get(exp->getAs<FunctionDec>()->getSymbol());
-                    if (pITMacro)
-                    {
-                        types::Macro* pMacro = pITMacro->getAs<types::Macro>();
-                        pMacro->setFileName(strFile);
-                    }
-                }
-            }
-
             if (pIT != NULL)
             {
                 bool bImplicitCall = false;
-                if (pIT->isCallable()) //to manage call without ()
+                bool isLambda = exp->isFunctionDec() && exp->getAs<ast::FunctionDec>()->isLambda();
+                if (pIT->isCallable() && isLambda == false)
                 {
                     types::Callable *pCall = pIT->getAs<types::Callable>();
                     types::typed_list out;
@@ -308,23 +333,39 @@ void DebuggerVisitor::visit(const SeqExp  &e)
                         throw ie;
                     }
                 }
-
-                //don't output Simplevar and empty result
-                if (getResult() != NULL && (!exp->isSimpleVar() || bImplicitCall))
+                else if (pIT->isImplicitList())
                 {
-                    //symbol::Context::getInstance()->put(symbol::Symbol(L"ans"), *execMe.getResult());
-                    types::InternalType* pITAns = getResult();
-                    symbol::Context::getInstance()->put(m_pAns, pITAns);
-                    if (exp->isVerbose() && ConfigVariable::isPrintOutput())
+                    //expand implicit when possible
+                    types::ImplicitList* pIL = pIT->getAs<types::ImplicitList>();
+                    if (pIL->isComputable())
                     {
-                        //TODO manage multiple returns
-                        scilabWriteW(L" ans  =\n\n");
-                        std::wostringstream ostrName;
-                        ostrName << L"ans";
-                        types::VariableToString(pITAns, ostrName.str().c_str());
+                        types::InternalType* p = pIL->extractFullMatrix();
+                        if (p)
+                        {
+                            setResult(p);
+                        }
                     }
                 }
 
+                //don't output Simplevar and empty result
+                if (getResult() != NULL)
+                {
+                    setLambdaResult(getResult());
+                    if (!exp->isSimpleVar() || bImplicitCall)
+                    {
+                        //symbol::Context::getInstance()->put(symbol::Symbol(L"ans"), *execMe.getResult());
+                        types::InternalType* pITAns = getResult();
+                        symbol::Context::getInstance()->put(m_pAns, pITAns);
+                        if (exp->isVerbose() && ConfigVariable::isPrintOutput())
+                        {
+                            //TODO manage multiple returns
+                            std::wostringstream ostrName;
+                            ostrName << L"ans";
+                            scilabWriteW(printVarEqualTypeDimsInfo(pITAns, L"ans").c_str());
+                            types::VariableToString(pITAns, ostrName.str().c_str());
+                        }
+                    }
+                }
                 pIT->killMe();
             }
 
@@ -353,16 +394,11 @@ void DebuggerVisitor::visit(const SeqExp  &e)
             // Do it at the end of the seqexp will make the debugger stop
             // even if the caller is at the last line
             // ie: the caller is followed by endfunction
-            if(manager->isStepOut())
+            if(ConfigVariable::getEnableDebug() && manager->isStepOut())
             {
-                manager->resetStepOut();
-                if(getMacroSourceFile() == false)
+                if(manager->getSourceFile())
                 {
-                    // no sources
-                    manager->setStepOut();
-                }
-                else
-                {
+                    manager->resetStepOut();
                     manager->stop(exp, iBreakPoint);
                 }
 
@@ -382,31 +418,31 @@ void DebuggerVisitor::visit(const SeqExp  &e)
                 throw ie;
             }
 
-            ConfigVariable::fillWhereError(ie.GetErrorLocation().first_line);
+            ConfigVariable::fillWhereError(ie.GetErrorLocation());
 
-            const std::vector<ConfigVariable::WhereEntry>& lWhereAmI = ConfigVariable::getWhere();
+            const auto& lWhereError = ConfigVariable::getWhereError();
 
-            //where can be empty on last stepout, on first calling expression
-            if (lWhereAmI.size())
+            //where can be empty on last stepout or on first calling expression
+            if (lWhereError.size())
             {
-                const std::wstring* filename = lWhereAmI.back().m_file_name;
+                const std::wstring filename = lWhereError[0].m_file_name;
 
-                if (filename == nullptr)
+                if (filename.empty())
                 {
                     //error in a console script
-                    std::wstring functionName = lWhereAmI.back().call->getName();
+                    std::wstring functionName = lWhereError[0].m_function_name;
                     manager->errorInScript(functionName, exp);
                 }
                 else
                 {
-                    manager->errorInFile(*filename, exp);
+                    manager->errorInFile(filename, exp);
                 }
+            }
 
-                // Debugger just restart after been stopped on an error.
-                if (manager->isAborted())
-                {
-                    throw ast::InternalAbort();
-                }
+            // Debugger just restart after been stopped on an error.
+            if (manager->isAborted())
+            {
+                throw ast::InternalAbort();
             }
 
             throw ie;
@@ -415,10 +451,9 @@ void DebuggerVisitor::visit(const SeqExp  &e)
         // If something other than NULL is given to setResult, then that would imply
         // to make a cleanup in visit(ForExp) for example (e.getBody().accept(*this);)
         setResult(NULL);
-
     }
 
-    if (e.getParent() == NULL && e.getExecFrom() == SeqExp::SCRIPT && (manager->isStepNext() || manager->isStepIn()))
+    if (ConfigVariable::getEnableDebug() && e.getParent() == NULL && e.getExecFrom() == SeqExp::SCRIPT && (manager->isStepNext() || manager->isStepIn()))
     {
         const std::vector<ConfigVariable::WhereEntry>& lWhereAmI = ConfigVariable::getWhere();
         if (lWhereAmI.size())
@@ -444,6 +479,10 @@ void DebuggerVisitor::visit(const SeqExp  &e)
                 std::wstring* comment = new std::wstring(L"end of function");
                 Location loc(m->getLastLine(), m->getLastLine(), 0, 0);
                 CommentExp fakeExp(loc, comment);
+                // reset step Next/In before stop
+                // next action will be set when restart the execution
+                manager->resetStepNext();
+                manager->resetStepIn();
                 manager->stop(&fakeExp, -1);
 
                 if (manager->isAborted())
@@ -451,55 +490,13 @@ void DebuggerVisitor::visit(const SeqExp  &e)
                     throw ast::InternalAbort();
                 }
 
-                //transform stepnext after endfunction as a stepout to show line marker on current statement
-                if (manager->isStepNext())
+                //transform stepnext/stepin after endfunction as a stepout to show line marker on current statement
+                if (manager->isStepNext() || manager->isStepIn())
                 {
-                    manager->resetStepNext();
-                    manager->setStepOut();
-                }
-                else if (manager->isStepIn())
-                {
-                    manager->resetStepIn();
                     manager->setStepOut();
                 }
             }
         }
     }
 }
-}
-
-// return false if a file .sci of a file .bin doesn't exists
-// return true for others files or existing .sci
-bool getMacroSourceFile(std::string* filename)
-{
-    const std::vector<ConfigVariable::WhereEntry>& lWhereAmI = ConfigVariable::getWhere();
-    // "Where" can be empty at the end of script execution
-    // this function is called when the script ends after a step out
-    if(lWhereAmI.empty())
-    {
-        return false;
-    }
-
-    if(lWhereAmI.back().m_file_name == nullptr)
-    {
-        return false;
-    }
-
-    std::string file = scilab::UTF8::toUTF8(*lWhereAmI.back().m_file_name);
-    if (file.rfind(".bin") != std::string::npos)
-    {
-        file.replace(file.size() - 4, 4, ".sci");
-        // stop on bp only if the file exist
-        if (!FileExist(file.data()))
-        {
-            return false;
-        }
-    }
-
-    if(filename != nullptr)
-    {
-        filename->assign(file);
-    }
-
-    return true;
 }

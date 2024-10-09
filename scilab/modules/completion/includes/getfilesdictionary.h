@@ -17,6 +17,7 @@
 #define __GETFILESDICTIONARY_H__
 
 #include "BOOL.h"
+#include "dynlib_completion.h"
 
 /**
 * get files dictionary
@@ -25,7 +26,7 @@
 * @param[in] returns with the full path name
 * @return array of strings
 */
-char **getfilesdictionary(const char *somechars, int *sizearray, BOOL fullpath);
+COMPLETION_IMPEXP char** getfilesdictionary(const char* somechars, int* sizearray, BOOL fullpath);
 
 #endif /* __GETFILESDICTIONARY_H__ */
 /*--------------------------------------------------------------------------*/

@@ -146,6 +146,78 @@ INCLUDE_FLAGS = $(libscislint_la_CPPFLAGS)
 
 #### slint : include files ####
 libscislint_la_includedir=$(pkgincludedir)
+libscislint_la_include_HEADERS = \
+includes/FileException.hxx \
+includes/PCREException.hxx \
+includes/PCREMatcher.hxx \
+includes/SLintContext.hxx \
+includes/SLintOptions.hxx \
+includes/SLintVisitor.hxx \
+includes/dynlib_slint.h \
+includes/SLintXMLException.hxx \
+includes/XMLtools.hxx \
+includes/PCRE.hxx \
+includes/SciFile.hxx \
+includes/SLint.hxx
+
+libscislint_la_include_configdir=$(pkgincludedir)/config
+libscislint_la_include_config_HEADERS = \
+includes/config/XMLConfig.hxx
+
+libscislint_la_include_outputdir=$(pkgincludedir)/output
+libscislint_la_include_output_HEADERS = \
+includes/output/SLintXmlResult.hxx \
+includes/output/SLintResult.hxx \
+includes/output/SLintScilabResult.hxx
+
+libscislint_la_include_checkersdir=$(pkgincludedir)/checkers
+libscislint_la_include_checkers_HEADERS = \
+includes/checkers/CommentRatioChecker.hxx \
+includes/checkers/PrintfChecker.hxx \
+includes/checkers/FunctionTestReturnChecker.hxx \
+includes/checkers/FindSymVisitor.hxx \
+includes/checkers/ExpInCondChecker.hxx \
+includes/checkers/NotNotChecker.hxx \
+includes/checkers/ImplicitListChecker.hxx \
+includes/checkers/NaNChecker.hxx \
+includes/checkers/FunctionArgsChecker.hxx \
+includes/checkers/VariableNameChecker.hxx \
+includes/checkers/LinesCountChecker.hxx \
+includes/checkers/LineLengthChecker.hxx \
+includes/checkers/TodoChecker.hxx \
+includes/checkers/VariablesChecker.hxx \
+includes/checkers/OldNotChecker.hxx \
+includes/checkers/StructChecker.hxx \
+includes/checkers/MopenMcloseChecker.hxx \
+includes/checkers/AllCheckers.hxx \
+includes/checkers/BracketedExpChecker.hxx \
+includes/checkers/SelectChecker.hxx \
+includes/checkers/UselessArgChecker.hxx \
+includes/checkers/LoadSaveChecker.hxx \
+includes/checkers/RedefinitionChecker.hxx \
+includes/checkers/ReturnsCountChecker.hxx \
+includes/checkers/SemicolonAtEOLChecker.hxx \
+includes/checkers/McCabeChecker.hxx \
+includes/checkers/UselessOpChecker.hxx \
+includes/checkers/BreaksInLoopChecker.hxx \
+includes/checkers/EqEqChecker.hxx \
+includes/checkers/EmptyBlockChecker.hxx \
+includes/checkers/ReturnChecker.hxx \
+includes/checkers/DeprecatedChecker.hxx \
+includes/checkers/GlobalKeywordChecker.hxx \
+includes/checkers/NestedBlocksChecker.hxx \
+includes/checkers/IllegalCallsChecker.hxx \
+includes/checkers/SpacesAroundOpChecker.hxx \
+includes/checkers/UselessRetChecker.hxx \
+includes/checkers/SingleInstrChecker.hxx \
+includes/checkers/FunctionNameChecker.hxx \
+includes/checkers/UnreachableCodeChecker.hxx \
+includes/checkers/SLintChecker.hxx \
+includes/checkers/NotEqualChecker.hxx \
+includes/checkers/DecimalChecker.hxx \
+includes/checkers/FunctionArgsOrderChecker.hxx \
+includes/checkers/SpacesInArgsChecker.hxx \
+includes/checkers/McCabeVisitor.hxx
 
 #### slint : gateway declaration ####
 libscislint_la_sci_gatewaydir = $(mydatadir)/sci_gateway

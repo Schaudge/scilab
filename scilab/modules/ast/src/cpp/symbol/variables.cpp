@@ -451,6 +451,66 @@ int Variables::getVarsToVariableBrowser(std::list<Variable*>& lst)
     return static_cast<int>(lst.size());
 }
 
+int Variables::getGlobalVars(std::list<Variable*>& lst)
+{
+    for (auto var : vars)
+    {
+        if (var.second->empty() == false && var.second->isGlobal())
+        {
+            types::InternalType* pIT = var.second->top()->m_pIT;
+            if (pIT && pIT->isMacroFile() == false &&
+                    pIT->isFunction() == false)
+            {
+                lst.push_back(var.second);
+            }
+        }
+    }
+
+    return static_cast<int>(lst.size());
+}
+
+int Variables::getLocalVars(std::list<Variable*>& lst, int _ilevel)
+{
+    for (auto var : vars)
+    {
+        if (var.second->empty() == false)
+        {
+            if (var.second->top()->m_iLevel == _ilevel)
+            {
+                types::InternalType* pIT = var.second->top()->m_pIT;
+                if (pIT && pIT->isMacroFile() == false &&
+                        pIT->isFunction() == false)
+                {
+                    lst.push_back(var.second);
+                }
+            }
+        }
+    }
+
+    return static_cast<int>(lst.size());
+}
+
+int Variables::getScopedVars(std::list<Variable*>& lst, int _ilevel)
+{
+    for (auto var : vars)
+    {
+        if (var.second->empty() == false)
+        {
+            // +1 to get current scope
+            types::InternalType* pIT = getAllButCurrentLevel(var.first, _ilevel+1);
+            if (pIT && pIT->isMacroFile() == false &&
+                    pIT->isFunction() == false)
+            {
+                Variable* tmpvar = new Variable(var.first);
+                tmpvar->put(pIT, _ilevel);
+                lst.push_back(tmpvar);
+            }
+        }
+    }
+
+    return static_cast<int>(lst.size());
+}
+
 int Variables::getCurrentScope(std::list<std::pair<std::wstring, int>>& lst, int level, bool sorted)
 {
     for (auto var : vars)

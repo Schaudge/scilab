@@ -331,7 +331,7 @@ void sciblk4(scicos_block* blk, const int flag)
     ***********************/
     types::Callable* pCall = static_cast<types::Callable*>(blk->scsptr);
 
-    ConfigVariable::where_begin(1, 1, pCall);
+    ConfigVariable::where_begin(1, pCall);
     types::Callable::ReturnValue Ret;
 
     try

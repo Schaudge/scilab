@@ -130,7 +130,7 @@ types::Function::ReturnValue Overload::call(const std::wstring& _stOverloadingFu
             {
                 iMacroLine =  _location.first_line + 1 - ConfigVariable::getMacroFirstLines();
             }
-            ConfigVariable::where_begin(iMacroLine, _location.first_line, pCall);
+            ConfigVariable::where_begin(iMacroLine, pCall, _location);
 
             types::Function::ReturnValue ret;
             ret = pCall->call(in, opt, _iRetCount, out);
@@ -147,7 +147,7 @@ types::Function::ReturnValue Overload::call(const std::wstring& _stOverloadingFu
     }
     catch (const ast::InternalError& ie)
     {
-        ConfigVariable::fillWhereError(ie.GetErrorLocation().first_line);
+        ConfigVariable::fillWhereError(ie.GetErrorLocation());
         if (pCall)
         {
             // remove function name in where

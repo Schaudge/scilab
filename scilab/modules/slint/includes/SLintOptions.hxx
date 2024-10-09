@@ -25,10 +25,15 @@
 #include "SLintContext.hxx"
 #include "checkers/SLintChecker.hxx"
 
+extern "C"
+{
+#include "dynlib_slint.h"
+}
+
 namespace slint
 {
 
-class SLintOptions
+class SLINT_IMPEXP SLintOptions
 {
 
     struct __Hasher

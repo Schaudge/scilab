@@ -631,8 +631,27 @@ int Context::getLibsToVariableBrowser(std::list<Library*>& lst)
 
 int Context::getVarsToVariableBrowser(std::list<Variable*>& lst)
 {
-    variables.getVarsToVariableBrowser(lst);
-    return static_cast<int>(lst.size());
+    return variables.getVarsToVariableBrowser(lst);
+}
+
+int Context::getScopedVars(std::list<Variable*>& lst, int iLevel)
+{
+    return variables.getScopedVars(lst, iLevel);
+}
+
+int Context::getGlobalVars(std::list<Variable*>& lst)
+{
+    return variables.getGlobalVars(lst);
+}
+
+int Context::getLocalVars(std::list<Variable*>& lst, int _iLevel)
+{
+    if(_iLevel < 0)
+    {
+        _iLevel = m_iLevel;
+    }
+
+    return variables.getLocalVars(lst, _iLevel);
 }
 
 int Context::getCurrentScope(std::list<std::pair<std::wstring, int>>& lst, bool bSorted)

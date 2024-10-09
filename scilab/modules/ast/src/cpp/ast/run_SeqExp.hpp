@@ -133,26 +133,6 @@ void RunVisitorT<T>::visitprivate(const SeqExp  &e)
             setExpectedSize(iExpectedSize);
             types::InternalType * pIT = getResult();
 
-            if((*it)->isFunctionDec())
-            {
-                // In case of exec file, set the file name in the Macro to store where it is defined.
-                std::wstring strFile = ConfigVariable::getExecutedFile();
-                const std::vector<ConfigVariable::WhereEntry>& lWhereAmI = ConfigVariable::getWhere();
-
-                if (strFile != L"" &&  // check if we are executing a script or a macro
-                    lWhereAmI.empty() == false &&
-                    lWhereAmI.back().m_file_name != nullptr && // check the last function execution is a macro
-                    *(lWhereAmI.back().m_file_name) == strFile) // check the last execution is the same macro as the executed one
-                {
-                    types::InternalType* pITMacro = symbol::Context::getInstance()->get((*it)->getAs<FunctionDec>()->getSymbol());
-                    if (pITMacro)
-                    {
-                        types::Macro* pMacro = pITMacro->getAs<types::Macro>();
-                        pMacro->setFileName(strFile);
-                    }
-                }
-            }
-
             if (pIT != NULL)
             {
                 bool bImplicitCall = false;
@@ -283,7 +263,7 @@ void RunVisitorT<T>::visitprivate(const SeqExp  &e)
         }
         catch (const InternalError& ie)
         {
-            ConfigVariable::fillWhereError(ie.GetErrorLocation().first_line);
+            ConfigVariable::fillWhereError(ie.GetErrorLocation());
             CoverageInstance::stopChrono((void*)&e);
             if (file)
             {

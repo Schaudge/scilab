@@ -30,9 +30,7 @@ Source: modules\{#FILEIO}\license.txt; DestDir: {app}\modules\{#FILEIO}; Compone
 Source: modules\{#FILEIO}\etc\{#FILEIO}.quit; DestDir: {app}\modules\{#FILEIO}\etc; Components: {#COMPN_SCILAB}
 Source: modules\{#FILEIO}\etc\{#FILEIO}.start; DestDir: {app}\modules\{#FILEIO}\etc; Components: {#COMPN_SCILAB}
 ;
-;Source: modules\{#FILEIO}\includes\*.h; DestDir: {app}\modules\{#FILEIO}\includes; Components: {#COMPN_SCILAB}
-Source: modules\{#FILEIO}\includes\getFullFilename.h; DestDir: {app}\modules\{#FILEIO}\includes; Components: {#COMPN_SCILAB}
-Source: modules\{#FILEIO}\includes\dynlib_fileio.h; DestDir: {app}\modules\{#FILEIO}\includes; Components: {#COMPN_SCILAB}
+Source: modules\{#FILEIO}\includes\*.h; DestDir: {app}\modules\{#FILEIO}\includes; Components: {#COMPN_SCILAB}
 ;
 Source: modules\{#FILEIO}\macros\buildmacros.sce; DestDir: {app}\modules\{#FILEIO}\macros; Flags: recursesubdirs; Components: {#COMPN_SCILAB}
 Source: modules\{#FILEIO}\macros\buildmacros.bat; DestDir: {app}\modules\{#FILEIO}\macros; Flags: recursesubdirs; Components: {#COMPN_SCILAB}

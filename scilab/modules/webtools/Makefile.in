@@ -39,6 +39,7 @@
 ##########
 
 
+
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -135,7 +136,8 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/ax_cxx_compile_stdcxx.m4 \
 	$(top_srcdir)/m4/umfpack.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
-DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
+DIST_COMMON = $(srcdir)/Makefile.am \
+	$(libsciwebtools_la_include_HEADERS) $(am__DIST_COMMON)
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/modules/core/includes/machine.h
 CONFIG_CLEAN_FILES =
@@ -170,7 +172,7 @@ am__uninstall_files_from_dir = { \
 am__installdirs = "$(DESTDIR)$(pkglibdir)" \
 	"$(DESTDIR)$(libsciwebtools_la_etcdir)" \
 	"$(DESTDIR)$(libsciwebtools_la_rootdir)" \
-	"$(DESTDIR)$(libsciwebtools_la_sci_gatewaydir)"
+	"$(DESTDIR)$(libsciwebtools_la_includedir)"
 LTLIBRARIES = $(noinst_LTLIBRARIES) $(pkglib_LTLIBRARIES)
 libsciwebtools_algo_la_LIBADD =
 am__dirstamp = $(am__leading_dot)dirstamp
@@ -201,8 +203,8 @@ am__objects_3 = sci_gateway/cpp/libsciwebtools_la-sci_http_get.lo \
 	sci_gateway/cpp/libsciwebtools_la-sci_url_decode.lo \
 	sci_gateway/cpp/libsciwebtools_la-sci_toJSON.lo \
 	sci_gateway/cpp/libsciwebtools_la-sci_fromJSON.lo \
-	sci_gateway/cpp/libsciwebtools_la-checkCommonOpt.lo \
-	sci_gateway/cpp/libsciwebtools_la-setPreferences.lo
+	sci_gateway/cpp/libsciwebtools_la-gateway_tools.lo \
+	sci_gateway/cpp/libsciwebtools_la-webtools_gw.lo
 am__objects_4 = sci_gateway/c/libsciwebtools_la-sci_url_split.lo
 am_libsciwebtools_la_OBJECTS = $(am__objects_3) $(am__objects_4)
 libsciwebtools_la_OBJECTS = $(am_libsciwebtools_la_OBJECTS)
@@ -223,7 +225,7 @@ depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade =  \
 	sci_gateway/c/$(DEPDIR)/libsciwebtools_la-sci_url_split.Plo \
-	sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-checkCommonOpt.Plo \
+	sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-gateway_tools.Plo \
 	sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-sci_fromJSON.Plo \
 	sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-sci_http_delete.Plo \
 	sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-sci_http_get.Plo \
@@ -235,7 +237,7 @@ am__depfiles_remade =  \
 	sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-sci_toJSON.Plo \
 	sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-sci_url_decode.Plo \
 	sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-sci_url_encode.Plo \
-	sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-setPreferences.Plo \
+	sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-webtools_gw.Plo \
 	src/c/$(DEPDIR)/libsciwebtools_algo_la-DllmainWebtools.Plo \
 	src/c/$(DEPDIR)/libsciwebtools_algo_la-jsmn.Plo \
 	src/cpp/$(DEPDIR)/libsciwebtools_algo_la-json.Plo \
@@ -287,8 +289,8 @@ am__can_run_installinfo = \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
-DATA = $(libsciwebtools_la_etc_DATA) $(libsciwebtools_la_root_DATA) \
-	$(libsciwebtools_la_sci_gateway_DATA)
+DATA = $(libsciwebtools_la_etc_DATA) $(libsciwebtools_la_root_DATA)
+HEADERS = $(libsciwebtools_la_include_HEADERS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 # Read a list of newline-separated strings from the standard input,
 # and print each of them once, without duplicates.  Input order is
@@ -658,13 +660,14 @@ GATEWAY_CPP_SOURCES = \
     sci_gateway/cpp/sci_url_decode.cpp \
     sci_gateway/cpp/sci_toJSON.cpp \
     sci_gateway/cpp/sci_fromJSON.cpp \
-    sci_gateway/cpp/checkCommonOpt.cpp \
-    sci_gateway/cpp/setPreferences.cpp
+    sci_gateway/cpp/gateway_tools.cpp \
+    sci_gateway/cpp/webtools_gw.cpp
 
 libsciwebtools_la_CPPFLAGS = \
     -I$(srcdir)/includes/ \
     -I$(srcdir)/src/cpp/ \
     -I$(srcdir)/src/c/ \
+    -I$(srcdir)/sci_gateway/cpp/ \
     -I$(top_srcdir)/modules/ast/includes/ast/ \
     -I$(top_srcdir)/modules/ast/includes/exps/ \
     -I$(top_srcdir)/modules/ast/includes/operations/ \
@@ -679,17 +682,21 @@ libsciwebtools_la_CPPFLAGS = \
     -I$(top_srcdir)/modules/dynamic_link/includes \
     -I$(top_srcdir)/modules/api_scilab/includes \
     -I$(top_srcdir)/modules/preferences/includes \
+    -I$(top_srcdir)/usr/include/cppserver/cppserver \
+    -I$(top_srcdir)/usr/include/cppserver/cppcommon \
+    -I$(top_srcdir)/usr/include/cppserver/asio \
+    -I$(top_srcdir)/usr/include/cppserver/fmt \
     $(CURL_CFLAGS) \
     $(XML_FLAGS) \
     $(AM_CPPFLAGS)
 
-libsciwebtools_algo_la_CPPFLAGS = $(libsciwebtools_la_CPPFLAGS)
+libsciwebtools_algo_la_CPPFLAGS = $(libsciwebtools_la_CPPFLAGS) -Wno-unused-parameter
 pkglib_LTLIBRARIES = libsciwebtools.la
 noinst_LTLIBRARIES = libsciwebtools-algo.la
 libsciwebtools_algo_la_LDFLAGS = $(CURL_LIBS)
 libsciwebtools_algo_la_SOURCES = $(WEBTOOLS_CPP_SOURCES) $(WEBTOOLS_C_SOURCES)
 libsciwebtools_la_SOURCES = $(GATEWAY_CPP_SOURCES) $(GATEWAY_C_SOURCES)
-libsciwebtools_la_LIBADD = libsciwebtools-algo.la
+libsciwebtools_la_LIBADD = libsciwebtools-algo.la -lasio -lfmt -lcppcommon -lcppserver
 
 # For the code check (splint)
 CHECK_SRC = $(libsciwebtools_la_SOURCES)
@@ -706,12 +713,15 @@ libsciwebtools_la_root_DATA = license.txt
 libsciwebtools_la_etcdir = $(mydatadir)/etc
 libsciwebtools_la_etc_DATA = etc/webtools.quit etc/webtools.start
 
-#### webtools : gateway declaration ####
-libsciwebtools_la_sci_gatewaydir = $(mydatadir)/sci_gateway
-libsciwebtools_la_sci_gateway_DATA = sci_gateway/webtools_gateway.xml
-
 #### webtools : include files ####
 libsciwebtools_la_includedir = $(pkgincludedir)
+libsciwebtools_la_include_HEADERS = \
+includes/tcpServer.hxx \
+includes/tcpSession.hxx \
+includes/tcpClient.hxx \
+includes/json.hxx \
+includes/dynlib_webtools.h
+
 
 # Where all the Scilab stuff is installed (macros, help, ...)
 mydatadir = $(pkgdatadir)/modules/$(modulename)
@@ -929,10 +939,10 @@ sci_gateway/cpp/libsciwebtools_la-sci_toJSON.lo:  \
 sci_gateway/cpp/libsciwebtools_la-sci_fromJSON.lo:  \
 	sci_gateway/cpp/$(am__dirstamp) \
 	sci_gateway/cpp/$(DEPDIR)/$(am__dirstamp)
-sci_gateway/cpp/libsciwebtools_la-checkCommonOpt.lo:  \
+sci_gateway/cpp/libsciwebtools_la-gateway_tools.lo:  \
 	sci_gateway/cpp/$(am__dirstamp) \
 	sci_gateway/cpp/$(DEPDIR)/$(am__dirstamp)
-sci_gateway/cpp/libsciwebtools_la-setPreferences.lo:  \
+sci_gateway/cpp/libsciwebtools_la-webtools_gw.lo:  \
 	sci_gateway/cpp/$(am__dirstamp) \
 	sci_gateway/cpp/$(DEPDIR)/$(am__dirstamp)
 sci_gateway/c/$(am__dirstamp):
@@ -963,7 +973,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/c/$(DEPDIR)/libsciwebtools_la-sci_url_split.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-checkCommonOpt.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-gateway_tools.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-sci_fromJSON.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-sci_http_delete.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-sci_http_get.Plo@am__quote@ # am--include-marker
@@ -975,7 +985,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-sci_toJSON.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-sci_url_decode.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-sci_url_encode.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-setPreferences.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-webtools_gw.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/$(DEPDIR)/libsciwebtools_algo_la-DllmainWebtools.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/$(DEPDIR)/libsciwebtools_algo_la-jsmn.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libsciwebtools_algo_la-json.Plo@am__quote@ # am--include-marker
@@ -1155,19 +1165,19 @@ sci_gateway/cpp/libsciwebtools_la-sci_fromJSON.lo: sci_gateway/cpp/sci_fromJSON.
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciwebtools_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sci_gateway/cpp/libsciwebtools_la-sci_fromJSON.lo `test -f 'sci_gateway/cpp/sci_fromJSON.cpp' || echo '$(srcdir)/'`sci_gateway/cpp/sci_fromJSON.cpp
 
-sci_gateway/cpp/libsciwebtools_la-checkCommonOpt.lo: sci_gateway/cpp/checkCommonOpt.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciwebtools_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sci_gateway/cpp/libsciwebtools_la-checkCommonOpt.lo -MD -MP -MF sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-checkCommonOpt.Tpo -c -o sci_gateway/cpp/libsciwebtools_la-checkCommonOpt.lo `test -f 'sci_gateway/cpp/checkCommonOpt.cpp' || echo '$(srcdir)/'`sci_gateway/cpp/checkCommonOpt.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-checkCommonOpt.Tpo sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-checkCommonOpt.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='sci_gateway/cpp/checkCommonOpt.cpp' object='sci_gateway/cpp/libsciwebtools_la-checkCommonOpt.lo' libtool=yes @AMDEPBACKSLASH@
+sci_gateway/cpp/libsciwebtools_la-gateway_tools.lo: sci_gateway/cpp/gateway_tools.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciwebtools_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sci_gateway/cpp/libsciwebtools_la-gateway_tools.lo -MD -MP -MF sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-gateway_tools.Tpo -c -o sci_gateway/cpp/libsciwebtools_la-gateway_tools.lo `test -f 'sci_gateway/cpp/gateway_tools.cpp' || echo '$(srcdir)/'`sci_gateway/cpp/gateway_tools.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-gateway_tools.Tpo sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-gateway_tools.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='sci_gateway/cpp/gateway_tools.cpp' object='sci_gateway/cpp/libsciwebtools_la-gateway_tools.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciwebtools_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sci_gateway/cpp/libsciwebtools_la-checkCommonOpt.lo `test -f 'sci_gateway/cpp/checkCommonOpt.cpp' || echo '$(srcdir)/'`sci_gateway/cpp/checkCommonOpt.cpp
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciwebtools_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sci_gateway/cpp/libsciwebtools_la-gateway_tools.lo `test -f 'sci_gateway/cpp/gateway_tools.cpp' || echo '$(srcdir)/'`sci_gateway/cpp/gateway_tools.cpp
 
-sci_gateway/cpp/libsciwebtools_la-setPreferences.lo: sci_gateway/cpp/setPreferences.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciwebtools_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sci_gateway/cpp/libsciwebtools_la-setPreferences.lo -MD -MP -MF sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-setPreferences.Tpo -c -o sci_gateway/cpp/libsciwebtools_la-setPreferences.lo `test -f 'sci_gateway/cpp/setPreferences.cpp' || echo '$(srcdir)/'`sci_gateway/cpp/setPreferences.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-setPreferences.Tpo sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-setPreferences.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='sci_gateway/cpp/setPreferences.cpp' object='sci_gateway/cpp/libsciwebtools_la-setPreferences.lo' libtool=yes @AMDEPBACKSLASH@
+sci_gateway/cpp/libsciwebtools_la-webtools_gw.lo: sci_gateway/cpp/webtools_gw.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciwebtools_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sci_gateway/cpp/libsciwebtools_la-webtools_gw.lo -MD -MP -MF sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-webtools_gw.Tpo -c -o sci_gateway/cpp/libsciwebtools_la-webtools_gw.lo `test -f 'sci_gateway/cpp/webtools_gw.cpp' || echo '$(srcdir)/'`sci_gateway/cpp/webtools_gw.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-webtools_gw.Tpo sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-webtools_gw.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='sci_gateway/cpp/webtools_gw.cpp' object='sci_gateway/cpp/libsciwebtools_la-webtools_gw.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciwebtools_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sci_gateway/cpp/libsciwebtools_la-setPreferences.lo `test -f 'sci_gateway/cpp/setPreferences.cpp' || echo '$(srcdir)/'`sci_gateway/cpp/setPreferences.cpp
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciwebtools_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sci_gateway/cpp/libsciwebtools_la-webtools_gw.lo `test -f 'sci_gateway/cpp/webtools_gw.cpp' || echo '$(srcdir)/'`sci_gateway/cpp/webtools_gw.cpp
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -1220,27 +1230,27 @@ uninstall-libsciwebtools_la_rootDATA:
 	@list='$(libsciwebtools_la_root_DATA)'; test -n "$(libsciwebtools_la_rootdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(libsciwebtools_la_rootdir)'; $(am__uninstall_files_from_dir)
-install-libsciwebtools_la_sci_gatewayDATA: $(libsciwebtools_la_sci_gateway_DATA)
+install-libsciwebtools_la_includeHEADERS: $(libsciwebtools_la_include_HEADERS)
 	@$(NORMAL_INSTALL)
-	@list='$(libsciwebtools_la_sci_gateway_DATA)'; test -n "$(libsciwebtools_la_sci_gatewaydir)" || list=; \
+	@list='$(libsciwebtools_la_include_HEADERS)'; test -n "$(libsciwebtools_la_includedir)" || list=; \
 	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(libsciwebtools_la_sci_gatewaydir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(libsciwebtools_la_sci_gatewaydir)" || exit 1; \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(libsciwebtools_la_includedir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(libsciwebtools_la_includedir)" || exit 1; \
 	fi; \
 	for p in $$list; do \
 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
 	  echo "$$d$$p"; \
 	done | $(am__base_list) | \
 	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(libsciwebtools_la_sci_gatewaydir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(libsciwebtools_la_sci_gatewaydir)" || exit $$?; \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(libsciwebtools_la_includedir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(libsciwebtools_la_includedir)" || exit $$?; \
 	done
 
-uninstall-libsciwebtools_la_sci_gatewayDATA:
+uninstall-libsciwebtools_la_includeHEADERS:
 	@$(NORMAL_UNINSTALL)
-	@list='$(libsciwebtools_la_sci_gateway_DATA)'; test -n "$(libsciwebtools_la_sci_gatewaydir)" || list=; \
+	@list='$(libsciwebtools_la_include_HEADERS)'; test -n "$(libsciwebtools_la_includedir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(libsciwebtools_la_sci_gatewaydir)'; $(am__uninstall_files_from_dir)
+	dir='$(DESTDIR)$(libsciwebtools_la_includedir)'; $(am__uninstall_files_from_dir)
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -1329,9 +1339,9 @@ distdir-am: $(DISTFILES)
 check-am: all-am
 	$(MAKE) $(AM_MAKEFLAGS) check-local
 check: check-am
-all-am: Makefile $(LTLIBRARIES) $(DATA) all-local
+all-am: Makefile $(LTLIBRARIES) $(DATA) $(HEADERS) all-local
 installdirs:
-	for dir in "$(DESTDIR)$(pkglibdir)" "$(DESTDIR)$(libsciwebtools_la_etcdir)" "$(DESTDIR)$(libsciwebtools_la_rootdir)" "$(DESTDIR)$(libsciwebtools_la_sci_gatewaydir)"; do \
+	for dir in "$(DESTDIR)$(pkglibdir)" "$(DESTDIR)$(libsciwebtools_la_etcdir)" "$(DESTDIR)$(libsciwebtools_la_rootdir)" "$(DESTDIR)$(libsciwebtools_la_includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -1379,7 +1389,7 @@ clean-am: clean-generic clean-libtool clean-local \
 
 distclean: distclean-am
 		-rm -f sci_gateway/c/$(DEPDIR)/libsciwebtools_la-sci_url_split.Plo
-	-rm -f sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-checkCommonOpt.Plo
+	-rm -f sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-gateway_tools.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-sci_fromJSON.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-sci_http_delete.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-sci_http_get.Plo
@@ -1391,7 +1401,7 @@ distclean: distclean-am
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-sci_toJSON.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-sci_url_decode.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-sci_url_encode.Plo
-	-rm -f sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-setPreferences.Plo
+	-rm -f sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-webtools_gw.Plo
 	-rm -f src/c/$(DEPDIR)/libsciwebtools_algo_la-DllmainWebtools.Plo
 	-rm -f src/c/$(DEPDIR)/libsciwebtools_algo_la-jsmn.Plo
 	-rm -f src/cpp/$(DEPDIR)/libsciwebtools_algo_la-json.Plo
@@ -1414,8 +1424,8 @@ info: info-am
 info-am:
 
 install-data-am: install-data-local install-libsciwebtools_la_etcDATA \
-	install-libsciwebtools_la_rootDATA \
-	install-libsciwebtools_la_sci_gatewayDATA
+	install-libsciwebtools_la_includeHEADERS \
+	install-libsciwebtools_la_rootDATA
 
 install-dvi: install-dvi-am
 
@@ -1445,7 +1455,7 @@ installcheck-am:
 
 maintainer-clean: maintainer-clean-am
 		-rm -f sci_gateway/c/$(DEPDIR)/libsciwebtools_la-sci_url_split.Plo
-	-rm -f sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-checkCommonOpt.Plo
+	-rm -f sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-gateway_tools.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-sci_fromJSON.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-sci_http_delete.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-sci_http_get.Plo
@@ -1457,7 +1467,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-sci_toJSON.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-sci_url_decode.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-sci_url_encode.Plo
-	-rm -f sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-setPreferences.Plo
+	-rm -f sci_gateway/cpp/$(DEPDIR)/libsciwebtools_la-webtools_gw.Plo
 	-rm -f src/c/$(DEPDIR)/libsciwebtools_algo_la-DllmainWebtools.Plo
 	-rm -f src/c/$(DEPDIR)/libsciwebtools_algo_la-jsmn.Plo
 	-rm -f src/cpp/$(DEPDIR)/libsciwebtools_algo_la-json.Plo
@@ -1480,8 +1490,8 @@ ps: ps-am
 ps-am:
 
 uninstall-am: uninstall-libsciwebtools_la_etcDATA \
+	uninstall-libsciwebtools_la_includeHEADERS \
 	uninstall-libsciwebtools_la_rootDATA \
-	uninstall-libsciwebtools_la_sci_gatewayDATA \
 	uninstall-pkglibLTLIBRARIES
 
 .MAKE: check-am install-am install-strip
@@ -1497,17 +1507,16 @@ uninstall-am: uninstall-libsciwebtools_la_etcDATA \
 	install-exec-am install-html install-html-am \
 	install-html-local install-info install-info-am \
 	install-libsciwebtools_la_etcDATA \
-	install-libsciwebtools_la_rootDATA \
-	install-libsciwebtools_la_sci_gatewayDATA install-man \
-	install-pdf install-pdf-am install-pkglibLTLIBRARIES \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags tags-am uninstall uninstall-am \
-	uninstall-libsciwebtools_la_etcDATA \
+	install-libsciwebtools_la_includeHEADERS \
+	install-libsciwebtools_la_rootDATA install-man install-pdf \
+	install-pdf-am install-pkglibLTLIBRARIES install-ps \
+	install-ps-am install-strip installcheck installcheck-am \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-am uninstall \
+	uninstall-am uninstall-libsciwebtools_la_etcDATA \
+	uninstall-libsciwebtools_la_includeHEADERS \
 	uninstall-libsciwebtools_la_rootDATA \
-	uninstall-libsciwebtools_la_sci_gatewayDATA \
 	uninstall-pkglibLTLIBRARIES
 
 .PRECIOUS: Makefile

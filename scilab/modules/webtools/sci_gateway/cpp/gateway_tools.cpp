@@ -12,7 +12,7 @@
 */
 /*--------------------------------------------------------------------------*/
 
-#include "webtools_gw.hxx"
+#include "gateway_tools.hxx"
 #include "function.hxx"
 #include "string.hxx"
 #include "double.hxx"
@@ -24,7 +24,25 @@ extern "C"
 #include "sci_malloc.h"
 }
 
-/*--------------------------------------------------------------------------*/
+int setPreferences(SciCurl& query, const char* fname)
+{
+    // set proxy information
+    if(query.setProxy() == false)
+    {
+        Scierror(999, _("%s: Wrong proxy information, please check in the '%s' Scilab preference.\n"), fname, _("Web"));
+        return 1;
+    }    
+
+    // set cookies information
+    if(query.setCookies() == false)
+    {
+        Scierror(999, _("%s: Wrong cookies information, please check in the '%s' Scilab preference.\n"), fname, _("Web"));
+        return 1;
+    }
+
+    return 0;
+}
+
 int checkCommonOpt(SciCurl& query, types::optional_list& opt, const char* fname)
 {
     // get optional argument if necessary

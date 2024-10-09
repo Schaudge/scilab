@@ -59,4 +59,5 @@
 //#include "../../tclsci/includes/tclsci_gw.hxx"
 #include "../../slint/includes/slint_gw.hxx"
 #include "../../coverage/includes/coverage_gw.hxx"
+#include "../../webtools/includes/webtools_gw.hxx"
 #endif /* !__MODULE_DECLARATION_HXX__ */

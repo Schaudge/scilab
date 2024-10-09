@@ -73,7 +73,7 @@ static parse_state parseCommand(const char* command, ast::Exp** tree)
     }
     else if (parser.getExitStatus() == Parser::Failed)
     {
-        scilabWriteW(parser.getErrorMessage());
+        scilabErrorW(parser.getErrorMessage());
         ConfigVariable::setLastErrorNumber(999);
         ConfigVariable::setLastErrorMessage(parser.getErrorMessage());
 
@@ -199,7 +199,7 @@ int StoreDebuggerCommand(const char *command, int iWaitFor)
         // make this wait before unlock the Store Command will prevent
         // dead lock in case where another thread get this command
         // and execute it before this thread is waiting for.
-        ThreadManagement::WaitForDebuggerExecDoneSignal(false);
+        ThreadManagement::WaitForDebuggerExecDoneSignal();
     }
     else
     {

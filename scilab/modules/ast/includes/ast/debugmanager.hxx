@@ -17,6 +17,7 @@
 #define __DEBUGGER_MANAGER_HXX__
 
 #include <memory>
+#include <mutex>
 
 #include "abstractdebugger.hxx"
 #include "configvariable.hxx"
@@ -44,6 +45,7 @@ public:
         int functionLine;
         int fileLine;
         int scope;
+        int column;
         bool hasFile = false;
     };
 
@@ -63,6 +65,7 @@ private:
         pExp(nullptr), interrupted(false), currentBreakPoint(-1),
         action(Continue), level(0), request_pause(false) {}
 
+    std::mutex breakpoints_lock;
     Breakpoints breakpoints;
     CallStack callstack;
     Debuggers debuggers;
@@ -75,6 +78,7 @@ private:
     int level;
 
     void internal_stop();
+    int get_current_level();
     bool callstackAddFile(StackRow* _row, const std::wstring& _fileName);
 
 public:
@@ -175,30 +179,25 @@ public:
     Breakpoint* getBreakPoint(int _iBreakPoint);
     int getBreakPointCount();
     Breakpoints& getAllBreakPoint();
+    void lockBreakpoints()
+    {
+        breakpoints_lock.lock();
+    }
+    void unlockBreakpoints()
+    {
+        breakpoints_lock.unlock();
+    }
 
     //actions called by debuggers
-    inline void setStepIn() //enter macro
+    inline void setStepIn()
     {
         action = StepIn;
-        level = symbol::Context::getInstance()->getScopeLevel();
+        level = get_current_level();
     }
 
     inline bool isStepIn()
     {
-        int l = symbol::Context::getInstance()->getScopeLevel();
-        //if stepIn failed ( not a macro ), stepIn become a stepNext
-        if(action != StepIn)
-        {
-            return false;
-        }
-
-        if(l < level)
-        {
-            action = StepNext;
-            return false;
-        }
-
-        return true;
+        return action == StepIn && get_current_level() > level;
     }
 
     inline void resetStepIn()
@@ -209,16 +208,16 @@ public:
         }
     }
 
-    inline void setStepOut() //exit macro
+    inline void setStepOut()
     {
         action = StepOut;
-        level = ConfigVariable::getWhere().size();
+        level = get_current_level();
     }
 
     inline bool isStepOut()
     {
-        int l = ConfigVariable::getWhere().size();
-        return action == StepOut && l < level;
+        // StepIn/StepNext: when stepIn/StepNext at the end of a body, considere it as stepOut
+        return (action == StepOut || action == StepNext || action == StepIn) && get_current_level() < level;
     }
 
     inline void resetStepOut()
@@ -229,7 +228,7 @@ public:
         }
     }
 
-    inline void setAborted() //next statement
+    inline void setAborted()
     {
         action = Aborted;
     }
@@ -247,17 +246,16 @@ public:
         }
     }
 
-    inline void setStepNext() //next statement
+    inline void setStepNext()
     {
         action = StepNext;
-        level = symbol::Context::getInstance()->getScopeLevel();
+        level = get_current_level();
     }
 
     inline bool isStepNext()
     {
-        int l = symbol::Context::getInstance()->getScopeLevel();
-        //if stepNext failed ( end of macro ), stepNext become a stepOut
-        return action == StepNext && l <= level;
+        // StepIn: when stepIn after stepOut, considere stepIn as StepNext
+        return (action == StepNext || action == StepIn) && get_current_level() == level;
     }
 
     inline void resetStepNext()
@@ -276,14 +274,16 @@ public:
         }
     }
 
-    char* execute(const std::string& command, int iWaitForIt = 1); //execute a command
+    char* execute(const std::string& command); //execute a non prioritary command
+    char* executeNow(const std::string& command, int iWaitForIt = 1); //execute a prioritary command
     void print(const std::string& variable); //print a variable
     void show(int bp); //print the breakpoint bp or all breakpoints (bp = -1)
-    void resume(); //resume execution
+    void resume(int iWait = true); //resume execution
     void abort(); //abort execution
     void requestPause(); //pause execution
     bool isPauseRequested(); //get pause request status
     void resetPauseRequest(); //reset pause request status
+    bool getSourceFile(std::string* filename = nullptr);
 };
 
 }

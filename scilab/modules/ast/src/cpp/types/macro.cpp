@@ -1513,7 +1513,11 @@ Macro::Macro(const std::wstring& _stName, std::vector<symbol::Variable*>& _input
     m_body->setReturnable();
     m_stPath = L"";
 
+    // Do not enable debug for Macro called when checking arguments (calling sci2exp)
+    bool isDebug = ConfigVariable::getEnableDebug();
+    ConfigVariable::setEnableDebug(false);
     updateArguments();
+    ConfigVariable::setEnableDebug(isDebug);
 }
 
 Macro::~Macro()
@@ -1725,7 +1729,7 @@ Callable::ReturnValue Macro::call(typed_list& in, optional_list& opt, int _iRetC
         }
 
         pContext->scope_end();
-        ConfigVariable::fillWhereError(getBody()->getLocation().first_line);
+        ConfigVariable::fillWhereError(getBody()->getLocation());
         ConfigVariable::macroFirstLine_end();
         return Callable::Error;
     }
@@ -1748,7 +1752,7 @@ Callable::ReturnValue Macro::call(typed_list& in, optional_list& opt, int _iRetC
         {
             Scierror(999, _("%s: Named argument are not compatible with arguments block.\n"), scilab::UTF8::toUTF8(m_wstName).data());
             pContext->scope_end();
-            ConfigVariable::fillWhereError(getBody()->getLocation().first_line);
+            ConfigVariable::fillWhereError(getBody()->getLocation());
             ConfigVariable::macroFirstLine_end();
             return Callable::Error;
         }
@@ -1933,7 +1937,7 @@ Callable::ReturnValue Macro::call(typed_list& in, optional_list& opt, int _iRetC
         catch (const ast::InternalError& ie)
         {
             pContext->scope_end();
-            ConfigVariable::fillWhereError(ie.GetErrorLocation().first_line);
+            ConfigVariable::fillWhereError(ie.GetErrorLocation());
             ConfigVariable::macroFirstLine_end();
             //return types::Function::Error;
             throw ie;

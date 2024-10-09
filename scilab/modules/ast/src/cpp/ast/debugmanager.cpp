@@ -258,6 +258,7 @@ void DebuggerManager::removeBreakPoint(int _iBreakPoint)
 
 void DebuggerManager::removeAllBreakPoints()
 {
+    breakpoints_lock.lock();
     Breakpoints::iterator it = breakpoints.begin();
     for (; it != breakpoints.end(); ++it)
     {
@@ -265,6 +266,7 @@ void DebuggerManager::removeAllBreakPoints()
     }
 
     breakpoints.clear();
+    breakpoints_lock.unlock();
     sendUpdate();
 }
 
@@ -343,86 +345,102 @@ void DebuggerManager::generateCallStack()
     std::wostringstream ostr;
     ast::PrintVisitor pp(ostr, true, true, true);
     getExp()->accept(pp);
-    char* tmp = wide_string_to_UTF8(ostr.str().data());
-    callstack.exp = tmp;
-    FREE(tmp);
+    callstack.exp = scilab::UTF8::toUTF8(ostr.str());
 
-    //where
-    const std::vector<ConfigVariable::WhereEntry>& where = ConfigVariable::getWhere();
-    auto it_name = where.rbegin();
-
-    // first row
-    Stack cs;
-    StackRow row;
-    tmp = wide_string_to_UTF8(it_name->call->getName().data());
-    row.functionName = tmp;
-    FREE(tmp);
-
-    row.functionLine = -1;
-    if (it_name->call->getFirstLine())
+    // - When stopped on error, generate the call stack from whereError
+    //   because "where" may have been unstacked (ie: parsing error in exec)
+    // - When stopped on breakpoint or paused, generate the call stack
+    //   from "where" because where error is not filled.
+    if(ConfigVariable::isError())
     {
-        row.functionLine = getExp()->getLocation().first_line - it_name->call->getFirstLine();
-    }
+        //where error
+        const auto& whereError = ConfigVariable::getWhereError();
 
-    if (it_name->m_file_name && callstackAddFile(&row, *it_name->m_file_name))
-    {
-        row.fileLine = getExp()->getLocation().first_line;
-    }
-
-    row.scope = symbol::Context::getInstance()->getScopeLevel();
-
-    cs.push_back(row);
-    ++it_name;
-
-    // next rows
-    for (auto it_line = where.rbegin(); it_name != where.rend(); it_name++, it_line++)
-    {
-        StackRow row;
-        tmp = wide_string_to_UTF8(it_name->call->getName().data());
-        row.functionName = tmp;
-        FREE(tmp);
-        row.functionLine = it_line->m_line - 1;
-        if (it_name->m_file_name && callstackAddFile(&row, *it_name->m_file_name))
+        Stack cs;
+        for (const auto& elem : whereError)
         {
-            row.fileLine = it_line->m_line;
-            row.functionLine = -1;
-            if (it_name->call->getFirstLine())
+            StackRow row;
+            row.functionName = scilab::UTF8::toUTF8(elem.m_function_name);
+            row.functionLine = elem.m_line - 1;
+            if (callstackAddFile(&row, elem.m_file_name))
             {
-                row.fileLine = it_name->call->getFirstLine() + it_line->m_line - 1;
-                row.functionLine = it_line->m_line - 1;
+                row.fileLine = elem.m_line;
+                row.functionLine = -1;
+                row.column = elem.m_Location.first_column;
+                if (elem.m_first_line)
+                {
+                    row.fileLine = elem.m_first_line + elem.m_line - 1;
+                    row.functionLine = elem.m_line - 1;
+                }
             }
+
+            row.scope = elem.m_scope_lvl;
+            cs.push_back(row);
         }
 
-        row.scope = it_line->m_scope_lvl;
-        cs.push_back(row);
+        callstack.stack = cs;
+        ConfigVariable::resetWhereError();
     }
+    else
+    {
+        //where
+        const std::vector<ConfigVariable::WhereEntry>& where = ConfigVariable::getWhere();
+        // skip fake pause name
+        auto it_name = where.rbegin();
+        ++it_name;
 
-    callstack.stack = cs;
+        Stack cs;
+        for (auto it_line = where.rbegin(); it_name != where.rend(); it_name++, it_line++)
+        {
+            StackRow row;
+            row.functionName = scilab::UTF8::toUTF8(it_name->call->getName());
+            row.functionLine = it_line->m_line - 1;
+            if (it_name->m_file_name != nullptr && callstackAddFile(&row, *it_name->m_file_name))
+            {
+                row.fileLine = it_line->m_line;
+                row.functionLine = -1;
+                row.column = it_line->m_Location.first_column;
+
+                if (it_name->call->getFirstLine())
+                {
+                    row.fileLine = it_name->call->getFirstLine() + it_line->m_line - 1;
+                    row.functionLine = it_line->m_line - 1;
+                }
+            }
+
+            row.scope = it_line->m_scope_lvl;
+            cs.push_back(row);
+        }
+
+        callstack.stack = cs;
+    }
 }
 
 bool DebuggerManager::callstackAddFile(StackRow* _row, const std::wstring& _fileName)
 {
     _row->hasFile = false;
-    if (_fileName.length())
+    if (_fileName.empty())
     {
-        std::string pstrFileName = scilab::UTF8::toUTF8(_fileName);
-        _row->hasFile = true;
-        // replace .bin by .sci
-        size_t pos = pstrFileName.rfind(".bin");
-        if (pos != std::string::npos)
-        {
-            pstrFileName.replace(pos, 4, ".sci");
-            // do not add the file in the callstack if the associeted .sci is not available
-            if (FileExist(pstrFileName.data()) == false)
-            {
-                _row->hasFile = false;
-            }
-        }
+        return false;
+    }
 
-        if (_row->hasFile)
+    std::string pstrFileName = scilab::UTF8::toUTF8(_fileName);
+    _row->hasFile = true;
+    // replace .bin by .sci
+    size_t pos = pstrFileName.rfind(".bin");
+    if (pos != std::string::npos)
+    {
+        pstrFileName.replace(pos, 4, ".sci");
+        // do not add the file in the callstack if the associeted .sci is not available
+        if (FileExist(pstrFileName.data()) == false)
         {
-            _row->fileName = pstrFileName;
+            _row->hasFile = false;
         }
+    }
+
+    if (_row->hasFile)
+    {
+        _row->fileName = pstrFileName;
     }
 
     return _row->hasFile;
@@ -440,7 +458,7 @@ void DebuggerManager::show(int bp)
     sendShow(bp);
 }
 
-char* DebuggerManager::execute(const std::string& command, int iWaitForIt)
+char* DebuggerManager::execute(const std::string& command)
 {
     char* error = checkCommand(command.data());
     if (error)
@@ -448,7 +466,26 @@ char* DebuggerManager::execute(const std::string& command, int iWaitForIt)
         return error;
     }
 
-    // reset abort flag befor a new exection
+    // reset abort flag befor a new execution
+    resetAborted();
+
+    // inform debuggers
+    sendExecution();
+    // execute command and wait
+    StoreCommandWithFlags(command.data(), 0, 1, DEBUGGER);
+
+    return nullptr;
+}
+
+char* DebuggerManager::executeNow(const std::string& command, int iWaitForIt)
+{
+    char* error = checkCommand(command.data());
+    if (error)
+    {
+        return error;
+    }
+
+    // reset abort flag befor a new execution
     resetAborted();
 
     // inform debuggers
@@ -459,20 +496,15 @@ char* DebuggerManager::execute(const std::string& command, int iWaitForIt)
     return nullptr;
 }
 
-void DebuggerManager::resume() //resume execution
+void DebuggerManager::resume(int iWait) //resume execution
 {
-    if (ConfigVariable::getPauseLevel() != 0)
-    {
-        //inform debuggers
-        sendResume();
+    //inform debuggers
+    sendResume();
 
-        ConfigVariable::DecreasePauseLevel();
-        // reset callstack
-        clearCallStack();
+    // reset callstack
+    clearCallStack();
 
-        // send "SendRunMeSignal" to unlock execution then wait
-        ThreadManagement::WaitForDebuggerExecDoneSignal(true);
-    }
+    StoreDebuggerCommand("resume", iWait);
 }
 
 void DebuggerManager::requestPause() //ask for pause
@@ -508,11 +540,6 @@ void DebuggerManager::abort() //abort execution
     // abort in a pause
     if (isInterrupted())
     {
-        if (ConfigVariable::getPauseLevel() != 0)
-        {
-            ConfigVariable::DecreasePauseLevel();
-        }
-
         // reset lasterror information
         ConfigVariable::clearLastError();
         // reset error flag
@@ -520,13 +547,38 @@ void DebuggerManager::abort() //abort execution
         // reset callstack
         clearCallStack();
 
-        ThreadManagement::WaitForDebuggerExecDoneSignal(true);
+        StoreDebuggerCommand("abort", true);
     }
+}
+
+int DebuggerManager::get_current_level()
+{
+    if(isInterrupted())
+    {
+        return ConfigVariable::getWhere().size() - 1; // -1 remove pause from the level, see DebuggerManager::internal_stop
+    }
+    else
+    {
+        return ConfigVariable::getWhere().size();
+    }
+    
 }
 
 void DebuggerManager::internal_stop()
 {
     interrupted = true;
+
+    // Create a fake pause call to retrieve good lines in
+    // where or whereami when stopped on breakpoint.
+    // This a no effect when stopped on error because where error has already been filled
+    // and will be used to generate the callstack.
+    int iFirstLine = getExp()->getLocation().first_line;
+    types::Macro* pFakePause = new types::Macro();
+    pFakePause->setName(L"pause");
+    pFakePause->setLines(iFirstLine, getExp()->getLocation().last_line);
+    ConfigVariable::where_begin(iFirstLine + 1 - ConfigVariable::getMacroFirstLines(), pFakePause, getExp()->getLocation());
+    ConfigVariable::macroFirstLine_begin(2);
+
     generateCallStack();
     // release the debugger thread
     ThreadManagement::SendDebuggerExecDoneSignal();
@@ -538,12 +590,16 @@ void DebuggerManager::internal_stop()
     }
     catch (const ast::InternalAbort& ia)
     {
+        ConfigVariable::macroFirstLine_end();
         // can append when aborting an execution
         // which is running inside a pause
+        ConfigVariable::where_end();
         interrupted = false;
         throw ia;
     }
 
+    ConfigVariable::macroFirstLine_end();
+    ConfigVariable::where_end();
     interrupted = false;
 }
 
@@ -573,4 +629,39 @@ void DebuggerManager::errorInScript(const std::wstring funcname, const ast::Exp*
     clearExp();
 }
 
+// return false if a file .sci of a file .bin doesn't exists
+// return true for others files or existing .sci .sce
+bool DebuggerManager::getSourceFile(std::string* filename)
+{
+    const std::vector<ConfigVariable::WhereEntry>& lWhereAmI = ConfigVariable::getWhere();
+    // "Where" can be empty at the end of script execution
+    // this function is called when the script ends after a step out
+    if(lWhereAmI.empty())
+    {
+        return false;
+    }
+
+    if(lWhereAmI.back().m_file_name == nullptr)
+    {
+        return false;
+    }
+
+    std::string file = scilab::UTF8::toUTF8(*lWhereAmI.back().m_file_name);
+    if (file.rfind(".bin") != std::string::npos)
+    {
+        file.replace(file.size() - 4, 4, ".sci");
+        // stop on bp only if the file exist
+        if (!FileExist(file.data()))
+        {
+            return false;
+        }
+    }
+
+    if(filename != nullptr)
+    {
+        filename->assign(file);
+    }
+
+    return true;
+}
 }
