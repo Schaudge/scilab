@@ -40,12 +40,12 @@ function optimplotx ( x , optimValues , state )
         bar ( 1:nbvar , x );
         gg = gce();
         gg.children.background = 9;
-        opfvh.user_data = "optimplotx";
+        opfvh.tag = "optimplotx";
         opfvh.children.x_label.text = msprintf ( "Number of variables: %d" , nbvar );
         opfvh.children.y_label.text = "Current point";
         opfvh.children.title.text = msprintf ( "Current Point" );
     else
-        opfvh = findobj ( "user_data" , "optimplotx" );
+        opfvh = get ( "optimplotx" );
         nbvar = length(x)
         gg = opfvh.children.children;
         for ivar = 1:nbvar

@@ -36,7 +36,7 @@ function optimplotfunccount ( x , optimValues , state )
     if ( state == "init" ) then
         opfvh = scf();
         plot ( 0 , optimValues.funccount );
-        opfvh.user_data = "optimplotfunccount";
+        opfvh.tag = "optimplotfunccount";
         opfvh.children.x_label.text = "Iteration";
         opfvh.children.y_label.text = "Function evaluations";
         opfvh.children.title.text = msprintf ( "Total Function Evaluations: %d", optimValues.funccount )
@@ -45,7 +45,7 @@ function optimplotfunccount ( x , optimValues , state )
         opfvh.children.children.children.mark_size = 10;
         opfvh.children.children.children.mark_background = 6;
     else
-        opfvh = findobj ( "user_data" , "optimplotfunccount" );
+        opfvh = get ( "optimplotfunccount" );
         gg = opfvh.children.children;
         // Update data
         gg.children.data($+1,1:2) = [optimValues.iteration optimValues.funccount];

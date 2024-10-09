@@ -36,7 +36,7 @@ function optimplotfval ( x , optimValues , state )
     if ( state == "init" ) then
         opfvh = scf();
         plot ( 0 , optimValues.fval );
-        opfvh.user_data = "optimplotfval";
+        opfvh.tag = "optimplotfval";
         opfvh.children.x_label.text = "Iteration";
         opfvh.children.y_label.text = "Function value";
         opfvh.children.title.text = msprintf ( "Current Function Value: %e", optimValues.fval )
@@ -45,7 +45,7 @@ function optimplotfval ( x , optimValues , state )
         opfvh.children.children.children.mark_size = 10;
         opfvh.children.children.children.mark_background = 6;
     else
-        opfvh = findobj ( "user_data" , "optimplotfval" );
+        opfvh = get ( "optimplotfval" );
         gg = opfvh.children.children;
         // Update data
         gg.children.data($+1,1:2) = [optimValues.iteration optimValues.fval];
