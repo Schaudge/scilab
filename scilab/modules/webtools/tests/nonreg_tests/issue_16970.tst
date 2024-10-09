@@ -21,5 +21,5 @@ f2 = "myfilenametwo";
 data.type = "images";
 data.date = date();
 
-msg = msprintf(_("%s: Wrong type for input argument #%d: A scalar string expected.\n"), "http_upload", 3, 1);
+msg = msprintf(_("%s: Wrong type for input argument #%d: A string expected.\n"), "http_upload", 3, 1);
 assert_checkerror("res = http_upload(""url:port/route"", [f1 f2], data, ""varname"");", msg);
